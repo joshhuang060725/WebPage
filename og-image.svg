@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="Personal website preview image">
+  <rect width="1200" height="630" fill="#f7f8f5"/>
+  <rect x="84" y="78" width="1032" height="474" rx="22" fill="#ffffff" stroke="#dce3dc" stroke-width="2"/>
+  <rect x="126" y="126" width="80" height="80" rx="18" fill="#22594b"/>
+  <text x="166" y="180" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="52" font-weight="700">P</text>
+  <text x="126" y="292" fill="#171b1a" font-family="Arial, sans-serif" font-size="72" font-weight="800">Personal Website</text>
+  <text x="126" y="374" fill="#56615c" font-family="Arial, sans-serif" font-size="34">Projects, notes, and public profile</text>
+  <rect x="126" y="430" width="208" height="58" rx="12" fill="#22594b"/>
+  <text x="230" y="468" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="24" font-weight="700">View Profile</text>
+</svg>
