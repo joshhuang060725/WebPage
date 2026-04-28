@@ -1,0 +1,11 @@
+/*
+  X-Content-Type-Options: nosniff
+
+/styles.css
+  Cache-Control: public, max-age=0, must-revalidate
+
+/js/*
+  Cache-Control: public, max-age=0, must-revalidate
+
+/data/*
+  Cache-Control: public, max-age=0, must-revalidate

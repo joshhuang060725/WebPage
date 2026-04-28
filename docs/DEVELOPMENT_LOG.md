@@ -160,6 +160,34 @@ Local only. Not pushed by request.
 
 ## Log Template
 
+## 2026-04-29 - Asset Cache Busting
+
+### Context
+
+After deployment, mobile and iPad rendered correctly, but the development PC showed the new HTML with stale or missing desktop UI styles. Direct network checks confirmed Cloudflare was serving the new `styles.css`, and a clean Edge headless profile rendered correctly. The issue was isolated to the active desktop browser profile cache/resource state.
+
+### Decisions
+
+1. Add version query strings to CSS and JS asset URLs.
+2. Add Cloudflare Pages `_headers` rules for CSS, JS, and JSON assets.
+3. Keep HTML cache behavior default while making static assets revalidate.
+
+### Implemented
+
+- Updated all public HTML pages to use:
+  - `/styles.css?v=20260429-2`
+  - `/js/data-loader.js?v=20260429-2`
+  - `/js/main.js?v=20260429-2`
+- Added `_headers` with `Cache-Control: public, max-age=0, must-revalidate`.
+
+### Verification
+
+Pending post-push live verification.
+
+### Git State
+
+Pending commit and push.
+
 ```markdown
 ## YYYY-MM-DD - Title
 
