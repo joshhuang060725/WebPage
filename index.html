@@ -3,149 +3,164 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Personal Website | Projects, Notes, Contact</title>
+    <title>Josh Huang | JATS Personal Portal</title>
     <meta
       name="description"
-      content="A basic personal website for a public profile, projects, notes, and contact information."
+      content="Josh Huang's personal promotion homepage and JATS portal for projects, quick links, and UI/UX system experiments."
     />
     <meta name="robots" content="index, follow" />
-    <meta name="author" content="Your Name" />
+    <meta name="author" content="Josh Huang" />
+    <meta name="theme-color" content="#202020" />
 
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="Personal Website | Projects, Notes, Contact" />
-    <meta
-      property="og:description"
-      content="A basic personal website for a public profile, projects, notes, and contact information."
-    />
-    <meta property="og:image" content="/og-image.svg" />
-
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Personal Website | Projects, Notes, Contact" />
-    <meta
-      name="twitter:description"
-      content="A basic personal website for a public profile, projects, notes, and contact information."
-    />
-    <meta name="twitter:image" content="/og-image.svg" />
-
-    <link rel="canonical" href="/" />
+    <link rel="canonical" href="https://joshhuang.ccwu.cc/" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/styles.css" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://joshhuang.ccwu.cc/" />
+    <meta property="og:title" content="Josh Huang | JATS Personal Portal" />
+    <meta
+      property="og:description"
+      content="A dark industrial personal homepage for Josh Huang and the Josh Auxiliary Terminal System."
+    />
+    <meta property="og:image" content="https://joshhuang.ccwu.cc/og-image.svg" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Josh Huang | JATS Personal Portal" />
+    <meta
+      name="twitter:description"
+      content="A dark industrial personal homepage for Josh Huang and the Josh Auxiliary Terminal System."
+    />
+    <meta name="twitter:image" content="https://joshhuang.ccwu.cc/og-image.svg" />
 
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "Person",
-        "name": "Your Name",
-        "url": "/",
-        "description": "A personal website for projects, notes, and contact information.",
-        "sameAs": []
+        "@graph": [
+          {
+            "@type": "Person",
+            "name": "Josh Huang",
+            "url": "https://joshhuang.ccwu.cc/",
+            "description": "Personal homepage and JATS portal.",
+            "sameAs": ["https://github.com/joshhuang060725"]
+          },
+          {
+            "@type": "WebSite",
+            "name": "Josh Huang Personal Portal",
+            "url": "https://joshhuang.ccwu.cc/",
+            "inLanguage": ["zh-TW", "zh-CN", "en"]
+          }
+        ]
       }
     </script>
   </head>
-  <body>
-    <header class="site-header">
-      <a class="brand" href="#home" aria-label="Back to home">
-        <span class="brand-mark">P</span>
-        <span>Personal Site</span>
-      </a>
-      <nav class="nav" aria-label="Primary navigation">
-        <a href="#about">About</a>
-        <a href="#projects">Projects</a>
-        <a href="#notes">Notes</a>
-        <a href="#contact">Contact</a>
-      </nav>
-    </header>
+  <body data-page="home">
+    <div class="shell">
+      <aside class="side-nav" aria-label="Primary navigation">
+        <a class="brand" href="/" aria-label="Josh Huang portal home">
+          <span class="brand-mark">J</span>
+          <span>
+            <strong>JOSH</strong>
+            <small data-i18n="nav.system">Personal Portal</small>
+          </span>
+        </a>
 
-    <main id="home">
-      <section class="hero">
-        <div class="hero-content">
-          <p class="eyebrow">Personal Website</p>
-          <h1>A simple public profile for projects and notes.</h1>
-          <p class="hero-text">
-            This first version is intentionally small: a searchable homepage, a short profile,
-            project placeholders, note topics, and a contact entry. Real content can be added after
-            the site is online.
-          </p>
-          <div class="actions">
-            <a class="button primary" href="#about">View profile</a>
-            <a class="button secondary" href="#contact">Contact</a>
-          </div>
-        </div>
-        <aside class="profile-panel" aria-label="Website summary">
-          <div>
-            <span>Current Focus</span>
-            <strong>Projects, notes, and public profile</strong>
-          </div>
-          <div>
-            <span>Website Status</span>
-            <strong>Basic public version</strong>
-          </div>
-          <div>
-            <span>Next Step</span>
-            <strong>Add real content and domain</strong>
-          </div>
-        </aside>
-      </section>
+        <nav class="nav-links">
+          <a href="/" aria-current="page" data-i18n="nav.portal">Portal</a>
+          <a href="/profile.html" data-i18n="nav.bio">Bio</a>
+          <a href="/projects.html" data-i18n="nav.projects">Projects</a>
+          <a href="/links.html" data-i18n="nav.links">Quick Links</a>
+          <a href="/tools.html" data-i18n="nav.tools">Tools</a>
+        </nav>
 
-      <section class="section" id="about">
-        <div class="section-heading">
-          <p class="eyebrow">About</p>
-          <h2>About me</h2>
+        <div class="language-panel" aria-label="Language selector">
+          <button type="button" data-lang-button="zh-TW">TW</button>
+          <button type="button" data-lang-button="zh-CN">CN</button>
+          <button type="button" data-lang-button="en">EN</button>
         </div>
-        <p class="wide-text">
-          This section can later include your real introduction, background, skills, current focus,
-          and the keywords you want search engines to associate with your public profile.
+
+        <p class="nav-meta">
+          <span data-i18n="meta.version">Static build</span>
+          <strong id="last-modified">--</strong>
         </p>
-      </section>
+      </aside>
 
-      <section class="section" id="projects">
-        <div class="section-heading">
-          <p class="eyebrow">Projects</p>
-          <h2>Projects</h2>
+      <header class="mobile-header">
+        <a class="brand" href="/" aria-label="Josh Huang portal home">
+          <span class="brand-mark">J</span>
+          <span>JOSH</span>
+        </a>
+        <div class="language-panel" aria-label="Language selector">
+          <button type="button" data-lang-button="zh-TW">TW</button>
+          <button type="button" data-lang-button="zh-CN">CN</button>
+          <button type="button" data-lang-button="en">EN</button>
         </div>
-        <div class="card-grid">
-          <article class="card">
-            <h3>Personal Website</h3>
-            <p>A public homepage that can be deployed, indexed, and improved over time.</p>
-          </article>
-          <article class="card">
-            <h3>Technical Projects</h3>
-            <p>Future space for GitHub links, screenshots, architecture notes, and outcomes.</p>
-          </article>
-          <article class="card">
-            <h3>Research Notes</h3>
-            <p>A place to organize learning records, experiments, and practical solutions.</p>
-          </article>
-        </div>
-      </section>
+      </header>
 
-      <section class="section two-column" id="notes">
-        <div class="section-heading">
-          <p class="eyebrow">Notes</p>
-          <h2>Note topics</h2>
-        </div>
-        <ul class="note-list">
-          <li>Technical learning notes</li>
-          <li>Project development logs</li>
-          <li>Deployment and website maintenance records</li>
-        </ul>
-      </section>
+      <main>
+        <section class="terminal-home panel" id="home">
+          <div class="dashboard-rail" aria-label="Dashboard modules">
+            <article class="dash-module time-module">
+              <span class="panel-label" data-i18n="hero.clockLabel">Local time</span>
+              <strong id="clock">--:--:--</strong>
+              <small id="date-line">----</small>
+            </article>
+            <a class="dash-module" href="/profile.html">
+              <span data-i18n="home.placeLabel">Place</span>
+              <strong id="place-value" data-i18n="home.placeValue">Detecting location</strong>
+              <small id="place-meta" data-i18n="home.placeMeta">IP based estimate</small>
+            </a>
+            <article class="dash-module">
+              <span data-i18n="home.weatherLabel">Weather</span>
+              <strong id="weather-value" data-i18n="home.weatherValue">Loading weather</strong>
+              <small id="weather-meta" data-i18n="home.weatherMeta">Using estimated location</small>
+            </article>
+            <a class="dash-module" href="https://github.com/joshhuang060725" target="_blank" rel="noreferrer">
+              <span>GitHub</span>
+              <strong>joshhuang060725</strong>
+              <small data-i18n="home.githubMeta">Public code profile</small>
+            </a>
+            <article class="dash-module">
+              <span>Ping</span>
+              <strong data-i18n="home.pingValue">Static site online</strong>
+              <small>Cloudflare Pages</small>
+            </article>
+            <a class="dash-module" href="/tools.html">
+              <span>Tool</span>
+              <strong data-i18n="home.toolValue">Module entries</strong>
+              <small>Exchange / Compute / UX</small>
+            </a>
+          </div>
 
-      <section class="contact-band" id="contact">
-        <div>
-          <p class="eyebrow">Contact</p>
-          <h2>Contact</h2>
-          <p>
-            Add your real email, GitHub, LinkedIn, or contact form here once you are ready to make
-            them public.
-          </p>
-        </div>
-        <a class="button primary" href="mailto:you@example.com">you@example.com</a>
-      </section>
-    </main>
+          <aside class="jats-console module-card" aria-label="JATS identity">
+            <div class="jats-lockup">
+              <strong>JATS</strong>
+              <span>Josh Auxiliary Terminal System</span>
+            </div>
+            <p class="owner-line">- Josh Huang</p>
+            <p class="motto-line" data-i18n="home.motto">Keep the interface precise. Keep the system useful.</p>
+            <p class="console-summary" data-i18n="home.jatsSummary">
+              JATS is the system identity behind this personal portal: a local-first, modular,
+              browser-accessible workspace for public presentation and future tools.
+            </p>
+            <form class="portal-search" role="search" action="/links.html">
+              <label for="portal-search-input" data-i18n="home.searchLabel">Search portal</label>
+              <div>
+                <span aria-hidden="true">J&gt;</span>
+                <input id="portal-search-input" name="q" type="search" data-i18n-placeholder="home.searchPlaceholder" placeholder="Search modules..." />
+              </div>
+            </form>
+            <div class="console-actions">
+              <a class="button primary" href="/profile.html" data-i18n="home.primaryAction">View profile</a>
+              <a class="button ghost" href="/projects.html" data-i18n="home.secondaryAction">Explore projects</a>
+            </div>
+            <p class="console-footer"><strong>JATS</strong> Josh Auxiliary Terminal System</p>
+          </aside>
+        </section>
+      </main>
+    </div>
 
-    <footer class="site-footer">
-      <p>Copyright 2026 Personal Website. Built as a static public website.</p>
-    </footer>
+    <script src="/js/data-loader.js"></script>
+    <script src="/js/main.js"></script>
   </body>
 </html>

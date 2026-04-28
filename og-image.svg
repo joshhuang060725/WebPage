@@ -1,10 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="Personal website preview image">
-  <rect width="1200" height="630" fill="#f7f8f5"/>
-  <rect x="84" y="78" width="1032" height="474" rx="22" fill="#ffffff" stroke="#dce3dc" stroke-width="2"/>
-  <rect x="126" y="126" width="80" height="80" rx="18" fill="#22594b"/>
-  <text x="166" y="180" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="52" font-weight="700">P</text>
-  <text x="126" y="292" fill="#171b1a" font-family="Arial, sans-serif" font-size="72" font-weight="800">Personal Website</text>
-  <text x="126" y="374" fill="#56615c" font-family="Arial, sans-serif" font-size="34">Projects, notes, and public profile</text>
-  <rect x="126" y="430" width="208" height="58" rx="12" fill="#22594b"/>
-  <text x="230" y="468" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="24" font-weight="700">View Profile</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="Josh Huang personal portal preview">
+  <rect width="1200" height="630" fill="#111312"/>
+  <path d="M0 104h1200M0 208h1200M0 312h1200M0 416h1200M0 520h1200M160 0v630M320 0v630M480 0v630M640 0v630M800 0v630M960 0v630" stroke="#333333" stroke-width="1" opacity=".55"/>
+  <rect x="72" y="70" width="1056" height="490" rx="18" fill="#202020" stroke="#D6D8D9" stroke-opacity=".18" stroke-width="2"/>
+  <rect x="116" y="114" width="86" height="86" rx="10" fill="#FFD900"/>
+  <text x="159" y="173" text-anchor="middle" fill="#202020" font-family="Arial, sans-serif" font-size="58" font-weight="900">J</text>
+  <text x="116" y="270" fill="#FFD900" font-family="Arial, sans-serif" font-size="28" font-weight="800" letter-spacing="5">PERSONAL PORTAL</text>
+  <text x="116" y="356" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="72" font-weight="900">Josh Huang</text>
+  <text x="116" y="418" fill="#D6D8D9" font-family="Arial, sans-serif" font-size="34">Projects, notes, quick links, and UI/UX lab</text>
+  <rect x="116" y="472" width="246" height="58" rx="10" fill="#FFD900"/>
+  <text x="239" y="511" text-anchor="middle" fill="#202020" font-family="Arial, sans-serif" font-size="24" font-weight="900">OPEN PORTAL</text>
+  <rect x="812" y="126" width="250" height="70" rx="10" fill="#333333" stroke="#2AAACE" stroke-width="2"/>
+  <rect x="812" y="218" width="250" height="70" rx="10" fill="#333333" stroke="#FFD900" stroke-width="2"/>
+  <rect x="812" y="310" width="250" height="70" rx="10" fill="#333333" stroke="#D6D8D9" stroke-opacity=".45" stroke-width="2"/>
 </svg>

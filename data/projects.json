@@ -1,0 +1,47 @@
+[
+  {
+    "id": "personal-portal",
+    "title": {
+      "en": "Personal Portal",
+      "zh-TW": "個人門戶網站",
+      "zh-CN": "个人门户网站"
+    },
+    "description": {
+      "en": "A Cloudflare Pages site that combines public profile, project display, quick links, and UI/UX system experiments.",
+      "zh-TW": "部署於 Cloudflare Pages 的個人網站，整合公開形象、專案展示、快捷入口與 UI/UX 系統實驗。",
+      "zh-CN": "部署于 Cloudflare Pages 的个人网站，整合公开形象、项目展示、快捷入口与 UI/UX 系统实验。"
+    },
+    "status": "active",
+    "tech_stack": ["HTML", "CSS", "JavaScript", "Cloudflare Pages"]
+  },
+  {
+    "id": "jatsweb",
+    "title": {
+      "en": "JATSWeb Concept",
+      "zh-TW": "JATSWeb 概念",
+      "zh-CN": "JATSWeb 概念"
+    },
+    "description": {
+      "en": "A browser-based auxiliary terminal concept focused on local-first computation, modular data, and restrained industrial interaction design.",
+      "zh-TW": "以瀏覽器為載體的輔助終端概念，聚焦本地優先運算、模組化資料與克制的工業交互設計。",
+      "zh-CN": "以浏览器为载体的辅助终端概念，聚焦本地优先计算、模块化数据与克制的工业交互设计。"
+    },
+    "status": "concept",
+    "tech_stack": ["JSON Data", "Local-first", "Responsive UI"]
+  },
+  {
+    "id": "ui-lab",
+    "title": {
+      "en": "UI/UX Lab",
+      "zh-TW": "UI/UX 實驗室",
+      "zh-CN": "UI/UX 实验室"
+    },
+    "description": {
+      "en": "A future log for interface iterations, motion rules, palette decisions, and user-facing system patterns.",
+      "zh-TW": "未來用於記錄介面迭代、動效規則、色票決策與使用者系統模式的實驗日誌。",
+      "zh-CN": "未来用于记录界面迭代、动效规则、色票决策与用户系统模式的实验日志。"
+    },
+    "status": "planned",
+    "tech_stack": ["Design System", "Interaction", "Documentation"]
+  }
+]

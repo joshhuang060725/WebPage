@@ -1,0 +1,177 @@
+# Development Log
+
+此文件記錄重要設計決策、實作內容、驗證結果與 Git 狀態。每次較大的架構或 UI 調整都應更新。
+
+## 2026-04-29 - Static Personal Portal Foundation
+
+### Context
+
+使用者希望先建立基本公開網站，其餘內容後續再迭代。網站需要能部署到 GitHub + Cloudflare Pages，並可被搜尋引擎索引。
+
+### Decisions
+
+1. 採用純靜態架構，避免第一版引入 build 流程。
+2. 使用 `index.html`、`styles.css`、`js/main.js`、`js/data-loader.js`。
+3. 內容資料放入 `data/*.json`，為未來 API 替換預留。
+4. SEO 保留 canonical、robots、Open Graph、Twitter Card、JSON-LD。
+5. 私人功能不在公開網站暴露，只顯示 locked / planned / coming soon 狀態。
+
+### Implemented
+
+- 建立首頁。
+- 建立資料檔：
+  - `data/profile.json`
+  - `data/projects.json`
+  - `data/shortcuts.json`
+  - `data/tools.json`
+  - `data/i18n.json`
+- 建立 `robots.txt`、`sitemap.xml`、`favicon.svg`、`og-image.svg`。
+- 建立資料載入與多語系渲染。
+
+### UI/UX Notes
+
+- 第一版以深色簡約工業風為方向。
+- 以公開個人形象、專案、工具入口為主。
+- 避免把私人管理能力放進公開頁。
+
+### Verification
+
+- JSON parse passed.
+- JavaScript syntax passed.
+- Local HTTP route check passed.
+- Desktop/mobile layout checked.
+- Language switching checked.
+
+### Git State
+
+Local commit only. Not pushed by user request.
+
+## 2026-04-29 - Multi Page Portal Structure
+
+### Context
+
+使用者希望不同區塊功能用跳轉不同頁面的方式實作。首頁只作為個人宣傳與入口，不承載完整內容。
+
+### Decisions
+
+1. 首頁改為個人宣傳 portal。
+2. 新增獨立頁面：
+   - `profile.html`
+   - `projects.html`
+   - `links.html`
+   - `tools.html`
+3. 左側導航改為頁面跳轉。
+4. `JATS / Josh Auxiliary Terminal System` 作為固定品牌 lockup，不進 i18n。
+5. Sitemap 新增所有公開頁。
+
+### Implemented
+
+- 新增四個內容頁。
+- 更新 navigation。
+- 更新 README 與 development guidelines。
+- 更新 `sitemap.xml`。
+
+### UI/UX Notes
+
+- 首頁保持簡潔，讓使用者快速理解網站身份。
+- 子頁面負責承載細節內容，方便後續擴充。
+
+### Verification
+
+- `/`
+- `/profile.html`
+- `/projects.html`
+- `/links.html`
+- `/tools.html`
+
+以上路由本地 200。
+
+### Git State
+
+Local commit only. Not pushed by user request.
+
+## 2026-04-29 - JATS Terminal Dashboard Homepage
+
+### Context
+
+使用者提供手繪草圖，希望首頁更像一個黑色終端面板：
+
+- 左側仍保留主要導航。
+- 首頁主畫面左側列出 Time、place、weather、GitHub、Ping、Tool。
+- 右側大字 `JATS`。
+- `JATS` 下方固定顯示 `Josh Auxiliary Terminal System`。
+- 再放 Josh、格言、搜尋框與概要文字。
+- 概要文字要比原先小幾個點。
+
+### Decisions
+
+1. 首頁使用單一大型 `.terminal-home` 面板。
+2. 面板左側是 `.dashboard-rail`，每個資訊模組是獨立 `.dash-module` 方框。
+3. 面板右側是 `.jats-console`，負責品牌、motto、search 和 CTA。
+4. Search 第一版只作為 portal entry UI，action 指向公開安全的 `links.html`。
+5. Place 使用 public IP 做城市級估算。
+6. Weather 使用估算座標查詢當前天氣。
+7. `JATS` lockup 不使用 `data-i18n`，確保切語言時不變。
+8. 介紹文字使用 `.console-summary`，字級低於 motto 和品牌標題。
+
+### Implemented
+
+- 重構 `index.html` 首頁結構。
+- 新增 terminal dashboard CSS。
+- 將首頁模組改成彼此隔離的方框。
+- 新增 IP geolocation 與 current weather 前端載入。
+- 新增 search placeholder i18n 支援。
+- 補齊 `data/i18n.json` 的首頁 dashboard key。
+- 補回 Twitter metadata。
+- 重寫 README、開發準則與開發日誌，確保文件可維護。
+
+### UI/UX Notes
+
+- 首頁從傳統 hero 轉為控制台式門戶。
+- 左側資訊模組對應草圖中的快速狀態列。
+- 每一個狀態區塊都隔離成卡片，降低資訊互相干擾。
+- 右側保留強品牌視覺，讓第一眼看到 JATS。
+- Search 與 Tool 都是未來功能入口，不暴露私密服務。
+- IP 位置為城市級估算，只作為使用者所在地天氣查詢依據。
+
+### Verification
+
+- JSON parse passed.
+- JavaScript syntax passed.
+- Local HTTP route check passed for:
+  - `/`
+  - `/profile.html`
+  - `/projects.html`
+  - `/links.html`
+  - `/tools.html`
+  - `/data/i18n.json`
+  - `/data/tools.json`
+  - `/sitemap.xml`
+  - `/robots.txt`
+- Headless Edge desktop/tablet/mobile check passed.
+- No layout overflow detected after module card adjustment.
+- IP location module resolved to city-level location during local test.
+- Weather module resolved current weather from estimated location during local test.
+- Language switching verified; `JATS` remained unchanged.
+
+### Git State
+
+Local only. Not pushed by request.
+
+## Log Template
+
+```markdown
+## YYYY-MM-DD - Title
+
+### Context
+
+### Decisions
+
+### Implemented
+
+### UI/UX Notes
+
+### Verification
+
+### Git State
+```
