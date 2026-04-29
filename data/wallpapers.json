@@ -1,6 +1,42 @@
 {
   "backgrounds": [
     {
+      "id": "moon-75457d",
+      "title": {
+        "en": "Moon",
+        "zh-TW": "皓月",
+        "zh-CN": "皓月"
+      },
+      "description": {
+        "en": "Uploaded through the local admin tool.",
+        "zh-TW": "透過本地後台工具上傳。",
+        "zh-CN": "通过本地后台工具上传。"
+      },
+      "status": "local",
+      "type": "image",
+      "src": "/assets/wallpapers/moon-75457d.jpg",
+      "accent": "#f9fafc",
+      "tone": "blue"
+    },
+    {
+      "id": "mountain-c7ddb0",
+      "title": {
+        "en": "Mountain",
+        "zh-TW": "雪山",
+        "zh-CN": "雪山"
+      },
+      "description": {
+        "en": "Uploaded through the local admin tool.",
+        "zh-TW": "透過本地後台工具上傳。",
+        "zh-CN": "通过本地后台工具上传。"
+      },
+      "status": "local",
+      "type": "image",
+      "src": "/assets/wallpapers/mountain-c7ddb0.jpg",
+      "accent": "#e2c580",
+      "tone": "warm"
+    },
+    {
       "id": "girl-a4ec35",
       "title": {
         "en": "Girl",
