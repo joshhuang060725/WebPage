@@ -1,0 +1,96 @@
+{
+  "backgrounds": [
+    {
+      "id": "jats-grid",
+      "title": {
+        "en": "JATS Grid",
+        "zh-TW": "JATS 網格",
+        "zh-CN": "JATS 网格"
+      },
+      "description": {
+        "en": "Default dark grid terminal surface.",
+        "zh-TW": "預設深色終端網格畫面。",
+        "zh-CN": "默认深色终端网格画面。"
+      },
+      "status": "placeholder",
+      "type": "css",
+      "src": "",
+      "accent": "#FFD900",
+      "tone": "yellow"
+    },
+    {
+      "id": "blue-signal",
+      "title": {
+        "en": "Blue Signal",
+        "zh-TW": "藍色訊號",
+        "zh-CN": "蓝色信号"
+      },
+      "description": {
+        "en": "Cool blue system surface reserved for future assets.",
+        "zh-TW": "保留給未來素材的冷藍系統畫面。",
+        "zh-CN": "保留给未来素材的冷蓝系统画面。"
+      },
+      "status": "placeholder",
+      "type": "css",
+      "src": "",
+      "accent": "#2AAACE",
+      "tone": "blue"
+    },
+    {
+      "id": "warm-terminal",
+      "title": {
+        "en": "Warm Terminal",
+        "zh-TW": "暖色終端",
+        "zh-CN": "暖色终端"
+      },
+      "description": {
+        "en": "Warm system surface reserved for a future rendered desktop.",
+        "zh-TW": "保留給未來渲染桌面的暖色系統畫面。",
+        "zh-CN": "保留给未来渲染桌面的暖色系统画面。"
+      },
+      "status": "placeholder",
+      "type": "css",
+      "src": "",
+      "accent": "#E5622B",
+      "tone": "warm"
+    },
+    {
+      "id": "mono-glass",
+      "title": {
+        "en": "Mono Glass",
+        "zh-TW": "單色玻璃",
+        "zh-CN": "单色玻璃"
+      },
+      "description": {
+        "en": "Low-noise monochrome surface for a clean desktop.",
+        "zh-TW": "低干擾的單色純淨桌面。",
+        "zh-CN": "低干扰的单色纯净桌面。"
+      },
+      "status": "placeholder",
+      "type": "css",
+      "src": "",
+      "accent": "#D6D8D9",
+      "tone": "mono"
+    }
+  ],
+  "links": [
+    { "label": "Home", "url": "/" },
+    { "label": "Bio", "url": "/profile.html" },
+    { "label": "Projects", "url": "/projects.html" },
+    { "label": "Links", "url": "/links.html" },
+    { "label": "Tools", "url": "/tools.html" },
+    { "label": "GitHub", "url": "https://github.com/joshhuang060725" },
+    { "label": "Google", "url": "https://www.google.com/" },
+    { "label": "YouTube", "url": "https://www.youtube.com/" },
+    { "label": "ChatGPT", "url": "https://chatgpt.com/" },
+    { "label": "Cloudflare", "url": "https://dash.cloudflare.com/" },
+    { "label": "MDN", "url": "https://developer.mozilla.org/" },
+    { "label": "W3C", "url": "https://www.w3.org/" },
+    { "label": "Open-Meteo", "url": "https://open-meteo.com/" },
+    { "label": "Git Docs", "url": "https://git-scm.com/doc" },
+    { "label": "Can I Use", "url": "https://caniuse.com/" },
+    { "label": "Pages", "url": "https://pages.cloudflare.com/" },
+    { "label": "Robots", "url": "/robots.txt" },
+    { "label": "Sitemap", "url": "/sitemap.xml" }
+  ]
+}

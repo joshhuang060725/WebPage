@@ -3,26 +3,26 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Tools | Josh Huang</title>
-    <meta name="description" content="Tool entry page for Exchange, Compute Lab, and UX Lab modules." />
+    <title>Wallpapers | Josh Huang</title>
+    <meta name="description" content="Dynamic desktop wallpaper switcher and future wallpaper asset gallery for Josh Huang's JATS portal." />
     <meta name="robots" content="index, follow" />
     <meta name="author" content="Josh Huang" />
     <meta name="theme-color" content="#202020" />
-    <link rel="canonical" href="https://joshhuang.ccwu.cc/tools.html" />
+    <link rel="canonical" href="https://joshhuang.ccwu.cc/wallpapers.html" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/styles.css?v=20260429-3" />
   </head>
-  <body data-page="tools">
+  <body data-page="wallpapers">
     <div class="shell">
       <aside class="side-nav" aria-label="Primary navigation" data-nav-collapsible>
         <a class="brand" href="/" aria-label="Josh Huang portal home"><span class="brand-mark">J</span><span><strong>JOSH</strong><small data-i18n="nav.system">Personal Portal</small></span></a>
         <nav class="nav-links">
           <a href="/" data-i18n="nav.portal">Portal</a>
           <a href="/profile.html" data-i18n="nav.bio">Bio</a>
-          <a href="/wallpapers.html" data-i18n="nav.wallpapers">Wallpapers</a>
+          <a href="/wallpapers.html" aria-current="page" data-i18n="nav.wallpapers">Wallpapers</a>
           <a href="/projects.html" data-i18n="nav.projects">Projects</a>
           <a href="/links.html" data-i18n="nav.links">Quick Links</a>
-          <a href="/tools.html" aria-current="page" data-i18n="nav.tools">Tools</a>
+          <a href="/tools.html" data-i18n="nav.tools">Tools</a>
         </nav>
         <div class="language-panel" aria-label="Language selector">
           <button type="button" data-lang-button="zh-TW">TW</button>
@@ -49,17 +49,40 @@
           <button type="button" data-theme-button="dark">NIGHT</button>
         </div>
       </header>
-      <main>
-        <section class="page-hero">
-          <p class="eyebrow" data-i18n="tools.eyebrow">Functional modules</p>
-          <h1 data-i18n="tools.title">Tool entries</h1>
-          <p data-i18n="tools.description">
-            The first release exposes module cards only. Runtime functions can connect later through
-            the same data loading layer.
-          </p>
-        </section>
-        <section class="section">
-          <div class="tool-grid" id="tool-list" aria-live="polite"></div>
+      <main class="wallpaper-main">
+        <section class="wallpaper-viewport" id="wallpaper-viewport" aria-label="Dynamic wallpaper workspace">
+          <div class="wallpaper-track" id="wallpaper-track">
+            <section class="wallpaper-screen wallpaper-screen-terminal" aria-label="Clean terminal wallpaper">
+              <div class="wallpaper-bg-layer" aria-hidden="true"></div>
+              <div class="wallpaper-terminal">
+                <p>JATS WALLPAPER</p>
+                <h1>Terminal Desktop</h1>
+                <span>Clean display surface / no widgets</span>
+              </div>
+            </section>
+
+            <section class="wallpaper-screen wallpaper-screen-links" aria-label="Search and shortcut wallpaper">
+              <div class="wallpaper-bg-layer" aria-hidden="true"></div>
+              <form class="wallpaper-search" action="https://www.google.com/search" method="get" role="search">
+                <label for="wallpaper-search-input">J&gt;</label>
+                <input id="wallpaper-search-input" name="q" type="search" placeholder="Search the web..." autocomplete="off" />
+                <button type="submit">Search</button>
+              </form>
+              <div class="wallpaper-link-grid" id="wallpaper-link-grid" aria-label="Preset shortcuts"></div>
+            </section>
+          </div>
+
+          <div class="wallpaper-panel-switch" aria-label="Wallpaper panel selector">
+            <button type="button" data-wallpaper-panel="0" aria-label="Show clean terminal"></button>
+            <button type="button" data-wallpaper-panel="1" aria-label="Show search shortcuts"></button>
+          </div>
+
+          <aside class="wallpaper-bg-dock" id="wallpaper-bg-dock" aria-label="Background selector">
+            <button class="wallpaper-bg-handle" type="button" aria-expanded="false">
+              Backgrounds
+            </button>
+            <div class="wallpaper-bg-options" id="wallpaper-bg-options"></div>
+          </aside>
         </section>
       </main>
     </div>

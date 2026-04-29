@@ -16,29 +16,10 @@
       tags: ["UI/UX", "Web", "Engineering"],
       contacts: [{ label: "GitHub", url: "https://github.com/joshhuang060725", public: true }]
     },
-    projects: [
-      {
-        title: { en: "Personal Portal" },
-        description: { en: "A public profile and UI/UX system experiment hosted as a static site." },
-        status: "active",
-        tech_stack: ["HTML", "CSS", "JavaScript"]
-      }
-    ],
-    shortcuts: [
-      {
-        name: "GitHub",
-        description: { en: "Public code profile and project repositories." },
-        url: "https://github.com/joshhuang060725",
-        category: "public"
-      }
-    ],
-    tools: [
-      {
-        name: "Exchange",
-        description: { en: "Currency terminal entry reserved for a later release." },
-        status: "coming soon"
-      }
-    ],
+    projects: [],
+    shortcuts: [],
+    tools: [],
+    wallpapers: [],
     i18n: fallbackI18n
   };
 
@@ -53,7 +34,10 @@
       locationError: false,
       weatherError: false,
       pingError: false
-    }
+    },
+    selectedWallpaper: null,
+    wallpaperPanel: 0,
+    wallpaperWheelLocked: false
   };
 
   function detectLanguage() {
@@ -260,6 +244,168 @@
     });
   }
 
+  function getWallpaperBackgrounds() {
+    const source = state.data.wallpapers;
+    if (Array.isArray(source)) return source;
+    return source?.backgrounds || [];
+  }
+
+  function getWallpaperLinks() {
+    const source = state.data.wallpapers;
+    return Array.isArray(source) ? [] : source?.links || [];
+  }
+
+  function setWallpaperPanel(index) {
+    const panelIndex = index > 0 ? 1 : 0;
+    const viewport = document.getElementById("wallpaper-viewport");
+    const track = document.getElementById("wallpaper-track");
+    if (!viewport || !track) return;
+
+    state.wallpaperPanel = panelIndex;
+    viewport.dataset.activePanel = String(panelIndex);
+    track.style.transform = `translateX(-${panelIndex * 50}%)`;
+    document.querySelectorAll("[data-wallpaper-panel]").forEach((button) => {
+      button.classList.toggle("is-active", Number(button.dataset.wallpaperPanel) === panelIndex);
+    });
+  }
+
+  function selectWallpaper(wallpaper) {
+    const viewport = document.getElementById("wallpaper-viewport");
+    if (!viewport || !wallpaper) return;
+
+    state.selectedWallpaper = wallpaper;
+    viewport.dataset.wallpaperTone = wallpaper.tone || "yellow";
+    viewport.style.setProperty("--wallpaper-accent", wallpaper.accent || "#FFD900");
+    viewport.style.setProperty("--wallpaper-name", `"${localized(wallpaper.title) || "Wallpaper"}"`);
+
+    if (wallpaper.src) {
+      viewport.style.setProperty("--wallpaper-image", `url("${wallpaper.src}")`);
+      viewport.classList.add("has-wallpaper-image");
+    } else {
+      viewport.style.removeProperty("--wallpaper-image");
+      viewport.classList.remove("has-wallpaper-image");
+    }
+
+    document.querySelectorAll("[data-wallpaper-id]").forEach((button) => {
+      button.classList.toggle("is-active", button.dataset.wallpaperId === wallpaper.id);
+    });
+  }
+
+  function renderWallpaperLinks() {
+    const grid = document.getElementById("wallpaper-link-grid");
+    if (!grid) return;
+
+    grid.innerHTML = "";
+    getWallpaperLinks().slice(0, 18).forEach((link) => {
+      const anchor = document.createElement("a");
+      anchor.className = "wallpaper-link-tile";
+      anchor.href = link.url || "#";
+      anchor.textContent = link.label || "Link";
+
+      if (/^https?:\/\//i.test(anchor.href) && !anchor.href.startsWith(location.origin)) {
+        anchor.target = "_blank";
+        anchor.rel = "noreferrer";
+      }
+
+      grid.append(anchor);
+    });
+  }
+
+  function renderWallpaperBackgrounds() {
+    const options = document.getElementById("wallpaper-bg-options");
+    if (!options) return;
+
+    const backgrounds = getWallpaperBackgrounds();
+    options.innerHTML = "";
+
+    if (!backgrounds.length) {
+      const empty = document.createElement("span");
+      empty.className = "wallpaper-bg-empty";
+      empty.textContent = t("wallpapers.empty");
+      options.append(empty);
+      return;
+    }
+
+    if (!state.selectedWallpaper || !backgrounds.some((item) => item.id === state.selectedWallpaper.id)) {
+      state.selectedWallpaper = backgrounds[0];
+    }
+
+    backgrounds.forEach((wallpaper) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "wallpaper-bg-option";
+      button.dataset.wallpaperId = wallpaper.id;
+      button.style.setProperty("--wallpaper-accent", wallpaper.accent || "#FFD900");
+      button.innerHTML = `
+        <span>${localized(wallpaper.title)}</span>
+        <small>${wallpaper.status || "placeholder"}</small>
+      `;
+      button.addEventListener("click", () => selectWallpaper(wallpaper));
+      options.append(button);
+    });
+
+    selectWallpaper(state.selectedWallpaper);
+  }
+
+  function renderWallpapers() {
+    renderWallpaperLinks();
+    renderWallpaperBackgrounds();
+    setWallpaperPanel(state.wallpaperPanel);
+  }
+
+  function setupWallpaperInteractions() {
+    const viewport = document.getElementById("wallpaper-viewport");
+    const dock = document.getElementById("wallpaper-bg-dock");
+    const handle = dock?.querySelector(".wallpaper-bg-handle");
+    if (!viewport || viewport.dataset.wallpaperReady === "true") return;
+
+    viewport.dataset.wallpaperReady = "true";
+
+    document.querySelectorAll("[data-wallpaper-panel]").forEach((button) => {
+      button.addEventListener("click", () => setWallpaperPanel(Number(button.dataset.wallpaperPanel)));
+    });
+
+    viewport.addEventListener(
+      "wheel",
+      (event) => {
+        const delta = Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
+        if (Math.abs(delta) < 18) return;
+        event.preventDefault();
+        if (state.wallpaperWheelLocked) return;
+
+        setWallpaperPanel(delta > 0 ? 1 : 0);
+        state.wallpaperWheelLocked = true;
+        window.setTimeout(() => {
+          state.wallpaperWheelLocked = false;
+        }, 640);
+      },
+      { passive: false }
+    );
+
+    let touchStartX = 0;
+    let touchStartY = 0;
+    viewport.addEventListener("touchstart", (event) => {
+      const touch = event.touches[0];
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
+    });
+
+    viewport.addEventListener("touchend", (event) => {
+      const touch = event.changedTouches[0];
+      const dx = touch.clientX - touchStartX;
+      const dy = touch.clientY - touchStartY;
+      if (Math.abs(dx) < 44 || Math.abs(dx) < Math.abs(dy)) return;
+      setWallpaperPanel(dx < 0 ? 1 : 0);
+    });
+
+    if (dock && handle) {
+      handle.addEventListener("click", () => {
+        const isOpen = dock.classList.toggle("is-open");
+        handle.setAttribute("aria-expanded", String(isOpen));
+      });
+    }
+  }
+
   function renderMeta() {
     const lastModified = document.getElementById("last-modified");
     if (lastModified) {
@@ -273,33 +419,9 @@
 
   function weatherLabel(code) {
     const labels = {
-      en: {
-        clear: "Clear",
-        cloudy: "Cloudy",
-        fog: "Fog",
-        drizzle: "Drizzle",
-        rain: "Rain",
-        snow: "Snow",
-        storm: "Storm"
-      },
-      "zh-TW": {
-        clear: "晴朗",
-        cloudy: "多雲",
-        fog: "有霧",
-        drizzle: "毛毛雨",
-        rain: "降雨",
-        snow: "降雪",
-        storm: "雷雨"
-      },
-      "zh-CN": {
-        clear: "晴朗",
-        cloudy: "多云",
-        fog: "有雾",
-        drizzle: "毛毛雨",
-        rain: "降雨",
-        snow: "降雪",
-        storm: "雷雨"
-      }
+      en: { clear: "Clear", cloudy: "Cloudy", fog: "Fog", drizzle: "Drizzle", rain: "Rain", snow: "Snow", storm: "Storm" },
+      "zh-TW": { clear: "晴朗", cloudy: "多雲", fog: "有霧", drizzle: "毛毛雨", rain: "降雨", snow: "降雪", storm: "雷雨" },
+      "zh-CN": { clear: "晴朗", cloudy: "多云", fog: "有雾", drizzle: "毛毛雨", rain: "降雨", snow: "降雪", storm: "雷雨" }
     };
     const dictionary = labels[state.lang] || labels.en;
 
@@ -362,10 +484,7 @@
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), timeout);
     try {
-      const response = await fetch(url, {
-        signal: controller.signal,
-        headers: { Accept: "application/json" }
-      });
+      const response = await fetch(url, { signal: controller.signal, headers: { Accept: "application/json" } });
       if (!response.ok) throw new Error(`Request failed: ${response.status}`);
       return await response.json();
     } finally {
@@ -438,13 +557,32 @@
 
   function setupNavigationRail() {
     document.querySelectorAll("[data-nav-collapsible]").forEach((nav) => {
+      let pointerInside = false;
+
+      nav.addEventListener("pointerenter", () => {
+        pointerInside = true;
+      });
+
       nav.addEventListener("click", (event) => {
         const target = event.target;
         if (target.closest("a, button")) return;
         nav.classList.toggle("is-expanded");
       });
+
       nav.addEventListener("mouseleave", () => {
+        pointerInside = false;
         nav.classList.remove("is-expanded");
+        if (nav.contains(document.activeElement) && document.activeElement.matches("button")) {
+          document.activeElement.blur();
+        }
+      });
+
+      nav.addEventListener("focusout", () => {
+        window.setTimeout(() => {
+          if (!pointerInside && !nav.contains(document.activeElement)) {
+            nav.classList.remove("is-expanded");
+          }
+        }, 0);
       });
     });
   }
@@ -455,6 +593,7 @@
     renderProjects();
     renderShortcuts();
     renderTools();
+    renderWallpapers();
     renderMeta();
     renderRuntimeStatus();
     updateClock();
@@ -468,6 +607,7 @@
       button.addEventListener("click", () => setThemeMode(button.dataset.themeButton));
     });
     setupNavigationRail();
+    setupWallpaperInteractions();
     updateTheme();
 
     try {

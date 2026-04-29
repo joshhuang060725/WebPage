@@ -35,6 +35,7 @@ Josh Auxiliary Terminal System
 WebPage/
 |-- index.html                  # 首頁：JATS 終端式個人宣傳入口
 |-- profile.html                # 個人介紹與公開聯絡方式
+|-- wallpapers.html             # 動態桌布預覽與切換頁
 |-- projects.html               # 專案展示頁
 |-- links.html                  # 公開安全快速連結
 |-- tools.html                  # Exchange / Compute Lab / UX Lab 入口
@@ -47,6 +48,7 @@ WebPage/
 |   |-- projects.json           # 專案卡片資料
 |   |-- shortcuts.json          # 公開快速連結
 |   |-- tools.json              # 工具入口狀態
+|   |-- wallpapers.json         # 動態桌布清單與素材路徑
 |   `-- i18n.json               # zh-TW / zh-CN / en 字典
 |-- favicon.svg
 |-- og-image.svg
@@ -99,6 +101,7 @@ WebPage/
 
 - `index.html`: 個人宣傳首頁與 JATS portal。
 - `profile.html`: 公開個人介紹、技能標籤、公開聯絡方式。
+- `wallpapers.html`: 動態桌布預覽與切換，真實素材後續放入 JSON。
 - `projects.html`: 專案展示，後續可擴充案例研究。
 - `links.html`: 只放公開安全連結。
 - `tools.html`: 工具模組入口，未完成前只顯示狀態。
@@ -164,6 +167,7 @@ python -m json.tool data\profile.json > $null
 python -m json.tool data\projects.json > $null
 python -m json.tool data\shortcuts.json > $null
 python -m json.tool data\tools.json > $null
+python -m json.tool data\wallpapers.json > $null
 python -m json.tool data\i18n.json > $null
 node --check js\data-loader.js
 node --check js\main.js
@@ -173,6 +177,7 @@ node --check js\main.js
 
 - `/`
 - `/profile.html`
+- `/wallpapers.html`
 - `/projects.html`
 - `/links.html`
 - `/tools.html`
@@ -197,6 +202,43 @@ Production branch: main
 ```text
 joshhuang.ccwu.cc
 ```
+
+## Wallpaper Interface Architecture
+
+`wallpapers.html` is treated as a dedicated desktop-surface application, not a normal content page.
+
+Core structure:
+
+```text
+wallpaper-viewport
+|-- wallpaper-track
+|   |-- wallpaper-screen-terminal  # clean terminal-style screen
+|   `-- wallpaper-screen-links     # same background + search + 18 shortcut tiles
+|-- wallpaper-panel-switch         # explicit left/right selector
+`-- wallpaper-bg-dock              # bottom drawer for background presets
+```
+
+Interaction model:
+
+- Desktop: mouse wheel switches between the two screens.
+- Mobile / iPad: horizontal swipe switches between the two screens.
+- The track only snaps to screen `0` or screen `1`; there is no resting state in the middle.
+- The bottom background drawer expands on hover, focus, or click/touch.
+- Selecting a background writes CSS variables on `#wallpaper-viewport`, so both screens update together.
+
+Data model:
+
+```text
+data/wallpapers.json
+|-- backgrounds[]  # future image/video/css background presets
+`-- links[]        # public shortcut set rendered as the 6 x 3 grid
+```
+
+Public boundary:
+
+- Shortcut tiles must remain public-safe.
+- Do not add private dashboards, tunnel URLs, admin panels, tokens, or local network addresses.
+- Future image/video assets should be referenced by public static paths only, for example `/assets/wallpapers/name.webp`.
 
 ## Maintenance Rule
 

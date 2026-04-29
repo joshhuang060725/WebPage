@@ -158,6 +158,90 @@ Local commit only. Not pushed by user request.
 
 Local only. Not pushed by request.
 
+## 2026-04-29 - Dual Panel Wallpaper Interface
+
+### Context
+
+User clarified that the wallpaper page should not be a normal preview/list page. It should behave like a dynamic desktop surface with two main screens: a clean terminal wallpaper and a browser/search shortcut wallpaper.
+
+### Decisions
+
+1. Replace the previous preview-card layout with a full-screen two-panel track.
+2. Keep panel switching binary: the interface can only rest on the left screen or the right screen.
+3. Use desktop wheel input for panel switching and touch swipe input for mobile/iPad.
+4. Put background presets in a bottom drawer that expands on hover, focus, or click/touch.
+5. Store both backgrounds and public shortcut links in `data/wallpapers.json`.
+6. Keep shortcuts public-safe and avoid private/admin/tunnel/local service URLs.
+
+### Implemented
+
+- Rebuilt `wallpapers.html` around:
+  - `.wallpaper-viewport`
+  - `.wallpaper-track`
+  - `.wallpaper-screen-terminal`
+  - `.wallpaper-screen-links`
+  - `.wallpaper-bg-dock`
+- Added 4 placeholder background presets.
+- Added 18 public shortcut tiles for the 6 x 3 grid.
+- Added wheel, swipe, explicit panel button, and background switching logic in `js/main.js`.
+- Added full-screen wallpaper CSS, responsive mobile sizing, bottom drawer behavior, and synchronized CSS variable background updates.
+- Updated README and development guidelines with the wallpaper architecture and maintenance rules.
+
+### Verification
+
+- `node --check js\main.js` passed.
+- `node --check js\data-loader.js` passed.
+- `python -m json.tool data\wallpapers.json` passed.
+- `python -m json.tool data\i18n.json` passed.
+- Local HTTP route check passed for `/wallpapers.html`, versioned CSS/JS, and `/data/wallpapers.json`.
+- Headless Edge render check passed:
+  - 18 shortcut tiles rendered.
+  - 4 background options rendered.
+  - wheel input switched from panel 0 to panel 1.
+  - background selection changed the active synchronized tone.
+  - mobile viewport kept the search box and 18 tiles visible.
+
+### Git State
+
+Local working tree only. Not committed and not pushed by user request.
+
+## 2026-04-29 - Navigation Collapse and Wallpaper Grid Direction
+
+### Context
+
+User reported that after changing language or display mode in the left navigation, moving the mouse away did not collapse the rail. User also clarified that the wallpaper shortcut grid should be 6 x 3 instead of 3 x 6.
+
+### Decisions
+
+1. Treat the navigation issue as a focus retention bug: button focus inside the rail kept `:focus-within` active after mouse leave.
+2. Clear button focus on mouse leave so pointer usage collapses naturally.
+3. Keep keyboard focus behavior available through normal focus handling.
+4. Change the wallpaper shortcut grid direction to 6 columns and 3 rows.
+
+### Implemented
+
+- Updated `setupNavigationRail()` to remove expanded state and blur focused buttons when the pointer leaves the side rail.
+- Added focus-out cleanup for the navigation rail.
+- Changed `.wallpaper-link-grid` to `repeat(6)` columns and `repeat(3)` rows.
+- Updated README and development guidelines to document the 6 x 3 grid.
+
+### Verification
+
+- JavaScript syntax check passed.
+- Wallpaper JSON parse passed.
+- i18n JSON parse passed.
+- Local route check passed for `/`, `/wallpapers.html`, versioned CSS/JS, and `/data/wallpapers.json`.
+- Headless Edge verification passed:
+  - desktop wallpaper grid rendered 18 tiles as 6 columns x 3 rows.
+  - mobile wallpaper grid rendered 18 tiles as 6 columns x 3 rows.
+  - wheel input switched the wallpaper panel from `0` to `1`.
+  - side navigation expanded to 280px on hover, then collapsed to 74px after clicking DAY and moving the pointer away.
+  - focus returned to `body` after pointer leave, preventing `:focus-within` from keeping the rail expanded.
+
+### Git State
+
+Local working tree only. Not committed and not pushed by user request.
+
 ## Log Template
 
 ## 2026-04-29 - Asset Cache Busting
@@ -232,6 +316,37 @@ User requested three interaction upgrades:
 ### Git State
 
 Pending commit and push.
+
+## 2026-04-29 - Wallpaper Page
+
+### Context
+
+User requested a new dynamic wallpaper page. The page should be accessible from the left navigation between Bio and Projects. Real wallpaper assets will be uploaded later, so this version only needs the switching structure.
+
+### Decisions
+
+1. Add `wallpapers.html` as a dedicated page instead of placing wallpaper controls on the homepage.
+2. Add `data/wallpapers.json` so future images or video loops can be registered without editing page markup.
+3. Keep the first version public and asset-safe: no private storage paths, no upload surface, no admin controls.
+4. Provide a preview stage and selectable wallpaper cards using CSS placeholders until real assets are added.
+
+### Implemented
+
+- Added `wallpapers.html`.
+- Added `data/wallpapers.json`.
+- Added `nav.wallpapers` i18n strings.
+- Added wallpaper rendering and selection logic in `js/main.js`.
+- Added wallpaper preview/list styling in `styles.css`.
+- Added the page to all desktop side navigation entries.
+- Added the page to `sitemap.xml`.
+
+### Verification
+
+Pending local verification.
+
+### Git State
+
+Pending commit. Not pushed by request.
 
 ```markdown
 ## YYYY-MM-DD - Title

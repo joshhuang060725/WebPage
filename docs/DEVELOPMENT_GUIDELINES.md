@@ -34,6 +34,7 @@
 用途：
 
 - `profile.html`: 個人資料與公開聯絡方式。
+- `wallpapers.html`: 動態桌布預覽與切換，不提供公開上傳。
 - `projects.html`: 專案展示。
 - `links.html`: 公開安全快速連結。
 - `tools.html`: 工具入口與狀態。
@@ -201,6 +202,24 @@ GET /api/i18n
 
 但 API response 必須維持同樣 shape，避免 UI 層重寫。
 
+## Wallpaper Page Standards
+
+`wallpapers.html` is an application-like page with two full-screen panels:
+
+- Panel 0: a clean terminal wallpaper surface.
+- Panel 1: the same wallpaper surface plus browser search and a fixed 6 x 3 shortcut grid.
+
+Implementation rules:
+
+- Keep both panels inside one `.wallpaper-track`.
+- Change panels only through `setWallpaperPanel(0 | 1)`.
+- Do not allow a resting state between panels.
+- Desktop input uses wheel gestures; touch devices use horizontal swipe.
+- Background presets are stored in `data/wallpapers.json` under `backgrounds`.
+- Shortcut tiles are stored in `data/wallpapers.json` under `links` and must remain public-safe.
+- A selected background updates CSS variables on `#wallpaper-viewport`, so both panels stay synchronized.
+- Future images/videos should be referenced by public static paths. Do not add upload, admin, token, tunnel, or local LAN features to this public page.
+
 ## Security Boundary
 
 禁止進 repo 或公開前端：
@@ -228,6 +247,7 @@ python -m json.tool data\profile.json > $null
 python -m json.tool data\projects.json > $null
 python -m json.tool data\shortcuts.json > $null
 python -m json.tool data\tools.json > $null
+python -m json.tool data\wallpapers.json > $null
 python -m json.tool data\i18n.json > $null
 node --check js\data-loader.js
 node --check js\main.js
@@ -237,6 +257,7 @@ Browser route check:
 
 - `/`
 - `/profile.html`
+- `/wallpapers.html`
 - `/projects.html`
 - `/links.html`
 - `/tools.html`
