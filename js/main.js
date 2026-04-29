@@ -44,12 +44,15 @@
 
   let state = {
     lang: detectLanguage(),
+    themeMode: detectThemeMode(),
     data: fallbackData,
     runtime: {
       geo: null,
       weather: null,
+      latency: null,
       locationError: false,
-      weatherError: false
+      weatherError: false,
+      pingError: false
     }
   };
 
@@ -61,6 +64,30 @@
     if (/^zh-(tw|hk|mo)$/i.test(lang)) return "zh-TW";
     if (/^zh/i.test(lang)) return "zh-CN";
     return "en";
+  }
+
+  function detectThemeMode() {
+    return localStorage.getItem("portal-theme") || "auto";
+  }
+
+  function resolveTheme() {
+    if (state.themeMode !== "auto") return state.themeMode;
+    const hour = new Date().getHours();
+    return hour >= 7 && hour < 18 ? "light" : "dark";
+  }
+
+  function setThemeMode(mode) {
+    state.themeMode = mode;
+    localStorage.setItem("portal-theme", mode);
+    updateTheme();
+  }
+
+  function updateTheme() {
+    document.body.dataset.theme = resolveTheme();
+    document.body.dataset.themeMode = state.themeMode;
+    document.querySelectorAll("[data-theme-button]").forEach((button) => {
+      button.classList.toggle("is-active", button.dataset.themeButton === state.themeMode);
+    });
   }
 
   function t(key, fallback = key) {
@@ -122,6 +149,8 @@
     document.querySelectorAll("[data-lang-button]").forEach((button) => {
       button.classList.toggle("is-active", button.dataset.langButton === state.lang);
     });
+
+    updateTheme();
   }
 
   function renderProfile() {
@@ -289,6 +318,8 @@
     const placeMeta = document.getElementById("place-meta");
     const weatherValue = document.getElementById("weather-value");
     const weatherMeta = document.getElementById("weather-meta");
+    const pingValue = document.getElementById("ping-value");
+    const pingMeta = document.getElementById("ping-meta");
 
     if (placeValue && placeMeta) {
       if (state.runtime.geo) {
@@ -312,6 +343,17 @@
       } else if (state.runtime.weatherError) {
         weatherValue.textContent = t("home.weatherUnavailable");
         weatherMeta.textContent = t("home.weatherMeta");
+      }
+    }
+
+    if (pingValue && pingMeta) {
+      const provider = state.runtime.geo?.org || state.runtime.geo?.asn || t("home.ispUnknown");
+      if (state.runtime.latency !== null) {
+        pingValue.textContent = `${state.runtime.latency} ms`;
+        pingMeta.textContent = interpolate(t("home.pingDetail"), { isp: provider });
+      } else if (state.runtime.pingError) {
+        pingValue.textContent = t("home.pingValue");
+        pingMeta.textContent = interpolate(t("home.pingDetail"), { isp: provider });
       }
     }
   }
@@ -365,6 +407,48 @@
     renderRuntimeStatus();
   }
 
+  async function measureLatency() {
+    const pingValue = document.getElementById("ping-value");
+    if (!pingValue) return;
+
+    const samples = [];
+    for (let index = 0; index < 3; index += 1) {
+      try {
+        const started = performance.now();
+        const response = await fetch(`/robots.txt?ping=${Date.now()}-${index}`, {
+          cache: "no-store",
+          headers: { Accept: "text/plain" }
+        });
+        if (!response.ok) throw new Error(`Ping failed: ${response.status}`);
+        await response.text();
+        samples.push(performance.now() - started);
+      } catch (error) {
+        console.warn(error);
+      }
+    }
+
+    if (samples.length) {
+      state.runtime.latency = Math.round(samples.reduce((sum, value) => sum + value, 0) / samples.length);
+    } else {
+      state.runtime.pingError = true;
+    }
+
+    renderRuntimeStatus();
+  }
+
+  function setupNavigationRail() {
+    document.querySelectorAll("[data-nav-collapsible]").forEach((nav) => {
+      nav.addEventListener("click", (event) => {
+        const target = event.target;
+        if (target.closest("a, button")) return;
+        nav.classList.toggle("is-expanded");
+      });
+      nav.addEventListener("mouseleave", () => {
+        nav.classList.remove("is-expanded");
+      });
+    });
+  }
+
   function render() {
     applyTranslations();
     renderProfile();
@@ -380,6 +464,11 @@
     document.querySelectorAll("[data-lang-button]").forEach((button) => {
       button.addEventListener("click", () => setLanguage(button.dataset.langButton));
     });
+    document.querySelectorAll("[data-theme-button]").forEach((button) => {
+      button.addEventListener("click", () => setThemeMode(button.dataset.themeButton));
+    });
+    setupNavigationRail();
+    updateTheme();
 
     try {
       const loaded = await window.PortalData.load();
@@ -391,7 +480,9 @@
     document.documentElement.lang = state.lang;
     render();
     loadRuntimeStatus();
+    measureLatency();
     setInterval(updateClock, 1000);
+    setInterval(updateTheme, 60000);
   }
 
   init();

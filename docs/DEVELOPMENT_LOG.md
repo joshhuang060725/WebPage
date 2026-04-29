@@ -182,7 +182,52 @@ After deployment, mobile and iPad rendered correctly, but the development PC sho
 
 ### Verification
 
-Pending post-push live verification.
+- Local route check passed for versioned CSS/JS paths.
+- Live network check confirmed Cloudflare served current `styles.css`.
+- Clean Edge headless profile rendered the live site correctly before this patch, confirming the active Edge profile was the likely stale-resource source.
+
+### Git State
+
+Pending push with the next feature commit.
+
+## 2026-04-29 - Navigation, Theme, and Network Modules
+
+### Context
+
+User requested three interaction upgrades:
+
+- Collapse the desktop side navigation to the `J` mark by default, then expand on hover or click.
+- Add a day mode based on Apple transparent glass guidance, defaulting to time-based auto switching with manual controls.
+- Replace the static Ping card with current-device latency and show the current network provider.
+
+### Decisions
+
+1. The desktop sidebar defaults to a narrow rail and expands through `:hover`, `:focus-within`, or a click-toggled class.
+2. Theme mode supports `auto`, `light`, and `dark`; `auto` resolves by local time.
+3. Day mode uses a translucent, blurred material layer for navigation and controls, following Apple HIG guidance that glass/material effects should support hierarchy and legibility.
+4. Browser JavaScript cannot perform ICMP ping, so the site measures HTTP round-trip latency to `/robots.txt` as a practical approximation.
+5. Network provider is taken from the IP geolocation response when available.
+
+### Implemented
+
+- Added theme controls to desktop and mobile navigation.
+- Added theme state management in `js/main.js`.
+- Added light-theme material styling in `styles.css`.
+- Added collapsible desktop sidebar behavior.
+- Added latency measurement and ISP display in the Ping module.
+
+### Verification
+
+- JavaScript syntax passed.
+- i18n JSON parse passed.
+- Local route check passed for versioned CSS/JS paths.
+- Desktop Edge headless check passed:
+  - collapsed sidebar width: 74px
+  - expanded sidebar width: 280px
+  - light/dark/auto theme controls updated `body[data-theme]`
+  - Ping module reported HTTP latency
+  - ISP text rendered from geolocation data
+- Tablet/mobile Edge headless check passed with no horizontal overflow.
 
 ### Git State
 

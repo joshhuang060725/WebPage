@@ -18,6 +18,9 @@
   --muted: #aeb6b9;
   --dim: #7e878a;
   --shadow: 0 24px 70px rgba(0, 0, 0, 0.36);
+  --nav-collapsed: 74px;
+  --nav-expanded: 280px;
+  --nav-width: var(--nav-collapsed);
   color: var(--white);
   background: var(--page-bg);
   font-family:
@@ -45,6 +48,30 @@ body {
     linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
     radial-gradient(circle at 75% 5%, rgba(42, 170, 206, 0.14), transparent 28rem),
     radial-gradient(circle at 20% 0%, rgba(255, 217, 0, 0.08), transparent 22rem),
+    var(--page-bg);
+  background-size: 72px 72px, 72px 72px, auto, auto, auto;
+}
+
+body[data-theme="light"] {
+  --white: #111827;
+  --icon-white: #111827;
+  --base-black: #111827;
+  --surface: rgba(255, 255, 255, 0.52);
+  --background: #f5f7fb;
+  --ui-gray: #c8d0d8;
+  --ink: #111827;
+  --large-gray: #6b7280;
+  --page-bg: #f5f7fb;
+  --panel-bg: rgba(255, 255, 255, 0.52);
+  --panel-border: rgba(34, 45, 58, 0.16);
+  --muted: #4b5563;
+  --dim: #6b7280;
+  --shadow: 0 24px 70px rgba(38, 58, 79, 0.18);
+  background:
+    linear-gradient(90deg, rgba(42, 170, 206, 0.07) 1px, transparent 1px),
+    linear-gradient(rgba(35, 45, 61, 0.045) 1px, transparent 1px),
+    radial-gradient(circle at 18% 14%, rgba(255, 217, 0, 0.28), transparent 30rem),
+    radial-gradient(circle at 80% 8%, rgba(42, 170, 206, 0.26), transparent 34rem),
     var(--page-bg);
   background-size: 72px 72px, 72px 72px, auto, auto, auto;
 }
@@ -79,8 +106,15 @@ h3 {
 
 .shell {
   display: grid;
-  grid-template-columns: 280px minmax(0, 1fr);
+  grid-template-columns: var(--nav-width) minmax(0, 1fr);
   min-height: 100vh;
+  transition: grid-template-columns 220ms ease;
+}
+
+.shell:has(.side-nav:hover),
+.shell:has(.side-nav:focus-within),
+.shell:has(.side-nav.is-expanded) {
+  --nav-width: var(--nav-expanded);
 }
 
 .side-nav {
@@ -94,6 +128,56 @@ h3 {
   border-right: 1px solid var(--panel-border);
   background: rgba(20, 22, 21, 0.92);
   backdrop-filter: blur(18px);
+  overflow: hidden;
+  transition:
+    background 220ms ease,
+    border-color 220ms ease;
+  cursor: pointer;
+}
+
+body[data-theme="light"] .side-nav,
+body[data-theme="light"] .mobile-header {
+  background: rgba(255, 255, 255, 0.56);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  box-shadow: 0 10px 40px rgba(38, 58, 79, 0.08);
+}
+
+.side-nav .brand,
+.side-nav .nav-links,
+.side-nav .language-panel,
+.side-nav .theme-panel,
+.side-nav .nav-meta {
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease,
+    max-height 180ms ease;
+}
+
+.side-nav .nav-links,
+.side-nav .language-panel,
+.side-nav .theme-panel,
+.side-nav .nav-meta {
+  max-height: 440px;
+}
+
+.side-nav:not(:hover):not(:focus-within):not(.is-expanded) .brand span:not(.brand-mark),
+.side-nav:not(:hover):not(:focus-within):not(.is-expanded) .nav-links,
+.side-nav:not(:hover):not(:focus-within):not(.is-expanded) .language-panel,
+.side-nav:not(:hover):not(:focus-within):not(.is-expanded) .theme-panel,
+.side-nav:not(:hover):not(:focus-within):not(.is-expanded) .nav-meta {
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  transform: translateX(-8px);
+}
+
+.side-nav:not(:hover):not(:focus-within):not(.is-expanded) .nav-links,
+.side-nav:not(:hover):not(:focus-within):not(.is-expanded) .language-panel,
+.side-nav:not(:hover):not(:focus-within):not(.is-expanded) .theme-panel,
+.side-nav:not(:hover):not(:focus-within):not(.is-expanded) .nav-meta {
+  max-height: 0;
+  overflow: hidden;
 }
 
 .brand {
@@ -177,12 +261,18 @@ h3 {
   width: 4px;
 }
 
-.language-panel {
+.language-panel,
+.theme-panel {
   display: flex;
   gap: 8px;
 }
 
-.language-panel button {
+.theme-panel {
+  flex-wrap: wrap;
+}
+
+.language-panel button,
+.theme-panel button {
   min-width: 42px;
   min-height: 34px;
   border: 1px solid var(--panel-border);
@@ -196,10 +286,17 @@ h3 {
 }
 
 .language-panel button.is-active,
-.language-panel button:hover {
+.language-panel button:hover,
+.theme-panel button.is-active,
+.theme-panel button:hover {
   border-color: var(--core-yellow);
   color: var(--base-black);
   background: var(--core-yellow);
+}
+
+.theme-panel button {
+  min-width: 58px;
+  font-size: 0.72rem;
 }
 
 .nav-meta {
@@ -239,6 +336,23 @@ main {
     linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
     #020303;
   background-size: 36px 36px, 36px 36px, auto;
+}
+
+body[data-theme="light"] .terminal-home,
+body[data-theme="light"] .dash-module,
+body[data-theme="light"] .module-card,
+body[data-theme="light"] .page-hero,
+body[data-theme="light"] .panel,
+body[data-theme="light"] .project-card,
+body[data-theme="light"] .shortcut-card,
+body[data-theme="light"] .tool-card,
+body[data-theme="light"] .contact-panel {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0.24)),
+    rgba(255, 255, 255, 0.48);
+  border-color: rgba(34, 45, 58, 0.14);
+  backdrop-filter: blur(26px) saturate(170%);
+  -webkit-backdrop-filter: blur(26px) saturate(170%);
 }
 
 .dashboard-rail {
@@ -326,6 +440,11 @@ a.dash-module:focus-visible {
 .jats-console .jats-lockup strong {
   font-size: clamp(5.4rem, 13vw, 13rem);
   line-height: 0.78;
+}
+
+body[data-theme="light"] .jats-console .jats-lockup strong {
+  color: #111827;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 .jats-console .jats-lockup span {
@@ -874,10 +993,15 @@ li {
     align-items: center;
     justify-content: space-between;
     gap: 16px;
+    flex-wrap: wrap;
     padding: 14px 18px;
     border-bottom: 1px solid var(--panel-border);
     background: rgba(20, 22, 21, 0.94);
     backdrop-filter: blur(18px);
+  }
+
+  .mobile-header .theme-panel {
+    margin-left: auto;
   }
 
   main {
