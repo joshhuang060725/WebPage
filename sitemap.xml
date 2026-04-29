@@ -31,6 +31,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://joshhuang.ccwu.cc/youtube.html</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://joshhuang.ccwu.cc/tools.html</loc>
     <lastmod>2026-04-29</lastmod>
     <changefreq>weekly</changefreq>

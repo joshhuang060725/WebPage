@@ -205,6 +205,57 @@ User clarified that the wallpaper page should not be a normal preview/list page.
 
 Local working tree only. Not committed and not pushed by user request.
 
+## 2026-04-29 - YouTube Browser Page
+
+### Context
+
+User requested a YouTube browser feature between Quick Links and Tools. The referenced DOCX suggested YouTube Data API plus IFrame Player API and a side scrolling title list. Current official API behavior was treated conservatively, so this version does not depend on deprecated recommendation parameters.
+
+### Decisions
+
+1. Add a dedicated `youtube.html` page instead of embedding the feature into the homepage.
+2. Keep the page in the same JATS dark industrial visual system.
+3. Use manual search only; no auto polling and no auto recommendation chain.
+4. Keep `YOUTUBE_API_KEY` out of the frontend and GitHub by using a Cloudflare Pages Function.
+5. Cache repeated searches for 1 hour in `localStorage` and through the Function response cache header.
+
+### Implemented
+
+- Added `youtube.html`.
+- Added YouTube navigation between Quick Links and Tools.
+- Added `js/youtube.js` for search submission, result rendering, side ticker, local cache, and IFrame Player control.
+- Added `functions/api/youtube/search.js` for `/api/youtube/search`.
+- Added YouTube i18n strings for English, Traditional Chinese, and Simplified Chinese.
+- Added YouTube route to `sitemap.xml`.
+- Updated README and development guidelines with architecture, security boundary, and QA rules.
+
+### UI/UX Notes
+
+- The player is the primary surface.
+- Search only runs on explicit user action.
+- Results are duplicated in the ticker for continuous scrolling; hover or focus pauses the ticker.
+- Mobile keeps the player above the search/results stack to avoid cramped side-by-side layout.
+
+### Verification
+
+- JSON parse passed.
+- JavaScript syntax passed for `js/data-loader.js`, `js/main.js`, `js/youtube.js`, and `functions/api/youtube/search.js`.
+- Function behavior check passed:
+  - missing `q` returns `missing_query`.
+  - missing `YOUTUBE_API_KEY` returns `missing_api_key`.
+  - normal mocked YouTube response returns sanitized JSON.
+  - response body does not expose the API key.
+- Local HTTP route check passed for `/youtube.html`.
+- Headless Edge UI check passed with mocked API data:
+  - search rendered 2 result cards.
+  - ticker rendered duplicated title items for scrolling.
+  - player title updated to the selected video.
+  - desktop and mobile had no horizontal overflow.
+
+### Git State
+
+Local working tree only. Not committed and not pushed by user request.
+
 ## 2026-04-29 - Navigation Collapse and Wallpaper Grid Direction
 
 ### Context

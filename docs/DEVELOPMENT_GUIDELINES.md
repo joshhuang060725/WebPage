@@ -37,6 +37,7 @@
 - `wallpapers.html`: 動態桌布預覽與切換，不提供公開上傳。
 - `projects.html`: 專案展示。
 - `links.html`: 公開安全快速連結。
+- `youtube.html`: YouTube 搜尋、播放器與側邊標題 ticker。
 - `tools.html`: 工具入口與狀態。
 
 規則：
@@ -91,6 +92,22 @@
 - DOM selector 必須容忍元素不存在，因為不同頁面只會有部分容器。
 - 不要在前端儲存或組合敏感 URL。
 - i18n 文字用 `data-i18n` 或 `data-i18n-placeholder`。
+
+### `js/youtube.js`
+
+用途：
+
+- YouTube 搜尋表單。
+- YouTube IFrame Player API 控制。
+- 搜尋結果列表與側邊 ticker。
+- 同一查詢 1 小時 localStorage 快取。
+
+規則：
+
+- 只有使用者提交搜尋時才能呼叫 `/api/youtube/search`。
+- 不做自動輪詢、不做自動推薦鏈。
+- 不在前端放 `YOUTUBE_API_KEY` 或任何 API secret。
+- API 失敗時顯示狀態文字，不能讓頁面壞掉。
 
 ### `data/*.json`
 
@@ -202,6 +219,20 @@ GET /api/i18n
 
 但 API response 必須維持同樣 shape，避免 UI 層重寫。
 
+YouTube 搜尋是目前唯一已預留的 Cloudflare Pages Function：
+
+```text
+GET /api/youtube/search?q={query}&lang={language}
+```
+
+Function 規則：
+
+- 從 Cloudflare Pages 環境變數讀 `YOUTUBE_API_KEY`。
+- 僅回傳整理後的影片 id、title、channelTitle、thumbnail、publishedAt。
+- 不回傳 API key、完整 Google API payload 或不必要的私密錯誤內容。
+- `q` trim 後限制 1-80 字。
+- YouTube API 錯誤要轉成可讀 JSON error。
+
 ## Wallpaper Page Standards
 
 `wallpapers.html` is an application-like page with two full-screen panels:
@@ -226,6 +257,7 @@ Implementation rules:
 
 - `.env`
 - API key
+- `YOUTUBE_API_KEY` value
 - token
 - private dashboard URL
 - Cloudflare Tunnel 私人 URL
@@ -251,6 +283,8 @@ python -m json.tool data\wallpapers.json > $null
 python -m json.tool data\i18n.json > $null
 node --check js\data-loader.js
 node --check js\main.js
+node --check js\youtube.js
+node --check functions\api\youtube\search.js
 ```
 
 Browser route check:
@@ -260,6 +294,7 @@ Browser route check:
 - `/wallpapers.html`
 - `/projects.html`
 - `/links.html`
+- `/youtube.html`
 - `/tools.html`
 
 Responsive check:

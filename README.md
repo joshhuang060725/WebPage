@@ -38,11 +38,15 @@ WebPage/
 |-- wallpapers.html             # 動態桌布預覽與切換頁
 |-- projects.html               # 專案展示頁
 |-- links.html                  # 公開安全快速連結
+|-- youtube.html                # YouTube 搜尋、嵌入播放器與側邊標題 ticker
 |-- tools.html                  # Exchange / Compute Lab / UX Lab 入口
 |-- styles.css                  # 全站 UI token、layout、components
 |-- js/
 |   |-- data-loader.js          # JSON-first data source，未來可切 API
-|   `-- main.js                 # i18n、clock、資料渲染、fallback
+|   |-- main.js                 # i18n、clock、資料渲染、fallback
+|   `-- youtube.js              # YouTube 搜尋 UI、播放器、ticker、本機快取
+|-- functions/
+|   `-- api/youtube/search.js   # Cloudflare Pages Function proxy，不暴露 API key
 |-- data/
 |   |-- profile.json            # 個人資料與公開聯絡資訊
 |   |-- projects.json           # 專案卡片資料
@@ -104,6 +108,7 @@ WebPage/
 - `wallpapers.html`: 動態桌布預覽與切換，真實素材後續放入 JSON。
 - `projects.html`: 專案展示，後續可擴充案例研究。
 - `links.html`: 只放公開安全連結。
+- `youtube.html`: YouTube 搜尋、嵌入播放與側邊標題 ticker，介於 Quick Links 與 Tools 之間。
 - `tools.html`: 工具模組入口，未完成前只顯示狀態。
 
 這樣可以維持首頁清楚，也讓後續每個功能區塊能獨立演化。
@@ -135,12 +140,14 @@ WebPage/
 
 - IP location: `https://ipapi.co/json/`
 - Weather: `https://api.open-meteo.com/v1/forecast`
+- YouTube Data API: only through Cloudflare Pages Function `/api/youtube/search`
 
 注意：
 
 - IP 位置是城市級估算，不代表精準地址。
 - 這些請求由使用者瀏覽器直接發出，網站本身不儲存 IP 或天氣資料。
 - API 失敗時頁面會顯示 unavailable，不影響其他模組。
+- YouTube API key 只能設定在 Cloudflare Pages 環境變數 `YOUTUBE_API_KEY`，不可寫入前端或 GitHub repo。
 
 ## Local Development
 
@@ -171,6 +178,8 @@ python -m json.tool data\wallpapers.json > $null
 python -m json.tool data\i18n.json > $null
 node --check js\data-loader.js
 node --check js\main.js
+node --check js\youtube.js
+node --check functions\api\youtube\search.js
 ```
 
 瀏覽器檢查：
@@ -180,6 +189,7 @@ node --check js\main.js
 - `/wallpapers.html`
 - `/projects.html`
 - `/links.html`
+- `/youtube.html`
 - `/tools.html`
 - Desktop / tablet / mobile 不重疊
 - 語言切換可用
@@ -197,11 +207,44 @@ Build output directory: /
 Production branch: main
 ```
 
+YouTube Function environment variable:
+
+```text
+YOUTUBE_API_KEY=<set in Cloudflare Pages, never commit this value>
+```
+
 自訂網域：
 
 ```text
 joshhuang.ccwu.cc
 ```
+
+## YouTube Browser Architecture
+
+`youtube.html` is a public browser-style media page. It provides manual search, embedded playback, a result list, and a side ticker of video titles.
+
+Core flow:
+
+```text
+youtube.html
+|-- js/youtube.js
+|   |-- reads query from search form
+|   |-- checks localStorage cache for 1 hour
+|   |-- calls /api/youtube/search only after user submission
+|   `-- controls YouTube IFrame Player API
+`-- functions/api/youtube/search.js
+    |-- validates q, lang, and region
+    |-- reads env.YOUTUBE_API_KEY
+    |-- calls YouTube Data API search.list
+    `-- returns sanitized JSON without secrets
+```
+
+Quota posture:
+
+- No auto polling.
+- No automatic recommendation chain.
+- `search.list` is called only when the user submits a query.
+- Repeated queries are cached in the browser and at the Function response layer for 1 hour.
 
 ## Wallpaper Interface Architecture
 

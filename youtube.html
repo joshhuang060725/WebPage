@@ -3,16 +3,16 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Projects | Josh Huang</title>
-    <meta name="description" content="Public project cards and UI/UX system experiments by Josh Huang." />
+    <title>YouTube Browser | Josh Huang</title>
+    <meta name="description" content="A YouTube search and embedded playback browser for Josh Huang's JATS personal portal." />
     <meta name="robots" content="index, follow" />
     <meta name="author" content="Josh Huang" />
     <meta name="theme-color" content="#202020" />
-    <link rel="canonical" href="https://joshhuang.ccwu.cc/projects.html" />
+    <link rel="canonical" href="https://joshhuang.ccwu.cc/youtube.html" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/styles.css?v=20260429-4" />
   </head>
-  <body data-page="projects">
+  <body data-page="youtube">
     <div class="shell">
       <aside class="side-nav" aria-label="Primary navigation" data-nav-collapsible>
         <a class="brand" href="/" aria-label="Josh Huang portal home"><span class="brand-mark">J</span><span><strong>JOSH</strong><small data-i18n="nav.system">Personal Portal</small></span></a>
@@ -20,9 +20,9 @@
           <a href="/" data-i18n="nav.portal">Portal</a>
           <a href="/profile.html" data-i18n="nav.bio">Bio</a>
           <a href="/wallpapers.html" data-i18n="nav.wallpapers">Wallpapers</a>
-          <a href="/projects.html" aria-current="page" data-i18n="nav.projects">Projects</a>
+          <a href="/projects.html" data-i18n="nav.projects">Projects</a>
           <a href="/links.html" data-i18n="nav.links">Quick Links</a>
-          <a href="/youtube.html" data-i18n="nav.youtube">YouTube</a>
+          <a href="/youtube.html" aria-current="page" data-i18n="nav.youtube">YouTube</a>
           <a href="/tools.html" data-i18n="nav.tools">Tools</a>
         </nav>
         <div class="language-panel" aria-label="Language selector">
@@ -52,19 +52,58 @@
       </header>
       <main>
         <section class="page-hero">
-          <p class="eyebrow" data-i18n="projects.eyebrow">Build log</p>
-          <h1 data-i18n="projects.title">Projects</h1>
-          <p data-i18n="projects.description">
-            Public project entries stay concise for now. Each card can later become a detailed
-            case study or repository link.
+          <p class="eyebrow" data-i18n="youtube.eyebrow">Media browser</p>
+          <h1 data-i18n="youtube.title">YouTube browser</h1>
+          <p data-i18n="youtube.description">
+            Search YouTube through a Cloudflare Function proxy, play videos in the embedded player, and browse titles through a side ticker.
           </p>
         </section>
-        <section class="section">
-          <div class="card-grid" id="project-list" aria-live="polite"></div>
+
+        <section class="section youtube-layout" aria-label="YouTube browser">
+          <div class="youtube-player-card panel">
+            <div class="youtube-section-head">
+              <span class="eyebrow" data-i18n="youtube.playerLabel">Player</span>
+              <strong id="youtube-now-title">JATS YouTube</strong>
+            </div>
+            <div class="youtube-player-frame">
+              <div id="youtube-player" class="youtube-player-placeholder">
+                <span>YT</span>
+              </div>
+            </div>
+            <form class="youtube-search" id="youtube-search-form" role="search">
+              <label for="youtube-search-input" data-i18n="youtube.searchLabel">Search YouTube</label>
+              <div>
+                <span aria-hidden="true">J&gt;</span>
+                <input
+                  id="youtube-search-input"
+                  name="q"
+                  type="search"
+                  maxlength="80"
+                  autocomplete="off"
+                  data-i18n-placeholder="youtube.searchPlaceholder"
+                  placeholder="Search videos..."
+                />
+                <button type="submit" data-i18n="youtube.searchButton">Search</button>
+              </div>
+            </form>
+            <p class="youtube-status" id="youtube-status" data-i18n="youtube.statusIdle">Enter a query to load videos.</p>
+          </div>
+
+          <aside class="youtube-side panel">
+            <div class="youtube-section-head">
+              <span class="eyebrow" data-i18n="youtube.tickerLabel">Ticker</span>
+              <strong data-i18n="youtube.resultsLabel">Results</strong>
+            </div>
+            <div class="youtube-ticker" aria-label="Video title ticker">
+              <div class="youtube-ticker-inner" id="youtube-ticker-inner"></div>
+            </div>
+            <div class="youtube-results" id="youtube-results" aria-live="polite"></div>
+          </aside>
         </section>
       </main>
     </div>
     <script src="/js/data-loader.js?v=20260429-4"></script>
     <script src="/js/main.js?v=20260429-4"></script>
+    <script src="/js/youtube.js?v=20260429-4"></script>
   </body>
 </html>
