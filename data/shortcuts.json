@@ -1,42 +1,52 @@
 [
   {
+    "name": "JoshHuang's Gmail：josh20060725@gmail.com",
+    "url": "mailto:josh20060725@gmail.com",
+    "category": "public",
+    "description": {
+      "en": "Support & Feedback: Professional Consulting / Bug Reporting / Feature Requests.",
+      "zh-TW": "技術支援與反饋：專業諮詢 / Bug 回報 / 功能許願。",
+      "zh-CN": "技术支持与反馈：专业咨询 / Bug 回报 / 功能许愿。"
+    }
+  },
+  {
     "name": "GitHub",
+    "url": "https://github.com/joshhuang060725",
+    "category": "public",
     "description": {
       "en": "Public code profile and project repositories.",
       "zh-TW": "公開程式碼個人頁與專案倉庫。",
       "zh-CN": "公开代码个人页与项目仓库。"
-    },
-    "url": "https://github.com/joshhuang060725",
-    "category": "public"
+    }
   },
   {
     "name": "Cloudflare Pages",
+    "url": "https://pages.cloudflare.com/",
+    "category": "public",
     "description": {
       "en": "Deployment surface for this static portal.",
       "zh-TW": "此靜態門戶的部署平台。",
       "zh-CN": "此静态门户的部署平台。"
-    },
-    "url": "https://pages.cloudflare.com/",
-    "category": "public"
+    }
   },
   {
     "name": "Search",
+    "url": "https://www.google.com/search?q=",
+    "category": "public",
     "description": {
       "en": "Browser start-page search placeholder for a future local index.",
       "zh-TW": "瀏覽器首頁搜尋占位，未來可接本地索引。",
       "zh-CN": "浏览器首页搜索占位，未来可接本地索引。"
-    },
-    "url": "https://www.google.com/search?q=",
-    "category": "public"
+    }
   },
   {
     "name": "Private Console",
+    "url": "",
+    "category": "locked",
     "description": {
       "en": "Reserved for private administration. No public endpoint is exposed.",
       "zh-TW": "保留給私人管理使用，不公開任何端點。",
       "zh-CN": "保留给私人管理使用，不公开任何端点。"
-    },
-    "url": "",
-    "category": "locked"
+    }
   }
 ]

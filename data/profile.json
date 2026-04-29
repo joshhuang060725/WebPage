@@ -1,11 +1,16 @@
 {
   "name": "Josh Huang",
   "summary": {
-    "en": "A public personal portal for engineering projects, UI/UX experiments, and practical web systems. This profile is intentionally concise until the final biography is ready.",
-    "zh-TW": "這是一個公開的個人門戶，用於展示工程專案、UI/UX 實驗與實用型 Web 系統。正式自我介紹完成前，這裡先保留簡潔版本。",
-    "zh-CN": "这是一个公开的个人门户，用于展示工程项目、UI/UX 实验与实用型 Web 系统。正式自我介绍完成前，这里先保留简洁版本。"
+    "en": "黃昭詠（Josh Huang） \nCurrently a student at National Yunlin University of Science and Technology. JATSWeb serves as a comprehensive portal for professional identity exhibition, system tool integration, and experimental UI/UX implementation. Dedicated to constructing a high-performance personal auxiliary terminal, this platform functions as a testing environment for frontier technologies. Your access and feedback are cordially welcomed. For functional proposals or technical inquiries, please contact the developer via email.",
+    "zh-TW": "黃昭詠 (Josh Huang)\n現就讀於國立雲林科技大學。本站點 —— JATSWeb —— 係為個人專業形象展示、系統工具整合及 UI/UX 實驗性設計之綜合門戶。\n爲了建構一高效能之個人輔助終端，並作為各類前瞻技術之測試載體。誠摯歡迎您的存取與測試；若有任何功能提案或技術交流需求，建請透過電子郵件聯繫開發者。",
+    "zh-CN": "黄昭詠 (Josh Huang)\n现就读于国立云林科技大学。本站点 —— JATSWeb —— 系个人专业形象展示、系统工具整合及 UI/UX 实验性设计的综合门户。\n\n旨在构建一高效能个人辅助终端，并作为各类前瞻技术的测试载体。诚挚欢迎您的访问与测试；若有任何功能建议或技术交流需求，请通过电子邮件联系开发者。"
   },
-  "tags": ["UI/UX", "Web Systems", "Engineering", "Public Profile"],
+  "tags": [
+    "UI/UX",
+    "Web Systems",
+    "Engineering",
+    "Public Profile"
+  ],
   "contacts": [
     {
       "label": "GitHub",
