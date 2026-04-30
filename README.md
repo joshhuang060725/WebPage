@@ -53,7 +53,10 @@ WebPage/
 |   |-- shortcuts.json          # 公開快速連結
 |   |-- tools.json              # 工具入口狀態
 |   |-- wallpapers.json         # 動態桌布清單與素材路徑
+|   |-- files.json              # 本地後台上傳檔案的公開 metadata
 |   `-- i18n.json               # zh-TW / zh-CN / en 字典
+|-- assets/
+|   `-- files/                  # 本地後台上傳的公開檔案
 |-- favicon.svg
 |-- og-image.svg
 |-- robots.txt
@@ -175,6 +178,7 @@ python -m json.tool data\projects.json > $null
 python -m json.tool data\shortcuts.json > $null
 python -m json.tool data\tools.json > $null
 python -m json.tool data\wallpapers.json > $null
+python -m json.tool data\files.json > $null
 python -m json.tool data\i18n.json > $null
 node --check js\data-loader.js
 node --check js\main.js

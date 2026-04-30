@@ -295,6 +295,50 @@ Local working tree only. Not committed and not pushed by user request.
 
 ## Log Template
 
+## 2026-04-30 - Local Admin File Manager
+
+### Context
+
+User requested a personal file upload and delete feature with backend upload interface support, common file-type handling, descriptions, upload dates, latest-upload sorting, and a capacity summary.
+
+### Decisions
+
+1. Keep upload/delete inside the local-only `WebPageAdmin` backend instead of exposing public website upload endpoints.
+2. Store uploaded public files under `assets/files/`.
+3. Store metadata under `data/files.json`.
+4. Sort by `uploadedAt` descending.
+5. Add file count and total byte size summary to the admin left rail.
+6. Ignore `YoutubeKey.txt` to reduce accidental secret commits.
+
+### Implemented
+
+- Added `data/files.json`.
+- Added `assets/files/.gitkeep`.
+- Added `.gitignore` rule for `YoutubeKey.txt`.
+- Extended `WebPageAdmin` backend with:
+  - `GET /api/files`
+  - `POST /api/files/upload`
+  - `PUT /api/files/:id`
+  - `DELETE /api/files/:id`
+- Added File Manager UI below Tools in `WebPageAdmin`.
+- Added upload metadata fields: name, description, extension, size, public path, upload date.
+- Updated admin publish/check logic to include `data/files.json` and `assets/files/`.
+
+### Verification
+
+- Admin JavaScript syntax check passed.
+- Website `data/files.json`, `data/i18n.json`, and `data/wallpapers.json` parse checks passed.
+- Local admin API smoke test passed:
+  - `GET /api/files` returned empty summary.
+  - `POST /api/files/upload` accepted a `.txt` file and created metadata.
+  - capacity summary changed from `0 B` to `21 B`.
+  - `DELETE /api/files/:id` removed the test file and restored summary to `0 B`.
+  - `data/files.json` returned to an empty array after cleanup.
+
+### Git State
+
+Local working tree only. Not committed and not pushed by user request.
+
 ## 2026-04-29 - Asset Cache Busting
 
 ### Context

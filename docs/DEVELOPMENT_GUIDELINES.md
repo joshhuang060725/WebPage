@@ -204,6 +204,7 @@ data/profile.json
 data/projects.json
 data/shortcuts.json
 data/tools.json
+data/files.json
 data/i18n.json
 ```
 
@@ -251,6 +252,25 @@ Implementation rules:
 - A selected background updates CSS variables on `#wallpaper-viewport`, so both panels stay synchronized.
 - Future images/videos should be referenced by public static paths. Do not add upload, admin, token, tunnel, or local LAN features to this public page.
 
+## File Upload Standards
+
+Personal file uploads are managed by the local-only `WebPageAdmin` tool, not by the public website.
+
+Website storage:
+
+```text
+assets/files/*
+data/files.json
+```
+
+Rules:
+
+- Supported public file types: `.zip`, `.pdf`, `.doc`, `.docx`, `.cpp`, `.c`, `.h`, `.hpp`, `.txt`, `.py`, `.md`, `.json`, `.csv`.
+- Every entry in `data/files.json` must include `id`, `name`, `description`, `path`, `extension`, `size`, and `uploadedAt`.
+- Sort file entries by latest `uploadedAt`.
+- Do not upload secrets, API keys, private documents, or local-only paths.
+- Do not implement public browser upload or delete endpoints on the Cloudflare Pages site.
+
 ## Security Boundary
 
 禁止進 repo 或公開前端：
@@ -280,6 +300,7 @@ python -m json.tool data\projects.json > $null
 python -m json.tool data\shortcuts.json > $null
 python -m json.tool data\tools.json > $null
 python -m json.tool data\wallpapers.json > $null
+python -m json.tool data\files.json > $null
 python -m json.tool data\i18n.json > $null
 node --check js\data-loader.js
 node --check js\main.js
