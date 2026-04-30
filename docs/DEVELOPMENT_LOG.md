@@ -1,6 +1,142 @@
 # Development Log
 
+## 2026-05-01 - Formula Derivation Area
+
+### Context
+
+User provided two WebMatlab-style reference files: one for a formula index and one for an interactive second-order damping response derivation. The requested structure is hierarchical: enter the formula area from navigation, choose a formula, then open a derivation and display module.
+
+### Decisions
+
+1. Add a dedicated `formulas.html` index page named `公式推導區`.
+2. Add a shared `formula.html?id={formulaId}` renderer for formula detail pages.
+3. Keep formula content in `data/formulas.json` for easier backend/admin maintenance.
+4. Use frontend JavaScript calculations for v1.
+5. Use KaTeX and Plotly from CDN for formula rendering and graphs.
+6. Add local-only Admin support with form fields for metadata and JSON fields for flexible derivation/interactivity data.
+
+### Implemented
+
+- Added `data/formulas.json`.
+- Added `formulas.html` and `formula.html`.
+- Added `js/formulas.js` for category filtering, search, and formula card rendering.
+- Added `js/formula-detail.js` for shared formula detail rendering, KaTeX rendering, Plotly plotting, and second-order response calculation.
+- Added the formula area to public navigation and sitemap.
+- Added Formulas management to `WebPageAdmin`.
+- Updated Admin publish/check coverage so static page, CSS, JS, Function, data, docs, and sitemap changes are all included.
+
+### UI/UX Notes
+
+- Formula index follows the existing JATS modular card style.
+- Formula detail behaves like a WebMatlab panel: symbolic derivation on the left, interactive computation on the right.
+- Draft formulas are visible but disabled as coming-soon cards.
+- Public website remains read-only.
+
+### Verification
+
+- JSON parse passed for `data/formulas.json`, `data/i18n.json`, and `data/files.json`.
+- JavaScript syntax passed for `js/data-loader.js`, `js/main.js`, `js/formulas.js`, `js/formula-detail.js`, and `js/youtube.js`.
+- Admin syntax passed for `public/app.js`, `src/config.js`, `src/git.js`, and `src/server.js`.
+- `git diff --check` passed.
+- Local HTTP route check passed for `/formulas.html`, `/formula.html?id=second-order-damping`, `/data/formulas.json`, `js/formulas.js`, and `js/formula-detail.js`.
+- Headless Edge check passed:
+  - formula index rendered 4 cards and 5 filters.
+  - formula detail rendered 2 derivation sections, 2 sliders, and a Plotly container.
+  - desktop and mobile checks had no horizontal overflow.
+
+### Git State
+
+Local working tree only. Not committed and not pushed.
+
 此文件記錄重要設計決策、實作內容、驗證結果與 Git 狀態。每次較大的架構或 UI 調整都應更新。
+
+## 2026-04-30 - Day Mode Palette Reset and Performance Pass
+
+### Context
+
+The previous day mode moved too far into saturated blue glass and felt visually uncomfortable. A later experiment also used SVG displacement filtering from a Liquid Glass demo, but the interaction cost was too high on desktop.
+
+### Decisions
+
+1. Keep night mode unchanged.
+2. Reset day mode to a light ice-blue glass system instead of a dark blue glass system.
+3. Use Active Blue only for selected navigation, active controls, and emphasis.
+4. Use deep blue-gray text for readability; reserve gradient text for headings and the homepage JATS lockup.
+5. Avoid SVG displacement filters and heavy `backdrop-filter: url(...)` on repeated components.
+6. Keep day and night tokens separated through explicit `body[data-theme="dark"]` and `body[data-theme="light"]` sections as the first step toward separate theme files.
+
+### Implemented
+
+- Added explicit dark-theme token block to preserve the existing JATS industrial night style.
+- Rebuilt day-theme tokens around light ice-blue background, translucent white-blue glass cards, softer shadows, and blue-gray text.
+- Reduced day-mode glass cost by removing the SVG displacement filter path and using lighter blur/saturate filters.
+- Updated day-mode heading and JATS lockup gradient colors after manual tuning.
+- Updated README and development guidelines to match the current day-mode design and performance constraints.
+
+### UI/UX Notes
+
+- Day mode should feel like a readable light interface first, glass effect second.
+- Large surfaces should stay low saturation and high readability.
+- Glass is expressed through transparency, specular edges, inset highlights, and soft shadows rather than expensive pixel-level refraction.
+
+### Verification
+
+- `node --check js/main.js` passed.
+- `git diff --check` passed.
+- Visual review is user-led for this pass.
+
+### Git State
+
+Local working tree only. Not committed and not pushed.
+
+## 2026-04-30 - Day Mode Liquid Glass Revision
+
+### Context
+
+User provided `Liquid Glass 網頁設計指南.docx` and asked to rethink the day display mode using Apple Glass / Liquid Glass references. The hard constraint for this pass is to avoid changing any night mode content.
+
+### References
+
+- Apple Developer Documentation: Liquid Glass.
+- Apple Human Interface Guidelines: Materials.
+- Local DOCX notes: 5-layer optical model, blur plus saturation, Fresnel-like edge highlights, multi-shadow depth, subtle grain, and legibility safeguards.
+
+### Decisions
+
+1. Keep night mode as the primary JATS dark industrial terminal visual language.
+2. Limit implementation changes to `body[data-theme="light"]` selectors and documentation.
+3. Treat day mode as a functional glass layer over a light technical background, not as a separate brand.
+4. Use Liquid Glass primarily for navigation, controls, and modular cards, while keeping content hierarchy explicit.
+5. Improve day mode depth with stronger blur, saturation compensation, specular borders, inset highlights, soft environment shadows, and subtle grain.
+6. Update day mode to the user-provided blue Apple Glass palette: Active Blue `#4971F2`, Glass Base `rgba(220, 234, 236, 0.45)`, Text Primary `#F5F7FB`, Text Secondary `rgba(255, 255, 255, 0.4)`, Inactive Gray `#3A3A3C`, and Specular `rgba(255, 255, 255, 0.4)`.
+
+### Implemented
+
+- Revised light theme background into a brighter cold/warm mesh with fine grid structure.
+- Revised light theme again into the requested blue Apple Glass direction.
+- Added light-only grain and glow overlay through `body[data-theme="light"]::before`.
+- Upgraded light-only navigation and mobile header glass material.
+- Expanded light-only glass treatment to page hero, dashboard modules, overview cards, hero/status panels, project cards, shortcut cards, tool cards, file cards, and contact panels.
+- Added light-only control/tag material treatment and restrained hover response.
+- Replaced day-mode yellow emphasis with Active Blue while leaving night-mode yellow unchanged.
+- Updated README UI design notes.
+- Updated development guidelines with explicit Night Mode and Day Mode rules.
+
+### UI/UX Notes
+
+- Night mode is unchanged in this pass.
+- Day mode emphasizes blue translucency, depth, and clear functional layering, but content remains modular and readable.
+- Glass opacity is intentionally thicker than decorative glass because the site contains text-heavy cards and navigation.
+
+### Verification
+
+- `node --check js/main.js` passed.
+- `git diff --check` passed.
+- Local headless Edge light-mode check was not run after the blue Apple Glass palette update because browser launch permission was not granted in this pass.
+
+### Git State
+
+Local working tree only. Not committed and not pushed.
 
 ## 2026-04-29 - Static Personal Portal Foundation
 

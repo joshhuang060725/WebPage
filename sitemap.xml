@@ -14,9 +14,21 @@
   </url>
   <url>
     <loc>https://joshhuang.ccwu.cc/projects.html</loc>
-    <lastmod>2026-04-29</lastmod>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://joshhuang.ccwu.cc/formulas.html</loc>
+    <lastmod>2026-05-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://joshhuang.ccwu.cc/formula.html</loc>
+    <lastmod>2026-05-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://joshhuang.ccwu.cc/wallpapers.html</loc>

@@ -1,0 +1,242 @@
+{
+  "categories": [
+    {
+      "id": "all",
+      "label": {
+        "en": "All",
+        "zh-TW": "全部",
+        "zh-CN": "全部"
+      }
+    },
+    {
+      "id": "control-systems",
+      "label": {
+        "en": "Control Systems",
+        "zh-TW": "控制系統",
+        "zh-CN": "控制系统"
+      }
+    },
+    {
+      "id": "signal-processing",
+      "label": {
+        "en": "Signal Processing",
+        "zh-TW": "訊號處理",
+        "zh-CN": "信号处理"
+      }
+    },
+    {
+      "id": "electrical-engineering",
+      "label": {
+        "en": "Electrical Engineering",
+        "zh-TW": "電機工程",
+        "zh-CN": "电机工程"
+      }
+    },
+    {
+      "id": "numerical-methods",
+      "label": {
+        "en": "Numerical Methods",
+        "zh-TW": "數值方法",
+        "zh-CN": "数值方法"
+      }
+    }
+  ],
+  "items": [
+    {
+      "id": "second-order-damping",
+      "number": "001",
+      "category": "control-systems",
+      "status": "ready",
+      "route": "/formula.html?id=second-order-damping",
+      "title": {
+        "en": "Second-order system damping response",
+        "zh-TW": "二階系統阻尼響應",
+        "zh-CN": "二阶系统阻尼响应"
+      },
+      "description": {
+        "en": "Interactive derivation and time-domain step response visualization for a standard second-order system.",
+        "zh-TW": "標準二階系統的互動推導與時域階躍響應視覺化。",
+        "zh-CN": "标准二阶系统的互动推导与时域阶跃响应可视化。"
+      },
+      "summary": {
+        "en": "Adjust damping ratio and natural frequency to observe overshoot and convergence.",
+        "zh-TW": "調整阻尼比與自然頻率，觀察超越量與收斂速度。",
+        "zh-CN": "调整阻尼比与自然频率，观察超调量与收敛速度。"
+      },
+      "tags": ["control", "damping", "step response", "plotly"],
+      "formula": "H(s)=\\frac{\\omega_n^2}{s^2+2\\zeta\\omega_n s+\\omega_n^2}",
+      "sections": [
+        {
+          "eyebrow": "Symbolic Derivation Engine",
+          "title": {
+            "en": "Transfer function",
+            "zh-TW": "轉移函數",
+            "zh-CN": "传递函数"
+          },
+          "body": {
+            "en": "A normalized second-order system is described by natural frequency omega_n and damping ratio zeta.",
+            "zh-TW": "標準二階系統可由自然頻率 omega_n 與阻尼比 zeta 描述。",
+            "zh-CN": "标准二阶系统可由自然频率 omega_n 与阻尼比 zeta 描述。"
+          },
+          "math": "H(s)=\\frac{\\omega_n^2}{s^2+2\\zeta\\omega_n s+\\omega_n^2}"
+        },
+        {
+          "eyebrow": "Step-by-Step Calculation",
+          "title": {
+            "en": "Step response",
+            "zh-TW": "階躍響應",
+            "zh-CN": "阶跃响应"
+          },
+          "body": {
+            "en": "For a unit step input U(s)=1/s, the output can be decomposed into an underdamped time-domain response when 0 < zeta < 1.",
+            "zh-TW": "對單位階躍輸入 U(s)=1/s，當 0 < zeta < 1 時可得到欠阻尼時域響應。",
+            "zh-CN": "对单位阶跃输入 U(s)=1/s，当 0 < zeta < 1 时可得到欠阻尼时域响应。"
+          },
+          "steps": [
+            {
+              "label": {
+                "en": "Laplace-domain output",
+                "zh-TW": "拉普拉斯域輸出",
+                "zh-CN": "拉普拉斯域输出"
+              },
+              "math": "Y(s)=H(s)U(s)=\\frac{\\omega_n^2}{s(s^2+2\\zeta\\omega_n s+\\omega_n^2)}"
+            },
+            {
+              "label": {
+                "en": "Underdamped time response",
+                "zh-TW": "欠阻尼時域響應",
+                "zh-CN": "欠阻尼时域响应"
+              },
+              "math": "y(t)=1-\\frac{1}{\\sqrt{1-\\zeta^2}}e^{-\\zeta\\omega_n t}\\sin(\\omega_n\\sqrt{1-\\zeta^2}t+\\phi),\\quad \\phi=\\cos^{-1}(\\zeta)"
+            }
+          ]
+        }
+      ],
+      "interactive": {
+        "enabled": true,
+        "handler": "secondOrderStepResponse",
+        "plotTitle": {
+          "en": "Time-domain response",
+          "zh-TW": "時域響應",
+          "zh-CN": "时域响应"
+        },
+        "parameters": [
+          {
+            "id": "zeta",
+            "symbol": "\\zeta",
+            "label": {
+              "en": "Damping ratio",
+              "zh-TW": "阻尼比",
+              "zh-CN": "阻尼比"
+            },
+            "min": 0.05,
+            "max": 0.99,
+            "step": 0.01,
+            "default": 0.3
+          },
+          {
+            "id": "wn",
+            "symbol": "\\omega_n",
+            "label": {
+              "en": "Natural frequency",
+              "zh-TW": "自然頻率",
+              "zh-CN": "自然频率"
+            },
+            "min": 1,
+            "max": 20,
+            "step": 0.1,
+            "default": 5,
+            "unit": "rad/s"
+          }
+        ],
+        "metrics": [
+          {
+            "id": "overshoot",
+            "label": {
+              "en": "Overshoot",
+              "zh-TW": "超越量",
+              "zh-CN": "超调量"
+            }
+          },
+          {
+            "id": "latency",
+            "label": {
+              "en": "Compute latency",
+              "zh-TW": "計算延遲",
+              "zh-CN": "计算延迟"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "fourier-transform",
+      "number": "002",
+      "category": "signal-processing",
+      "status": "coming-soon",
+      "route": "/formula.html?id=fourier-transform",
+      "title": {
+        "en": "Fourier transform",
+        "zh-TW": "傅立葉轉換",
+        "zh-CN": "傅里叶变换"
+      },
+      "description": {
+        "en": "Frequency-domain representation placeholder.",
+        "zh-TW": "頻域表示法占位內容。",
+        "zh-CN": "频域表示法占位内容。"
+      },
+      "tags": ["signals", "frequency"],
+      "formula": "X(f)=\\int_{-\\infty}^{\\infty}x(t)e^{-j2\\pi ft}\\,dt",
+      "sections": [],
+      "interactive": {
+        "enabled": false
+      }
+    },
+    {
+      "id": "convolution",
+      "number": "003",
+      "category": "signal-processing",
+      "status": "draft",
+      "route": "/formula.html?id=convolution",
+      "title": {
+        "en": "Convolution",
+        "zh-TW": "卷積",
+        "zh-CN": "卷积"
+      },
+      "description": {
+        "en": "LTI system response placeholder.",
+        "zh-TW": "LTI 系統響應占位內容。",
+        "zh-CN": "LTI 系统响应占位内容。"
+      },
+      "tags": ["signals", "lti"],
+      "formula": "y(t)=(x*h)(t)=\\int_{-\\infty}^{\\infty}x(\\tau)h(t-\\tau)\\,d\\tau",
+      "sections": [],
+      "interactive": {
+        "enabled": false
+      }
+    },
+    {
+      "id": "fundamental-theorem-calculus",
+      "number": "004",
+      "category": "numerical-methods",
+      "status": "draft",
+      "route": "/formula.html?id=fundamental-theorem-calculus",
+      "title": {
+        "en": "Fundamental theorem of calculus",
+        "zh-TW": "微積分基本定理",
+        "zh-CN": "微积分基本定理"
+      },
+      "description": {
+        "en": "Integral and antiderivative relationship placeholder.",
+        "zh-TW": "積分與反導函數關係占位內容。",
+        "zh-CN": "积分与反导函数关系占位内容。"
+      },
+      "tags": ["calculus", "integral"],
+      "formula": "\\int_a^b f(x)\\,dx=F(b)-F(a)",
+      "sections": [],
+      "interactive": {
+        "enabled": false
+      }
+    }
+  ]
+}

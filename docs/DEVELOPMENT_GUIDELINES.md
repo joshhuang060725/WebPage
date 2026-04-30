@@ -136,7 +136,7 @@
 
 ### Visual Direction
 
-關鍵字：
+整體關鍵字：
 
 - dark
 - industrial
@@ -144,6 +144,8 @@
 - modular
 - public but personal
 - precise
+
+Night mode 是主視覺，不要在沒有明確需求時修改。Day mode 是同一個 JATS 系統的透明玻璃外觀，不是新的品牌方向。
 
 核心色：
 
@@ -153,6 +155,33 @@
 - `#333333`: 次級表面。
 - `#D6D8D9`: 邊框與弱文字。
 - `#E5622B`: warning / coming soon。
+
+### Theme Mode Rules
+
+#### Night Mode
+
+- 保持目前的 JATS dark industrial terminal 設計。
+- 不修改夜間模式的 `:root` token、暗色背景、暗色卡片材質與 terminal grid，除非使用者明確要求。
+- 黑灰基底、`#FFD900`、`#2AAACE` 與高對比白字是夜間模式的基本識別。
+- 新增元件時先在 night mode 中遵守既有 panel/card/button 結構，不額外創造一套暗色視覺語言。
+
+#### Day Mode
+
+- Day mode 只透過 `body[data-theme="light"]` 相關 selector 調整，避免影響 night mode。
+- 視覺參考 Apple Liquid Glass / HIG Materials：玻璃效果應建立功能層級，主要放在 navigation、controls、cards 等浮動功能層。
+- Day mode 主色規則：
+  - Active Blue: `#3F7DF6` / nearby blue values，僅用於活動導航、開關狀態與核心控制。
+  - Background: `#EDF6FB` 為基底，搭配低飽和冰藍/霧白 mesh。
+  - Glass Base: `rgba(247, 252, 255, 0.72)` 附近，用於資訊承載層。
+  - Text Primary: 深藍灰系，例如 `#1B2B41`、`#16243A`。
+  - Text Secondary: 藍灰系，例如 `#50667C`、`#53677C`。
+  - Specular: 高透明白色，例如 `rgba(255, 255, 255, 0.82)`，用於玻璃邊緣高光。
+- 背景層使用淺色冰藍到霧白的光學 mesh、細網格與柔和環境光，保留 JATS 技術感但避免大面積深藍。
+- 玻璃層使用輕量 `backdrop-filter: blur(...) saturate(...) contrast(...)`，並搭配 Glass Base 半透明填色、1px specular 高光邊界、多層內陰影與極低透明度紋理。
+- 文字可讀性優先。正文、按鈕與 nav 文字不得因透明材質而低對比；標題可以使用藍色漸層文字，但要保持深色端足夠清楚。
+- 效能優先。不要在大量卡片上使用 SVG `feDisplacementMap` 或 `backdrop-filter: url(#filter)`；此類折射效果只可作為少量 hero/展示元件實驗，且必須經過互動流暢度確認。
+- 避免把 Liquid Glass 用成內容背景的大面積裝飾。內容模組仍需清楚分區，互動元素才使用更明顯的玻璃與高光。
+- Hover/active 只做微幅放大、陰影與高光變化，不做大幅位移或誇張動畫。
 
 ### Layout Logic
 
@@ -272,6 +301,40 @@ Rules:
 - Do not upload secrets, API keys, private documents, or local-only paths.
 - Do not implement public browser upload or delete endpoints on the Cloudflare Pages site.
 - Public downloads are rendered through `files.html`; upload/delete remains local-admin only.
+
+## Formula Derivation Standards
+
+Formula modules are data-driven and public-read-only.
+
+Website storage:
+
+```text
+data/formulas.json
+formulas.html
+formula.html
+js/formulas.js
+js/formula-detail.js
+```
+
+Rules:
+
+- Use `formulas.html` as the formula index and `formula.html?id={formulaId}` as the shared detail renderer.
+- Important modules may receive a dedicated entry route later, but they must still use the shared renderer and `data/formulas.json`.
+- Keep title, category, status, tags, summary, TeX formula strings, derivation sections, and interaction settings in `data/formulas.json`.
+- Do not hard-code formula content into page HTML.
+- Static derivation modules only need JSON updates.
+- Interactive modules must add a named calculation handler in `js/formula-detail.js`.
+- Use frontend JavaScript for v1 calculations; do not add public write APIs or backend compute endpoints.
+- KaTeX and Plotly are CDN dependencies for v1. If either CDN fails, the page must degrade with text and a visible fallback message.
+- Admin editing remains local-only through `WebPageAdmin`; public users must not be able to upload, edit, or delete formulas.
+
+QA additions:
+
+```powershell
+python -m json.tool data\formulas.json > $null
+node --check js\formulas.js
+node --check js\formula-detail.js
+```
 
 ## Security Boundary
 

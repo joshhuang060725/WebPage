@@ -21,6 +21,7 @@
     tools: [],
     wallpapers: [],
     files: [],
+    formulas: { categories: [], items: [] },
     i18n: fallbackI18n
   };
 

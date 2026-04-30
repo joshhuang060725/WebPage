@@ -8,6 +8,7 @@
     tools: "/data/tools.json",
     wallpapers: "/data/wallpapers.json",
     files: "/data/files.json",
+    formulas: "/data/formulas.json",
     i18n: "/data/i18n.json"
   };
 

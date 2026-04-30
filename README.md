@@ -79,7 +79,7 @@ WebPage/
 
 ## UI Design
 
-設計方向：深色、簡約、工業終端、模組化。
+設計方向：JATS 的主視覺仍以深色、簡約、工業終端、模組化為核心；日間模式則作為 Apple Liquid Glass 參考下的透明玻璃變體。
 
 核心色票：
 
@@ -92,6 +92,14 @@ WebPage/
 | UI Gray | `#D6D8D9` | 邊框、弱提示文字 |
 | Notice Orange | `#E5622B` | planned / coming soon |
 | White | `#FFFFFF` | 高對比主文字 |
+
+模式規則：
+
+- Night mode: 保持 JATS 深色工業終端感，黑灰基底、黃藍狀態色與高對比文字是主規則。除非有明確需求，不調整夜間模式 token、背景與卡片材質。
+- Day mode: 採用淺色冰藍玻璃，不使用大面積深藍底。背景以霧白、淡冰藍與低飽和藍色 mesh 為主，卡片使用半透明白藍玻璃，Active Blue 只用於活動導航、開關狀態與核心控制。
+- Day mode 文字：正文使用深藍灰系，標題與首頁 `JATS` 允許使用藍色漸層文字；避免純白大面積文字，降低長時間觀看壓力。
+- 可讀性與效能優先：玻璃效果不能犧牲文字對比或互動流暢度。避免在大量卡片上使用 SVG displacement / heavy backdrop filter；日間模式以輕量 blur、tint、specular、inset shadow 和 outer shadow 表現玻璃質感。
+- Liquid Glass 只用在導航、控制、卡片等功能層；內容本身仍保持明確分區，避免整頁變成單一模糊背景。
 
 首頁 UX：
 
@@ -252,6 +260,50 @@ Quota posture:
 - No automatic recommendation chain.
 - `search.list` is called only when the user submits a query.
 - Repeated queries are cached in the browser and at the Function response layer for 1 hour.
+
+## Formula Derivation Architecture
+
+`formulas.html` is the public entry for formula derivation modules. It shows searchable formula cards, category filters, status labels, and public-safe module links.
+
+Core flow:
+
+```text
+formulas.html
+|-- js/formulas.js
+|   |-- reads data/formulas.json
+|   |-- renders category filters and searchable formula cards
+|   `-- links ready modules to formula.html?id={formulaId}
+formula.html
+|-- js/formula-detail.js
+|   |-- reads the same formula registry
+|   |-- renders symbolic sections and step-by-step derivation
+|   |-- renders KaTeX math from JSON TeX strings
+|   `-- runs browser-side interactive calculations and Plotly charts
+data/formulas.json
+|-- categories[]
+`-- items[]
+```
+
+First interactive module:
+
+- `second-order-damping`
+- Uses frontend JavaScript only.
+- Uses KaTeX CDN for math layout.
+- Uses Plotly CDN for the response graph.
+- Adjusts damping ratio and natural frequency, then updates overshoot and time-domain response.
+
+Content rule:
+
+- Formula text, metadata, categories, derivation steps, and interaction settings belong in `data/formulas.json`.
+- Do not hard-code formula content into the HTML pages unless it is structural fallback text.
+- New interactive formulas should add a named calculation handler in `js/formula-detail.js`.
+
+Admin fit:
+
+- Local-only `WebPageAdmin` now includes a Formulas section.
+- Basic metadata is edited through form fields.
+- Derivation sections and interactive settings are edited as JSON to keep the system flexible.
+- Publish/check logic includes formulas, HTML, CSS, JS, Functions, docs, and sitemap changes.
 
 ## Wallpaper Interface Architecture
 

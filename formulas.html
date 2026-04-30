@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Formula Lab | Josh Huang</title>
+    <meta name="description" content="Formula derivation modules and interactive engineering calculations by Josh Huang." />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="Josh Huang" />
+    <meta name="theme-color" content="#202020" />
+    <link rel="canonical" href="https://joshhuang.ccwu.cc/formulas.html" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+    <link rel="stylesheet" href="/styles.css?v=20260501-1" />
+  </head>
+  <body data-page="formulas">
+    <div class="shell">
+      <aside class="side-nav" aria-label="Primary navigation" data-nav-collapsible>
+        <a class="brand" href="/" aria-label="Josh Huang portal home"><span class="brand-mark">J</span><span><strong>JOSH</strong><small data-i18n="nav.system">Personal Portal</small></span></a>
+        <nav class="nav-links">
+          <a href="/" data-i18n="nav.portal">Portal</a>
+          <a href="/profile.html" data-i18n="nav.bio">Bio</a>
+          <a href="/wallpapers.html" data-i18n="nav.wallpapers">Wallpapers</a>
+          <a href="/projects.html" data-i18n="nav.projects">Projects</a>
+          <a href="/formulas.html" aria-current="page" data-i18n="nav.formulas">公式推導區</a>
+          <a href="/links.html" data-i18n="nav.links">Quick Links</a>
+          <a href="/youtube.html" data-i18n="nav.youtube">YouTube</a>
+          <a href="/tools.html" data-i18n="nav.tools">Tools</a>
+          <a href="/files.html" data-i18n="nav.files">Files</a>
+        </nav>
+        <div class="language-panel" aria-label="Language selector">
+          <button type="button" data-lang-button="zh-TW">TW</button>
+          <button type="button" data-lang-button="zh-CN">CN</button>
+          <button type="button" data-lang-button="en">EN</button>
+        </div>
+        <div class="theme-panel" aria-label="Theme selector">
+          <button type="button" data-theme-button="auto">AUTO</button>
+          <button type="button" data-theme-button="light">DAY</button>
+          <button type="button" data-theme-button="dark">NIGHT</button>
+        </div>
+        <p class="nav-meta"><span data-i18n="meta.version">Static build</span><strong id="last-modified">--</strong></p>
+      </aside>
+      <header class="mobile-header">
+        <a class="brand" href="/" aria-label="Josh Huang portal home"><span class="brand-mark">J</span><span>JOSH</span></a>
+        <div class="language-panel" aria-label="Language selector">
+          <button type="button" data-lang-button="zh-TW">TW</button>
+          <button type="button" data-lang-button="zh-CN">CN</button>
+          <button type="button" data-lang-button="en">EN</button>
+        </div>
+        <div class="theme-panel" aria-label="Theme selector">
+          <button type="button" data-theme-button="auto">AUTO</button>
+          <button type="button" data-theme-button="light">DAY</button>
+          <button type="button" data-theme-button="dark">NIGHT</button>
+        </div>
+      </header>
+      <main>
+        <section class="page-hero">
+          <p class="eyebrow" data-i18n="formulas.eyebrow">Derivation modules</p>
+          <h1 data-i18n="formulas.title">公式推導區</h1>
+          <p data-i18n="formulas.description">
+            A structured entry for formula cards, derivation notes, and browser-side interactive engineering calculations.
+          </p>
+        </section>
+        <section class="section formula-control-panel panel" aria-label="Formula filters">
+          <div>
+            <p class="eyebrow" data-i18n="formulas.filterLabel">Category filter</p>
+            <div class="formula-filters" id="formula-filters"></div>
+          </div>
+          <form class="formula-search" role="search" id="formula-search-form">
+            <label for="formula-search" data-i18n="formulas.searchLabel">Search formulas</label>
+            <div>
+              <span aria-hidden="true">J&gt;</span>
+              <input id="formula-search" name="q" type="search" data-i18n-placeholder="formulas.searchPlaceholder" placeholder="Search derivations..." />
+            </div>
+          </form>
+        </section>
+        <section class="section">
+          <div class="formula-grid" id="formula-list" aria-live="polite"></div>
+        </section>
+      </main>
+    </div>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <script defer src="/js/data-loader.js?v=20260501-1"></script>
+    <script defer src="/js/main.js?v=20260501-1"></script>
+    <script defer src="/js/formulas.js?v=20260501-1"></script>
+  </body>
+</html>
