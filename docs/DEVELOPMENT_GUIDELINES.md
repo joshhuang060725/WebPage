@@ -39,6 +39,7 @@
 - `links.html`: 公開安全快速連結。
 - `youtube.html`: YouTube 搜尋、播放器與側邊標題 ticker。
 - `tools.html`: 工具入口與狀態。
+- `files.html`: 公開下載頁，只讀取 `data/files.json`。
 
 規則：
 
@@ -270,6 +271,7 @@ Rules:
 - Sort file entries by latest `uploadedAt`.
 - Do not upload secrets, API keys, private documents, or local-only paths.
 - Do not implement public browser upload or delete endpoints on the Cloudflare Pages site.
+- Public downloads are rendered through `files.html`; upload/delete remains local-admin only.
 
 ## Security Boundary
 
@@ -317,6 +319,7 @@ Browser route check:
 - `/links.html`
 - `/youtube.html`
 - `/tools.html`
+- `/files.html`
 
 Responsive check:
 

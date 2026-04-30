@@ -339,6 +339,46 @@ User requested a personal file upload and delete feature with backend upload int
 
 Local working tree only. Not committed and not pushed by user request.
 
+## 2026-04-30 - Public Files Download Page
+
+### Context
+
+User clarified that uploaded files also need a corresponding download surface on the public website.
+
+### Decisions
+
+1. Add a dedicated `files.html` page instead of mixing downloads into Tools.
+2. Public site only reads `data/files.json`; upload/delete remains local-admin only.
+3. File entries are sorted by latest `uploadedAt`.
+4. Each card displays name, description, type, size, upload date, and open/download actions.
+
+### Implemented
+
+- Added `files.html`.
+- Added Files navigation entry under Tools.
+- Added `data/files.json` loading to `js/data-loader.js`.
+- Added `renderFiles()` to `js/main.js`.
+- Added Files i18n keys.
+- Added file card styling and responsive layout.
+- Added `/files.html` to `sitemap.xml`.
+- Updated README and development guidelines.
+
+### Verification
+
+- JSON parse passed for all data files, including `data/files.json`.
+- JavaScript syntax passed for `js/data-loader.js`, `js/main.js`, `js/youtube.js`, and the YouTube Function.
+- `git diff --check` passed.
+- Headless Edge public page check passed with mocked file data:
+  - 2 file cards rendered.
+  - newest `uploadedAt` sorted first.
+  - summary rendered total file count and size.
+  - download link pointed to the public asset path.
+  - desktop and mobile had no horizontal overflow.
+
+### Git State
+
+Local working tree only. Not committed and not pushed by user request.
+
 ## 2026-04-29 - Asset Cache Busting
 
 ### Context

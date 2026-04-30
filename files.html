@@ -1,18 +1,18 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>YouTube Browser | Josh Huang</title>
-    <meta name="description" content="A YouTube search and embedded playback browser for Josh Huang's JATS personal portal." />
+    <title>Files | Josh Huang</title>
+    <meta name="description" content="Public downloads and shared files for Josh Huang's personal portal." />
     <meta name="robots" content="index, follow" />
     <meta name="author" content="Josh Huang" />
     <meta name="theme-color" content="#202020" />
-    <link rel="canonical" href="https://joshhuang.ccwu.cc/youtube.html" />
+    <link rel="canonical" href="https://joshhuang.ccwu.cc/files.html" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/styles.css?v=20260430-1" />
   </head>
-  <body data-page="youtube">
+  <body data-page="files">
     <div class="shell">
       <aside class="side-nav" aria-label="Primary navigation" data-nav-collapsible>
         <a class="brand" href="/" aria-label="Josh Huang portal home"><span class="brand-mark">J</span><span><strong>JOSH</strong><small data-i18n="nav.system">Personal Portal</small></span></a>
@@ -22,9 +22,9 @@
           <a href="/wallpapers.html" data-i18n="nav.wallpapers">Wallpapers</a>
           <a href="/projects.html" data-i18n="nav.projects">Projects</a>
           <a href="/links.html" data-i18n="nav.links">Quick Links</a>
-          <a href="/youtube.html" aria-current="page" data-i18n="nav.youtube">YouTube</a>
+          <a href="/youtube.html" data-i18n="nav.youtube">YouTube</a>
           <a href="/tools.html" data-i18n="nav.tools">Tools</a>
-          <a href="/files.html" data-i18n="nav.files">Files</a>
+          <a href="/files.html" aria-current="page" data-i18n="nav.files">Files</a>
         </nav>
         <div class="language-panel" aria-label="Language selector">
           <button type="button" data-lang-button="zh-TW">TW</button>
@@ -53,58 +53,22 @@
       </header>
       <main>
         <section class="page-hero">
-          <p class="eyebrow" data-i18n="youtube.eyebrow">Media browser</p>
-          <h1 data-i18n="youtube.title">YouTube browser</h1>
-          <p data-i18n="youtube.description">
-            Search YouTube through a Cloudflare Function proxy, play videos in the embedded player, and browse titles through a side ticker.
+          <p class="eyebrow" data-i18n="files.eyebrow">Public downloads</p>
+          <h1 data-i18n="files.title">Files</h1>
+          <p data-i18n="files.description">
+            Public files uploaded through the local admin tool. Private documents and keys are not published here.
           </p>
         </section>
-
-        <section class="section youtube-layout" aria-label="YouTube browser">
-          <div class="youtube-player-card panel">
-            <div class="youtube-section-head">
-              <span class="eyebrow" data-i18n="youtube.playerLabel">Player</span>
-              <strong id="youtube-now-title">JATS YouTube</strong>
-            </div>
-            <div class="youtube-player-frame">
-              <div id="youtube-player" class="youtube-player-placeholder">
-                <span>YT</span>
-              </div>
-            </div>
-            <form class="youtube-search" id="youtube-search-form" role="search">
-              <label for="youtube-search-input" data-i18n="youtube.searchLabel">Search YouTube</label>
-              <div>
-                <span aria-hidden="true">J&gt;</span>
-                <input
-                  id="youtube-search-input"
-                  name="q"
-                  type="search"
-                  maxlength="80"
-                  autocomplete="off"
-                  data-i18n-placeholder="youtube.searchPlaceholder"
-                  placeholder="Search videos..."
-                />
-                <button type="submit" data-i18n="youtube.searchButton">Search</button>
-              </div>
-            </form>
-            <p class="youtube-status" id="youtube-status" data-i18n="youtube.statusIdle">Enter a query to load videos.</p>
+        <section class="section">
+          <div class="section-heading">
+            <p class="eyebrow" data-i18n="files.summaryLabel">Storage summary</p>
+            <h2 class="file-summary-value" id="file-summary">0 files / 0 B</h2>
           </div>
-
-          <aside class="youtube-side panel">
-            <div class="youtube-section-head">
-              <span class="eyebrow" data-i18n="youtube.tickerLabel">Ticker</span>
-              <strong data-i18n="youtube.resultsLabel">Results</strong>
-            </div>
-            <div class="youtube-ticker" aria-label="Video title ticker">
-              <div class="youtube-ticker-inner" id="youtube-ticker-inner"></div>
-            </div>
-            <div class="youtube-results" id="youtube-results" aria-live="polite"></div>
-          </aside>
+          <div class="file-grid" id="file-list" aria-live="polite"></div>
         </section>
       </main>
     </div>
     <script src="/js/data-loader.js?v=20260430-1"></script>
     <script src="/js/main.js?v=20260430-1"></script>
-    <script src="/js/youtube.js?v=20260430-1"></script>
   </body>
 </html>

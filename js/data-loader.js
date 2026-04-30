@@ -7,6 +7,7 @@
     shortcuts: "/data/shortcuts.json",
     tools: "/data/tools.json",
     wallpapers: "/data/wallpapers.json",
+    files: "/data/files.json",
     i18n: "/data/i18n.json"
   };
 

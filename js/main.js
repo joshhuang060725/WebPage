@@ -20,6 +20,7 @@
     shortcuts: [],
     tools: [],
     wallpapers: [],
+    files: [],
     i18n: fallbackI18n
   };
 
@@ -240,6 +241,75 @@
         <p>${localized(tool.description)}</p>
         <span class="tool-status">${t("state.status")}: ${tool.status}</span>
       `;
+      list.append(card);
+    });
+  }
+
+  function formatFileSize(value) {
+    const bytes = Number(value || 0);
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    if (bytes < 1024 * 1024 * 1024) return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+    return `${(bytes / 1024 / 1024 / 1024).toFixed(2)} GB`;
+  }
+
+  function formatFileDate(value) {
+    if (!value) return "--";
+    return new Intl.DateTimeFormat(state.lang, {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit"
+    }).format(new Date(value));
+  }
+
+  function renderFiles() {
+    const list = document.getElementById("file-list");
+    const summary = document.getElementById("file-summary");
+    if (!list) return;
+
+    const files = [...(state.data.files || [])].sort(
+      (a, b) => new Date(b.uploadedAt || 0) - new Date(a.uploadedAt || 0)
+    );
+    const totalBytes = files.reduce((sum, file) => sum + Number(file.size || 0), 0);
+
+    if (summary) {
+      summary.textContent = `${files.length} ${t("files.countLabel")} / ${formatFileSize(totalBytes)}`;
+    }
+
+    list.innerHTML = "";
+
+    if (!files.length) {
+      const empty = document.createElement("article");
+      empty.className = "panel file-empty";
+      empty.textContent = t("files.empty");
+      list.append(empty);
+      return;
+    }
+
+    files.forEach((file) => {
+      const card = document.createElement("article");
+      card.className = "file-card";
+      card.innerHTML = `
+        <div>
+          <span class="file-type"></span>
+          <h3></h3>
+          <p></p>
+        </div>
+        <dl class="file-meta">
+          <div><dt>${t("files.size")}</dt><dd>${formatFileSize(file.size)}</dd></div>
+          <div><dt>${t("files.uploaded")}</dt><dd>${formatFileDate(file.uploadedAt)}</dd></div>
+        </dl>
+        <div class="file-actions">
+          <a class="button primary" download>${t("files.download")}</a>
+          <a class="button ghost" target="_blank" rel="noreferrer">${t("files.open")}</a>
+        </div>
+      `;
+      card.querySelector(".file-type").textContent = file.extension || t("files.type");
+      card.querySelector("h3").textContent = file.name || file.fileName || "File";
+      card.querySelector("p").textContent = file.description || "";
+      card.querySelectorAll("a").forEach((link) => {
+        link.href = file.path || "#";
+      });
       list.append(card);
     });
   }
@@ -593,6 +663,7 @@
     renderProjects();
     renderShortcuts();
     renderTools();
+    renderFiles();
     renderWallpapers();
     renderMeta();
     renderRuntimeStatus();

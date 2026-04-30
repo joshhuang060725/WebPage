@@ -40,6 +40,7 @@ WebPage/
 |-- links.html                  # 公開安全快速連結
 |-- youtube.html                # YouTube 搜尋、嵌入播放器與側邊標題 ticker
 |-- tools.html                  # Exchange / Compute Lab / UX Lab 入口
+|-- files.html                  # 公開下載頁，讀取 data/files.json
 |-- styles.css                  # 全站 UI token、layout、components
 |-- js/
 |   |-- data-loader.js          # JSON-first data source，未來可切 API
@@ -113,6 +114,7 @@ WebPage/
 - `links.html`: 只放公開安全連結。
 - `youtube.html`: YouTube 搜尋、嵌入播放與側邊標題 ticker，介於 Quick Links 與 Tools 之間。
 - `tools.html`: 工具模組入口，未完成前只顯示狀態。
+- `files.html`: 公開下載頁，只展示本地後台上傳並標記為公開的檔案。
 
 這樣可以維持首頁清楚，也讓後續每個功能區塊能獨立演化。
 
@@ -195,6 +197,7 @@ node --check functions\api\youtube\search.js
 - `/links.html`
 - `/youtube.html`
 - `/tools.html`
+- `/files.html`
 - Desktop / tablet / mobile 不重疊
 - 語言切換可用
 - JATS lockup 不隨語言切換

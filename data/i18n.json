@@ -71,7 +71,19 @@
     "contact.description": "Contact points are intentionally limited to public channels. Administration and data upload surfaces are private.",
     "state.locked": "Locked",
     "state.category": "Category",
-    "state.status": "Status"
+    "state.status": "Status",
+    "nav.files": "Files",
+    "files.eyebrow": "Public downloads",
+    "files.title": "Files",
+    "files.description": "Public files uploaded through the local admin tool. Private documents and keys are not published here.",
+    "files.summaryLabel": "Storage summary",
+    "files.countLabel": "files",
+    "files.empty": "No public files are available yet.",
+    "files.download": "Download",
+    "files.open": "Open",
+    "files.size": "Size",
+    "files.uploaded": "Uploaded",
+    "files.type": "File"
   },
   "zh-TW": {
     "nav.system": "個人門戶",
@@ -145,7 +157,19 @@
     "contact.description": "聯絡方式刻意限制在公開管道。管理與資料上傳功能維持私人。",
     "state.locked": "鎖定",
     "state.category": "分類",
-    "state.status": "狀態"
+    "state.status": "狀態",
+    "nav.files": "\u6a94\u6848",
+    "files.eyebrow": "\u516c\u958b\u4e0b\u8f09",
+    "files.title": "\u6a94\u6848",
+    "files.description": "\u900f\u904e\u672c\u5730\u5f8c\u53f0\u5de5\u5177\u4e0a\u50b3\u7684\u516c\u958b\u6a94\u6848\u3002\u79c1\u4eba\u6587\u4ef6\u8207\u91d1\u9470\u4e0d\u6703\u767c\u5e03\u5728\u9019\u88e1\u3002",
+    "files.summaryLabel": "\u5bb9\u91cf\u6458\u8981",
+    "files.countLabel": "\u500b\u6a94\u6848",
+    "files.empty": "\u76ee\u524d\u6c92\u6709\u516c\u958b\u6a94\u6848\u3002",
+    "files.download": "\u4e0b\u8f09",
+    "files.open": "\u958b\u555f",
+    "files.size": "\u5927\u5c0f",
+    "files.uploaded": "\u4e0a\u50b3\u65e5\u671f",
+    "files.type": "\u6a94\u6848"
   },
   "zh-CN": {
     "nav.system": "个人门户",
@@ -219,6 +243,18 @@
     "contact.description": "联系方式刻意限制在公开渠道。管理与数据上传功能维持私人。",
     "state.locked": "锁定",
     "state.category": "分类",
-    "state.status": "状态"
+    "state.status": "状态",
+    "nav.files": "\u6587\u4ef6",
+    "files.eyebrow": "\u516c\u5f00\u4e0b\u8f7d",
+    "files.title": "\u6587\u4ef6",
+    "files.description": "\u901a\u8fc7\u672c\u5730\u540e\u53f0\u5de5\u5177\u4e0a\u4f20\u7684\u516c\u5f00\u6587\u4ef6\u3002\u79c1\u4eba\u6587\u4ef6\u4e0e\u5bc6\u94a5\u4e0d\u4f1a\u53d1\u5e03\u5728\u8fd9\u91cc\u3002",
+    "files.summaryLabel": "\u5bb9\u91cf\u6458\u8981",
+    "files.countLabel": "\u4e2a\u6587\u4ef6",
+    "files.empty": "\u76ee\u524d\u6ca1\u6709\u516c\u5f00\u6587\u4ef6\u3002",
+    "files.download": "\u4e0b\u8f7d",
+    "files.open": "\u6253\u5f00",
+    "files.size": "\u5927\u5c0f",
+    "files.uploaded": "\u4e0a\u4f20\u65e5\u671f",
+    "files.type": "\u6587\u4ef6"
   }
 }
