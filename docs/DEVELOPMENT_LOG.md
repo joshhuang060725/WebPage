@@ -1,5 +1,23 @@
 # Development Log
 
+## 2026-05-01 - Cloudflare Pages Asset Size Deployment Fix
+
+### Context
+
+Cloudflare Pages deployment failed during asset validation because `assets/files/02-9af97a.pdf` was 29.1 MiB. Pages only accepts static files up to 25 MiB.
+
+### Decisions
+
+1. Remove the oversized PDF from Git tracking while leaving the local copy ignored.
+2. Remove its public metadata entry from `data/files.json` so the website does not expose a broken download link.
+3. Document the 25 MiB static asset limit in the development guidelines.
+
+### Result
+
+- `assets/files/01-1b8c4c.docx` remains published.
+- `assets/files/02-9af97a.pdf` remains local-only and ignored by Git.
+- Larger downloads should be compressed or moved to Cloudflare R2 / external object storage before being listed publicly.
+
 ## 2026-05-01 - Formula Derivation Area
 
 ### Context

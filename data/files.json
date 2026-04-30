@@ -1,18 +1,8 @@
 [
   {
-    "id": "02-9af97a",
-    "name": "测试02",
-    "description": "这是一个用于测试的文件",
-    "fileName": "02-9af97a.pdf",
-    "path": "/assets/files/02-9af97a.pdf",
-    "extension": "pdf",
-    "size": 30463153,
-    "uploadedAt": "2026-04-30T04:48:06.010Z"
-  },
-  {
     "id": "01-1b8c4c",
-    "name": "测试01",
-    "description": "这是一个用于测试的文件",
+    "name": "test01",
+    "description": "Public test document for validating the file download area.",
     "fileName": "01-1b8c4c.docx",
     "path": "/assets/files/01-1b8c4c.docx",
     "extension": "docx",

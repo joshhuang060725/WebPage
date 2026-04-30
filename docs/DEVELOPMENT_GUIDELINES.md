@@ -298,6 +298,7 @@ Rules:
 - Supported public file types: `.zip`, `.pdf`, `.doc`, `.docx`, `.cpp`, `.c`, `.h`, `.hpp`, `.txt`, `.py`, `.md`, `.json`, `.csv`.
 - Every entry in `data/files.json` must include `id`, `name`, `description`, `path`, `extension`, `size`, and `uploadedAt`.
 - Sort file entries by latest `uploadedAt`.
+- Cloudflare Pages rejects any single static asset larger than 25 MiB. Keep files under 25 MiB, compress them before publishing, or move larger assets to external object storage such as Cloudflare R2 and link them from metadata.
 - Do not upload secrets, API keys, private documents, or local-only paths.
 - Do not implement public browser upload or delete endpoints on the Cloudflare Pages site.
 - Public downloads are rendered through `files.html`; upload/delete remains local-admin only.
