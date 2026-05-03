@@ -76,6 +76,7 @@ WebPage/
 |-- profile.html                # 個人介紹與公開聯絡方式
 |-- wallpapers.html             # 動態桌布預覽與切換頁
 |-- projects.html               # 專案展示頁
+|-- project.html                # 共用專案詳情頁，讀取 data/projects.json
 |-- links.html                  # 公開安全快速連結
 |-- youtube.html                # YouTube 搜尋、嵌入播放器與側邊標題 ticker
 |-- tools.html                  # Exchange / Compute Lab / UX Lab 入口
@@ -157,7 +158,8 @@ WebPage/
 - `index.html`: 個人宣傳首頁與 JATS portal。
 - `profile.html`: 公開個人介紹、技能標籤、公開聯絡方式。
 - `wallpapers.html`: 動態桌布預覽與切換，真實素材後續放入 JSON。
-- `projects.html`: 專案展示，後續可擴充案例研究。
+- `projects.html`: 專案展示，點擊卡片進入 `project.html?id={projectId}` 詳情。
+- `project.html`: 共用專案詳情頁，頂部顯示 links / PDF 文件，下方渲染受控 Markdown 長文與圖片。
 - `links.html`: 只放公開安全連結。
 - `youtube.html`: YouTube 搜尋、嵌入播放與側邊標題 ticker，介於 Quick Links 與 Tools 之間。
 - `tools.html`: 工具模組入口，未完成前只顯示狀態。
@@ -241,6 +243,7 @@ node --check functions\api\youtube\search.js
 - `/profile.html`
 - `/wallpapers.html`
 - `/projects.html`
+- `/project.html?id=personal-portal`
 - `/links.html`
 - `/youtube.html`
 - `/tools.html`
@@ -340,8 +343,8 @@ Content rule:
 Admin fit:
 
 - Local-only `WebPageAdmin` now includes a Formulas section.
-- Basic metadata is edited through form fields.
-- Derivation sections and interactive settings are edited as JSON to keep the system flexible.
+- Formula cards open a dedicated local editing surface in `WebPageAdmin`.
+- Basic metadata, derivation sections, steps, interactive parameters, and metrics are edited through structured form fields.
 - Publish/check logic includes formulas, HTML, CSS, JS, Functions, docs, and sitemap changes.
 
 ## Wallpaper Interface Architecture

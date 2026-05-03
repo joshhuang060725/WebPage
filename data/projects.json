@@ -12,7 +12,31 @@
       "zh-CN": "部署于 Cloudflare Pages 的个人网站，整合公开形象、项目展示、快捷入口与 UI/UX 系统实验。"
     },
     "status": "active",
-    "tech_stack": ["HTML", "CSS", "JavaScript", "Cloudflare Pages"]
+    "tech_stack": [
+      "HTML",
+      "CSS",
+      "JavaScript",
+      "Cloudflare Pages"
+    ],
+    "route": "/project.html?id=personal-portal",
+    "links": [
+      {
+        "label": "GitHub",
+        "url": "https://github.com/joshhuang060725",
+        "type": "github"
+      },
+      {
+        "label": "Cloudflare Pages",
+        "url": "https://pages.cloudflare.com/",
+        "type": "reference"
+      }
+    ],
+    "documents": [],
+    "content": {
+      "en": "# Personal Portal\n\nThis project records the public website system behind the profile, project cards, quick links, wallpaper surface, files, and formula lab.\n\nThe implementation keeps public content in JSON so the local admin tool can edit and publish without exposing private endpoints.",
+      "zh-TW": "# 個人門戶網站\n\n這個專案記錄個人公開網站系統，包含個人資料、專案卡片、快速連結、動態桌布、檔案與公式推導區。\n\n實作上把公開內容保留在 JSON，讓本地 Admin 可以編輯與發布，同時不暴露私人端點。",
+      "zh-CN": "# 个人门户网站\n\n这个项目记录个人公开网站系统，包含个人资料、项目卡片、快速链接、动态桌布、文件与公式推导区。\n\n实现上把公开内容保留在 JSON，让本地 Admin 可以编辑与发布，同时不暴露私人端点。"
+    }
   },
   {
     "id": "jatsweb",
@@ -27,7 +51,25 @@
       "zh-CN": "以浏览器为载体的辅助终端概念，聚焦本地优先计算、模块化数据与克制的工业交互设计。"
     },
     "status": "concept",
-    "tech_stack": ["JSON Data", "Local-first", "Responsive UI"]
+    "tech_stack": [
+      "JSON Data",
+      "Local-first",
+      "Responsive UI"
+    ],
+    "route": "/project.html?id=jatsweb",
+    "links": [
+      {
+        "label": "Project Notes",
+        "url": "/projects.html#jatsweb",
+        "type": "internal"
+      }
+    ],
+    "documents": [],
+    "content": {
+      "en": "# JATSWeb Concept\n\nJATSWeb is a browser-based auxiliary terminal concept for local-first computation and restrained industrial interaction design.\n\nFuture notes can expand this page with diagrams, screenshots, documents, and implementation logs.",
+      "zh-TW": "# JATSWeb 概念\n\nJATSWeb 是以瀏覽器為載體的輔助終端概念，聚焦本地優先運算與克制的工業互動設計。\n\n後續可以在此頁補充圖表、截圖、文件與實作紀錄。",
+      "zh-CN": "# JATSWeb 概念\n\nJATSWeb 是以浏览器为载体的辅助终端概念，聚焦本地优先计算与克制的工业交互设计。\n\n后续可以在此页补充图表、截图、文件与实现记录。"
+    }
   },
   {
     "id": "ui-lab",
@@ -42,6 +84,24 @@
       "zh-CN": "未来用于记录界面迭代、动效规则、色票决策与用户系统模式的实验日志。"
     },
     "status": "planned",
-    "tech_stack": ["Design System", "Interaction", "Documentation"]
+    "tech_stack": [
+      "Design System",
+      "Interaction",
+      "Documentation"
+    ],
+    "route": "/project.html?id=ui-lab",
+    "links": [
+      {
+        "label": "Design Log",
+        "url": "/docs/DEVELOPMENT_LOG.md",
+        "type": "internal"
+      }
+    ],
+    "documents": [],
+    "content": {
+      "en": "# UI/UX Lab\n\nThe UI/UX Lab is the future home for interface iterations, motion decisions, palette experiments, and reusable system patterns.\n\nMarkdown content can hold longer case-study writing while images and PDFs stay in the asset layer.",
+      "zh-TW": "# UI/UX 實驗室\n\nUI/UX 實驗室會用來整理介面迭代、動效決策、色彩實驗與可重用的系統模式。\n\nMarkdown 內容可承載較長的案例文字，圖片與 PDF 則留在資產層。",
+      "zh-CN": "# UI/UX 实验室\n\nUI/UX 实验室会用来整理界面迭代、动效决策、色彩实验与可复用的系统模式。\n\nMarkdown 内容可承载较长的案例文字，图片与 PDF 则留在资产层。"
+    }
   }
 ]

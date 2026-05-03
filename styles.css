@@ -426,6 +426,8 @@ body[data-theme="light"] .tool-card,
 body[data-theme="light"] .file-card,
 body[data-theme="light"] .formula-card,
 body[data-theme="light"] .formula-section-card,
+body[data-theme="light"] .project-article,
+body[data-theme="light"] .project-resource-panel,
 body[data-theme="light"] .contact-panel {
   position: relative;
   isolation: isolate;
@@ -481,6 +483,8 @@ body[data-theme="light"] .tool-card > *,
 body[data-theme="light"] .file-card > *,
 body[data-theme="light"] .formula-card > *,
 body[data-theme="light"] .formula-section-card > *,
+body[data-theme="light"] .project-article > *,
+body[data-theme="light"] .project-resource-panel > *,
 body[data-theme="light"] .contact-panel > * {
   position: relative;
   z-index: 1;
@@ -586,7 +590,8 @@ body[data-theme="light"] .dash-module small,
 body[data-theme="light"] .file-meta,
 body[data-theme="light"] .youtube-meta,
 body[data-theme="light"] .formula-card-footer,
-body[data-theme="light"] .formula-step span,
+body[data-theme="light"] .formula-image figcaption,
+body[data-theme="light"] .formula-plot-caption,
 body[data-theme="light"] .nav-meta {
   color: var(--text-secondary);
 }
@@ -1146,6 +1151,8 @@ li {
 }
 
 .project-card {
+  display: grid;
+  color: inherit;
   min-height: 240px;
   padding: 24px;
 }
@@ -1160,6 +1167,21 @@ li {
   flex-wrap: wrap;
   gap: 7px;
   margin-top: 18px;
+}
+
+.project-open {
+  align-self: end;
+  margin-top: 18px;
+  color: var(--core-yellow);
+  font-size: 0.92rem;
+}
+
+.project-card:hover,
+.project-card:focus-visible,
+.tool-card:hover,
+.tool-card:focus-visible {
+  border-color: rgba(255, 217, 0, 0.42);
+  outline: none;
 }
 
 .link-grid {
@@ -1186,6 +1208,7 @@ li {
 .tool-card {
   display: flex;
   flex-direction: column;
+  color: inherit;
   min-height: 260px;
   padding: 24px;
   border: 1px solid var(--panel-border);
@@ -1400,10 +1423,13 @@ li {
   background: var(--core-yellow);
 }
 
-.formula-card[data-status="coming-soon"],
-.formula-card[data-status="draft"] {
+.formula-card[data-status="wait"] {
   border-style: dashed;
   opacity: 0.72;
+}
+
+.formula-card[data-status="wait"]::before {
+  background: var(--dim);
 }
 
 .formula-card-head,
@@ -1484,7 +1510,7 @@ li {
 
 .formula-detail-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(340px, 0.7fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: 18px;
   align-items: start;
 }
@@ -1498,38 +1524,42 @@ li {
   padding: clamp(22px, 3vw, 32px);
 }
 
-.formula-step-list {
+.formula-element-list {
   display: grid;
-  gap: 14px;
+  gap: 18px;
   margin-top: 18px;
 }
 
-.formula-step {
-  display: grid;
-  grid-template-columns: 52px minmax(0, 1fr);
-  gap: 14px;
-  align-items: start;
+.formula-element {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.78;
 }
 
-.formula-step > span {
+.formula-element-text {
+  white-space: pre-line;
+}
+
+.formula-image {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+
+.formula-image img {
+  width: min(100%, 980px);
+  max-height: 620px;
+  border: 1px solid rgba(214, 216, 217, 0.16);
+  border-radius: 8px;
+  object-fit: contain;
+  background: rgba(0, 0, 0, 0.24);
+}
+
+.formula-image figcaption,
+.formula-plot-caption {
   color: var(--dim);
-  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-  font-size: 0.78rem;
-  font-weight: 950;
-}
-
-.formula-step strong {
-  display: block;
-  margin-bottom: 8px;
-  color: var(--white);
-}
-
-.formula-interactive {
-  position: sticky;
-  top: 24px;
-  display: grid;
-  gap: 18px;
-  padding: clamp(20px, 3vw, 30px);
+  font-size: 0.86rem;
+  line-height: 1.6;
 }
 
 .formula-plot {
@@ -1541,6 +1571,15 @@ li {
     linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
     rgba(0, 0, 0, 0.18);
   background-size: 36px 36px, 36px 36px, auto;
+}
+
+.formula-plot-module {
+  display: grid;
+  gap: 18px;
+  padding: clamp(16px, 2.5vw, 22px);
+  border: 1px solid rgba(214, 216, 217, 0.14);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.12);
 }
 
 .formula-controls {
@@ -1606,6 +1645,114 @@ li {
   padding: 24px;
   color: var(--notice);
   text-align: center;
+}
+
+.project-detail-hero {
+  margin-bottom: 18px;
+}
+
+.project-detail-layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.38fr) minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.project-resource-panel,
+.project-article {
+  padding: clamp(22px, 3vw, 32px);
+}
+
+.project-resource-panel {
+  position: sticky;
+  top: 24px;
+  display: grid;
+  gap: 18px;
+}
+
+.project-link-list,
+.project-document-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.project-link-list p,
+.project-document-list p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.markdown-body {
+  display: grid;
+  gap: 18px;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.76;
+}
+
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4 {
+  margin: 10px 0 0;
+  color: var(--white);
+  line-height: 1.18;
+}
+
+.markdown-body p,
+.markdown-body ul,
+.markdown-body blockquote,
+.markdown-body pre,
+.markdown-body figure {
+  margin: 0;
+}
+
+.markdown-body a {
+  color: var(--core-yellow);
+  font-weight: 850;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.markdown-body ul {
+  padding-left: 1.3rem;
+}
+
+.markdown-body blockquote {
+  padding: 14px 18px;
+  border-left: 4px solid var(--core-yellow);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.markdown-body code {
+  padding: 2px 6px;
+  border-radius: 6px;
+  color: var(--core-yellow);
+  background: rgba(0, 0, 0, 0.22);
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+.markdown-body pre {
+  max-height: none;
+}
+
+.markdown-body pre code {
+  display: block;
+  padding: 0;
+  color: inherit;
+  background: transparent;
+  white-space: pre-wrap;
+}
+
+.markdown-body img {
+  display: block;
+  width: min(100%, 980px);
+  max-height: 680px;
+  border: 1px solid rgba(214, 216, 217, 0.16);
+  border-radius: 8px;
+  object-fit: contain;
+  background: rgba(0, 0, 0, 0.24);
 }
 
 .contact-panel {
@@ -2275,12 +2422,13 @@ body[data-page="wallpapers"] .wallpaper-main {
   .link-grid,
   .file-grid,
   .formula-grid,
+  .project-detail-layout,
   .formula-detail-layout,
   .formula-control-panel {
     grid-template-columns: 1fr;
   }
 
-  .formula-interactive {
+  .project-resource-panel {
     position: static;
   }
 
@@ -2326,7 +2474,6 @@ body[data-page="wallpapers"] .wallpaper-main {
   .tool-card,
   .formula-card,
   .formula-section-card,
-  .formula-interactive,
   .contact-panel {
     padding: 20px;
   }
@@ -2435,10 +2582,6 @@ body[data-page="wallpapers"] .wallpaper-main {
 
   .formula-control-panel {
     padding: 20px;
-  }
-
-  .formula-step {
-    grid-template-columns: 1fr;
   }
 
   .formula-plot {

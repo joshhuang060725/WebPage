@@ -1,8 +1,6 @@
 (function () {
   const fallback = {
-    categories: [
-      { id: "all", label: { en: "All", "zh-TW": "全部", "zh-CN": "全部" } }
-    ],
+    categories: [{ id: "all", label: { en: "All", "zh-TW": "全部", "zh-CN": "全部" } }],
     items: []
   };
 
@@ -44,9 +42,7 @@
       formula.category,
       formula.status,
       ...(formula.tags || [])
-    ]
-      .join(" ")
-      .toLowerCase();
+    ].join(" ").toLowerCase();
   }
 
   function renderMath(root = document.body) {
@@ -104,12 +100,12 @@
     }
 
     formulas.forEach((formula) => {
-      const isReady = formula.status === "ready";
-      const node = document.createElement(isReady ? "a" : "article");
+      const isOpen = formula.status === "open" || formula.status === "ready";
+      const node = document.createElement(isOpen ? "a" : "article");
       node.className = "formula-card";
-      node.dataset.status = formula.status || "draft";
+      node.dataset.status = isOpen ? "open" : "wait";
 
-      if (isReady) {
+      if (isOpen) {
         node.href = formula.route || `/formula.html?id=${encodeURIComponent(formula.id)}`;
       }
 
@@ -122,8 +118,8 @@
         <p>${localized(formula.description)}</p>
         <div class="formula-math">$$${formula.formula || ""}$$</div>
         <div class="formula-card-footer">
-          <span>${formula.status || "draft"}</span>
-          <strong>${isReady ? "Open module" : "Coming soon"}</strong>
+          <span>${isOpen ? "open" : "wait"}</span>
+          <strong>${isOpen ? "Open module" : "Waiting"}</strong>
         </div>
       `;
       target.append(node);

@@ -7,7 +7,8 @@
       "zh-TW": "人民幣、美元與新台幣匯率換算終端。此版本僅提供入口。",
       "zh-CN": "人民币、美元与新台币汇率换算终端。此版本仅提供入口。"
     },
-    "status": "coming soon"
+    "status": "coming soon",
+    "url": "/tools.html#exchange"
   },
   {
     "id": "compute-lab",
@@ -17,7 +18,8 @@
       "zh-TW": "類 Math.js 的矩陣運算與資料可視化界面。運算功能尚未啟用。",
       "zh-CN": "类 Math.js 的矩阵运算与数据可视化界面。计算功能尚未启用。"
     },
-    "status": "planned"
+    "status": "planned",
+    "url": "/tools.html#compute-lab"
   },
   {
     "id": "ux-lab",
@@ -27,6 +29,7 @@
       "zh-TW": "介面實驗、交互反饋與視覺系統更新的設計迭代日誌。",
       "zh-CN": "界面实验、交互反馈与视觉系统更新的设计迭代日志。"
     },
-    "status": "planned"
+    "status": "planned",
+    "url": "/tools.html#ux-lab"
   }
 ]

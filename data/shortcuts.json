@@ -1,5 +1,15 @@
 [
   {
+    "name": "测试Youtube",
+    "url": "https://www.youtube.com/watch?v=sLsHLFTgG-4",
+    "category": "public",
+    "description": {
+      "en": "Test YouTube link",
+      "zh-TW": "测试Youtube链接",
+      "zh-CN": "测试Youtube链接"
+    }
+  },
+  {
     "name": "JoshHuang's Gmail：josh20060725@gmail.com",
     "url": "mailto:josh20060725@gmail.com",
     "category": "public",
@@ -41,7 +51,7 @@
   },
   {
     "name": "Private Console",
-    "url": "",
+    "url": "#",
     "category": "locked",
     "description": {
       "en": "Reserved for private administration. No public endpoint is exposed.",

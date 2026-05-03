@@ -46,7 +46,7 @@
       "id": "second-order-damping",
       "number": "001",
       "category": "control-systems",
-      "status": "ready",
+      "status": "open",
       "route": "/formula.html?id=second-order-damping",
       "title": {
         "en": "Second-order system damping response",
@@ -63,117 +63,146 @@
         "zh-TW": "調整阻尼比與自然頻率，觀察超越量與收斂速度。",
         "zh-CN": "调整阻尼比与自然频率，观察超调量与收敛速度。"
       },
-      "tags": ["control", "damping", "step response", "plotly"],
+      "tags": [
+        "control",
+        "damping",
+        "step response",
+        "plotly"
+      ],
       "formula": "H(s)=\\frac{\\omega_n^2}{s^2+2\\zeta\\omega_n s+\\omega_n^2}",
       "sections": [
         {
+          "id": "transfer-function",
           "eyebrow": "Symbolic Derivation Engine",
           "title": {
             "en": "Transfer function",
             "zh-TW": "轉移函數",
             "zh-CN": "传递函数"
           },
-          "body": {
-            "en": "A normalized second-order system is described by natural frequency omega_n and damping ratio zeta.",
-            "zh-TW": "標準二階系統可由自然頻率 omega_n 與阻尼比 zeta 描述。",
-            "zh-CN": "标准二阶系统可由自然频率 omega_n 与阻尼比 zeta 描述。"
-          },
-          "math": "H(s)=\\frac{\\omega_n^2}{s^2+2\\zeta\\omega_n s+\\omega_n^2}"
+          "elements": [
+            {
+              "id": "normalized-model",
+              "type": "text",
+              "content": {
+                "en": "A normalized second-order system is described by natural frequency omega_n and damping ratio zeta.",
+                "zh-TW": "標準二階系統可由自然頻率 omega_n 與阻尼比 zeta 描述。",
+                "zh-CN": "标准二阶系统可由自然频率 omega_n 与阻尼比 zeta 描述。"
+              }
+            },
+            {
+              "id": "transfer-equation",
+              "type": "math",
+              "content": {
+                "en": "H(s)=\\frac{\\omega_n^2}{s^2+2\\zeta\\omega_n s+\\omega_n^2}",
+                "zh-TW": "H(s)=\\frac{\\omega_n^2}{s^2+2\\zeta\\omega_n s+\\omega_n^2}",
+                "zh-CN": "H(s)=\\frac{\\omega_n^2}{s^2+2\\zeta\\omega_n s+\\omega_n^2}"
+              }
+            }
+          ]
         },
         {
+          "id": "step-response",
           "eyebrow": "Step-by-Step Calculation",
           "title": {
             "en": "Step response",
             "zh-TW": "階躍響應",
             "zh-CN": "阶跃响应"
           },
-          "body": {
-            "en": "For a unit step input U(s)=1/s, the output can be decomposed into an underdamped time-domain response when 0 < zeta < 1.",
-            "zh-TW": "對單位階躍輸入 U(s)=1/s，當 0 < zeta < 1 時可得到欠阻尼時域響應。",
-            "zh-CN": "对单位阶跃输入 U(s)=1/s，当 0 < zeta < 1 时可得到欠阻尼时域响应。"
-          },
-          "steps": [
+          "elements": [
             {
-              "label": {
-                "en": "Laplace-domain output",
-                "zh-TW": "拉普拉斯域輸出",
-                "zh-CN": "拉普拉斯域输出"
-              },
-              "math": "Y(s)=H(s)U(s)=\\frac{\\omega_n^2}{s(s^2+2\\zeta\\omega_n s+\\omega_n^2)}"
+              "id": "unit-step",
+              "type": "text",
+              "content": {
+                "en": "For a unit step input U(s)=1/s, the output can be decomposed into an underdamped time-domain response when 0 < zeta < 1.",
+                "zh-TW": "對單位階躍輸入 U(s)=1/s，當 0 < zeta < 1 時可得到欠阻尼時域響應。",
+                "zh-CN": "对单位阶跃输入 U(s)=1/s，当 0 < zeta < 1 时可得到欠阻尼时域响应。"
+              }
             },
             {
-              "label": {
-                "en": "Underdamped time response",
-                "zh-TW": "欠阻尼時域響應",
-                "zh-CN": "欠阻尼时域响应"
+              "id": "laplace-output",
+              "type": "math",
+              "content": {
+                "en": "Y(s)=H(s)U(s)=\\frac{\\omega_n^2}{s(s^2+2\\zeta\\omega_n s+\\omega_n^2)}",
+                "zh-TW": "Y(s)=H(s)U(s)=\\frac{\\omega_n^2}{s(s^2+2\\zeta\\omega_n s+\\omega_n^2)}",
+                "zh-CN": "Y(s)=H(s)U(s)=\\frac{\\omega_n^2}{s(s^2+2\\zeta\\omega_n s+\\omega_n^2)}"
+              }
+            },
+            {
+              "id": "time-response",
+              "type": "math",
+              "content": {
+                "en": "y(t)=1-\\frac{1}{\\sqrt{1-\\zeta^2}}e^{-\\zeta\\omega_n t}\\sin(\\omega_n\\sqrt{1-\\zeta^2}t+\\phi),\\quad \\phi=\\cos^{-1}(\\zeta)",
+                "zh-TW": "y(t)=1-\\frac{1}{\\sqrt{1-\\zeta^2}}e^{-\\zeta\\omega_n t}\\sin(\\omega_n\\sqrt{1-\\zeta^2}t+\\phi),\\quad \\phi=\\cos^{-1}(\\zeta)",
+                "zh-CN": "y(t)=1-\\frac{1}{\\sqrt{1-\\zeta^2}}e^{-\\zeta\\omega_n t}\\sin(\\omega_n\\sqrt{1-\\zeta^2}t+\\phi),\\quad \\phi=\\cos^{-1}(\\zeta)"
+              }
+            },
+            {
+              "id": "response-plot",
+              "type": "plot",
+              "handler": "secondOrderStepResponse",
+              "caption": {
+                "en": "Time-domain response",
+                "zh-TW": "時域響應",
+                "zh-CN": "时域响应"
               },
-              "math": "y(t)=1-\\frac{1}{\\sqrt{1-\\zeta^2}}e^{-\\zeta\\omega_n t}\\sin(\\omega_n\\sqrt{1-\\zeta^2}t+\\phi),\\quad \\phi=\\cos^{-1}(\\zeta)"
+              "parameters": [
+                {
+                  "id": "zeta",
+                  "symbol": "\\zeta",
+                  "label": {
+                    "en": "Damping ratio",
+                    "zh-TW": "阻尼比",
+                    "zh-CN": "阻尼比"
+                  },
+                  "min": 0.05,
+                  "max": 0.99,
+                  "step": 0.01,
+                  "default": 0.3,
+                  "unit": ""
+                },
+                {
+                  "id": "wn",
+                  "symbol": "\\omega_n",
+                  "label": {
+                    "en": "Natural frequency",
+                    "zh-TW": "自然頻率",
+                    "zh-CN": "自然频率"
+                  },
+                  "min": 1,
+                  "max": 20,
+                  "step": 0.1,
+                  "default": 5,
+                  "unit": "rad/s"
+                }
+              ],
+              "metrics": [
+                {
+                  "id": "latency",
+                  "label": {
+                    "en": "Compute latency",
+                    "zh-TW": "計算延遲",
+                    "zh-CN": "计算延迟"
+                  }
+                }
+              ],
+              "expressionConfig": {
+                "xVariable": "x",
+                "xMin": -10,
+                "xMax": 10,
+                "samples": 420,
+                "yLabel": "y",
+                "expressions": []
+              }
             }
           ]
         }
-      ],
-      "interactive": {
-        "enabled": true,
-        "handler": "secondOrderStepResponse",
-        "plotTitle": {
-          "en": "Time-domain response",
-          "zh-TW": "時域響應",
-          "zh-CN": "时域响应"
-        },
-        "parameters": [
-          {
-            "id": "zeta",
-            "symbol": "\\zeta",
-            "label": {
-              "en": "Damping ratio",
-              "zh-TW": "阻尼比",
-              "zh-CN": "阻尼比"
-            },
-            "min": 0.05,
-            "max": 0.99,
-            "step": 0.01,
-            "default": 0.3
-          },
-          {
-            "id": "wn",
-            "symbol": "\\omega_n",
-            "label": {
-              "en": "Natural frequency",
-              "zh-TW": "自然頻率",
-              "zh-CN": "自然频率"
-            },
-            "min": 1,
-            "max": 20,
-            "step": 0.1,
-            "default": 5,
-            "unit": "rad/s"
-          }
-        ],
-        "metrics": [
-          {
-            "id": "overshoot",
-            "label": {
-              "en": "Overshoot",
-              "zh-TW": "超越量",
-              "zh-CN": "超调量"
-            }
-          },
-          {
-            "id": "latency",
-            "label": {
-              "en": "Compute latency",
-              "zh-TW": "計算延遲",
-              "zh-CN": "计算延迟"
-            }
-          }
-        ]
-      }
+      ]
     },
     {
       "id": "fourier-transform",
       "number": "002",
       "category": "signal-processing",
-      "status": "coming-soon",
+      "status": "open",
       "route": "/formula.html?id=fourier-transform",
       "title": {
         "en": "Fourier transform",
@@ -185,58 +214,279 @@
         "zh-TW": "頻域表示法占位內容。",
         "zh-CN": "频域表示法占位内容。"
       },
-      "tags": ["signals", "frequency"],
+      "summary": {
+        "en": "Waiting for a full derivation and interactive module.",
+        "zh-TW": "等待補上完整推導與互動模組。",
+        "zh-CN": "等待补上完整推导与互动模块。"
+      },
+      "tags": [
+        "signals",
+        "frequency"
+      ],
       "formula": "X(f)=\\int_{-\\infty}^{\\infty}x(t)e^{-j2\\pi ft}\\,dt",
-      "sections": [],
-      "interactive": {
-        "enabled": false
-      }
-    },
-    {
-      "id": "convolution",
-      "number": "003",
-      "category": "signal-processing",
-      "status": "draft",
-      "route": "/formula.html?id=convolution",
-      "title": {
-        "en": "Convolution",
-        "zh-TW": "卷積",
-        "zh-CN": "卷积"
-      },
-      "description": {
-        "en": "LTI system response placeholder.",
-        "zh-TW": "LTI 系統響應占位內容。",
-        "zh-CN": "LTI 系统响应占位内容。"
-      },
-      "tags": ["signals", "lti"],
-      "formula": "y(t)=(x*h)(t)=\\int_{-\\infty}^{\\infty}x(\\tau)h(t-\\tau)\\,d\\tau",
-      "sections": [],
-      "interactive": {
-        "enabled": false
-      }
-    },
-    {
-      "id": "fundamental-theorem-calculus",
-      "number": "004",
-      "category": "numerical-methods",
-      "status": "draft",
-      "route": "/formula.html?id=fundamental-theorem-calculus",
-      "title": {
-        "en": "Fundamental theorem of calculus",
-        "zh-TW": "微積分基本定理",
-        "zh-CN": "微积分基本定理"
-      },
-      "description": {
-        "en": "Integral and antiderivative relationship placeholder.",
-        "zh-TW": "積分與反導函數關係占位內容。",
-        "zh-CN": "积分与反导函数关系占位内容。"
-      },
-      "tags": ["calculus", "integral"],
-      "formula": "\\int_a^b f(x)\\,dx=F(b)-F(a)",
-      "sections": [],
-      "interactive": {
-        "enabled": false
-      }
+      "sections": [
+        {
+          "id": "overview",
+          "eyebrow": "Waiting Module",
+          "title": {
+            "en": "Frequency-domain representation",
+            "zh-TW": "頻域表示",
+            "zh-CN": "复指数傅里叶级数推导"
+          },
+          "elements": [
+            {
+              "id": "text-element",
+              "type": "text",
+              "content": {
+                "en": "X(f)=\\int_{-\\infty}^{\\infty}x(t)e^{-j2\\pi ft}\\,dt",
+                "zh-TW": "X(f)=\\int_{-\\infty}^{\\infty}x(t)e^{-j2\\pi ft}\\,dt",
+                "zh-CN": "1. 周期信号的复指数傅里叶级数\n对于任意周期为 $T$ 的函数 $x(t)$，若满足狄利克雷条件，可将其展开为复指数形式的傅里叶级数："
+              }
+            },
+            {
+              "id": "math-element",
+              "type": "math",
+              "content": {
+                "zh-CN": "X(f) = \\int_{-\\infty}^{\\infty} x(t) e^{-j 2\\pi f t} dt"
+              }
+            },
+            {
+              "id": "text-element",
+              "type": "text",
+              "content": {
+                "en": "X(f)=\\int_{-\\infty}^{\\infty}x(t)e^{-j2\\pi ft}\\,dt",
+                "zh-TW": "X(f)=\\int_{-\\infty}^{\\infty}x(t)e^{-j2\\pi ft}\\,dt",
+                "zh-CN": "其中，$\\omega_0 = \\frac{2\\pi}{T}$ 为基波角频率，$c_n$ 为傅里叶系数，其计算公式为："
+              }
+            },
+            {
+              "id": "math-element",
+              "type": "math",
+              "content": {
+                "zh-CN": "c_n = \\frac{1}{T} \\int_{-T/2}^{T/2} x(t) e^{-j n \\omega_0 t} dt"
+              }
+            },
+            {
+              "id": "text-element",
+              "type": "text",
+              "content": {
+                "en": "X(f)=\\int_{-\\infty}^{\\infty}x(t)e^{-j2\\pi ft}\\,dt",
+                "zh-TW": "X(f)=\\int_{-\\infty}^{\\infty}x(t)e^{-j2\\pi ft}\\,dt",
+                "zh-CN": "2. 非周期信号的极限演化"
+              }
+            },
+            {
+              "id": "text-element",
+              "type": "text",
+              "content": {
+                "en": "X(f)=\\int_{-\\infty}^{\\infty}x(t)e^{-j2\\pi ft}\\,dt",
+                "zh-TW": "X(f)=\\int_{-\\infty}^{\\infty}x(t)e^{-j2\\pi ft}\\,dt",
+                "zh-CN": "将非周期信号视为周期趋于无穷大（$T \\to \\infty$）的周期信号。考察当 $T \\to \\infty$ 时的参数变化规律：\n基波角频率 $\\omega_0 = \\frac{2\\pi}{T} \\to d\\omega$，变为无穷小量。\n离散频谱的离散频率点 $n\\omega_0$ 密集分布，转化为连续频率变量 $\\omega$。\n相邻频率分量的间隔 $\\Delta\\omega = (n+1)\\omega_0 - n\\omega_0 = \\omega_0 = \\frac{2\\pi}{T}$。"
+              }
+            },
+            {
+              "id": "math-element",
+              "type": "math",
+              "content": {
+                "zh-CN": "x(t) = \\sum_{n=-\\infty}^{\\infty} \\left[ \\frac{1}{T} \\int_{-T/2}^{T/2} x(\\tau) e^{-j n \\omega_0 \\tau} d\\tau \\right] e^{j n \\omega_0 t}"
+              }
+            },
+            {
+              "id": "text-element",
+              "type": "text",
+              "content": {
+                "en": "X(f)=\\int_{-\\infty}^{\\infty}x(t)e^{-j2\\pi ft}\\,dt",
+                "zh-TW": "X(f)=\\int_{-\\infty}^{\\infty}x(t)e^{-j2\\pi ft}\\,dt",
+                "zh-CN": "利用关系式 $\\frac{1}{T} = \\frac{\\Delta\\omega}{2\\pi}$ 替换等式中的 $\\frac{1}{T}$ 项："
+              }
+            },
+            {
+              "id": "math-element",
+              "type": "math",
+              "content": {
+                "zh-CN": "x(t) = \\frac{1}{2\\pi} \\sum_{n=-\\infty}^{\\infty} \\left[ \\int_{-T/2}^{T/2} x(\\tau) e^{-j n \\omega_0 \\tau} d\\tau \\right] e^{j n \\omega_0 t} \\Delta\\omega"
+              }
+            },
+            {
+              "id": "text-element",
+              "type": "text",
+              "content": {
+                "en": "X(f)=\\int_{-\\infty}^{\\infty}x(t)e^{-j2\\pi ft}\\,dt",
+                "zh-TW": "X(f)=\\int_{-\\infty}^{\\infty}x(t)e^{-j2\\pi ft}\\,dt",
+                "zh-CN": "对上式两端取极限 $T \\to \\infty$。在此极限下，离散求和操作 $\\sum \\dots \\Delta\\omega$ 将严格转化为连续积分 $\\int \\dots d\\omega$，积分的上下限从 $-T/2$ 与 $T/2$ 扩展至 $-\\infty$ 与 $\\infty$："
+              }
+            },
+            {
+              "id": "math-element",
+              "type": "math",
+              "content": {
+                "zh-CN": "x(t) = \\frac{1}{2\\pi} \\int_{-\\infty}^{\\infty} \\left[ \\int_{-\\infty}^{\\infty} x(\\tau) e^{-j \\omega \\tau} d\\tau \\right] e^{j \\omega t} d\\omega"
+              }
+            },
+            {
+              "id": "text-element",
+              "type": "text",
+              "content": {
+                "en": "X(f)=\\int_{-\\infty}^{\\infty}x(t)e^{-j2\\pi ft}\\,dt",
+                "zh-TW": "X(f)=\\int_{-\\infty}^{\\infty}x(t)e^{-j2\\pi ft}\\,dt",
+                "zh-CN": "4. 傅里叶变换对的定义提取上述复合积分式内部的结构，将内部对时间变量 $\\tau$（或直接写为 $t$）的定积分定义为连续时间傅里叶变换（正变换），用于表征信号的频域特性："
+              }
+            },
+            {
+              "id": "math-element",
+              "type": "math",
+              "content": {
+                "zh-CN": "X(\\omega) = \\int_{-\\infty}^{\\infty} x(t) e^{-j \\omega t} dt"
+              }
+            },
+            {
+              "id": "text-element",
+              "type": "text",
+              "content": {
+                "en": "X(f)=\\int_{-\\infty}^{\\infty}x(t)e^{-j2\\pi ft}\\,dt",
+                "zh-TW": "X(f)=\\int_{-\\infty}^{\\infty}x(t)e^{-j2\\pi ft}\\,dt",
+                "zh-CN": "外部对角频率变量 $\\omega$ 的积分则定义为连续时间傅里叶逆变换："
+              }
+            },
+            {
+              "id": "math-element",
+              "type": "math",
+              "content": {
+                "zh-CN": "x(t) = \\frac{1}{2\\pi} \\int_{-\\infty}^{\\infty} X(\\omega) e^{j \\omega t} d\\omega"
+              }
+            },
+            {
+              "id": "text-element",
+              "type": "text",
+              "content": {
+                "en": "X(f)=\\int_{-\\infty}^{\\infty}x(t)e^{-j2\\pi ft}\\,dt",
+                "zh-TW": "X(f)=\\int_{-\\infty}^{\\infty}x(t)e^{-j2\\pi ft}\\,dt",
+                "zh-CN": "若采用普通频率 $f$ 进行数学描述（运用 $\\omega = 2\\pi f$ 及微元转换 $d\\omega = 2\\pi df$），常数系数 $\\frac{1}{2\\pi}$ 将被抵消，公式对偶性更为对称，可直接用于网站表单（如Formula TeX栏位）的展示测试：傅里叶变换（正变换）："
+              }
+            },
+            {
+              "id": "math-element",
+              "type": "math",
+              "content": {
+                "zh-CN": "X(f) = \\int_{-\\infty}^{\\infty} x(t) e^{-j 2\\pi f t} dt"
+              }
+            },
+            {
+              "id": "text-element",
+              "type": "text",
+              "content": {
+                "en": "X(f)=\\int_{-\\infty}^{\\infty}x(t)e^{-j2\\pi ft}\\,dt",
+                "zh-TW": "X(f)=\\int_{-\\infty}^{\\infty}x(t)e^{-j2\\pi ft}\\,dt",
+                "zh-CN": "傅里叶逆变换："
+              }
+            },
+            {
+              "id": "math-element",
+              "type": "math",
+              "content": {
+                "zh-CN": "x(t) = \\int_{-\\infty}^{\\infty} X(f) e^{j 2\\pi f t} df"
+              }
+            },
+            {
+              "id": "plot-fourier-rect",
+              "type": "plot",
+              "handler": "expressionPlot",
+              "caption": {
+                "en": "Expression-driven Fourier transform",
+                "zh-TW": "表達式驅動的傅立葉轉換",
+                "zh-CN": "表达式驱动的傅里叶变换"
+              },
+              "parameters": [
+                {
+                  "id": "width",
+                  "symbol": "T",
+                  "unit": "s",
+                  "label": {
+                    "en": "Pulse width",
+                    "zh-TW": "脈衝寬度",
+                    "zh-CN": "脉冲宽度"
+                  },
+                  "min": 0.2,
+                  "max": 4,
+                  "step": 0.1,
+                  "default": 1
+                },
+                {
+                  "id": "amplitude",
+                  "symbol": "A",
+                  "unit": "",
+                  "label": {
+                    "en": "Amplitude",
+                    "zh-TW": "振幅",
+                    "zh-CN": "振幅"
+                  },
+                  "min": 0.2,
+                  "max": 3,
+                  "step": 0.1,
+                  "default": 1
+                },
+                {
+                  "id": "maxFrequency",
+                  "symbol": "f_{max}",
+                  "unit": "Hz",
+                  "label": {
+                    "en": "Frequency range",
+                    "zh-TW": "頻率範圍",
+                    "zh-CN": "频率范围"
+                  },
+                  "min": 2,
+                  "max": 20,
+                  "step": 0.5,
+                  "default": 8
+                }
+              ],
+              "metrics": [
+                {
+                  "id": "expressions",
+                  "label": {
+                    "en": "Expressions",
+                    "zh-TW": "表達式",
+                    "zh-CN": "表达式"
+                  }
+                },
+                {
+                  "id": "samples",
+                  "label": {
+                    "en": "Samples",
+                    "zh-TW": "取樣點",
+                    "zh-CN": "采样点"
+                  }
+                },
+                {
+                  "id": "latency",
+                  "label": {
+                    "en": "Compute latency",
+                    "zh-TW": "計算延遲",
+                    "zh-CN": "计算延迟"
+                  }
+                }
+              ],
+              "expressionConfig": {
+                "xVariable": "f",
+                "xMin": "-maxFrequency",
+                "xMax": "maxFrequency",
+                "samples": 640,
+                "yLabel": "Amplitude",
+                "expressions": [
+                  {
+                    "label": "X(f)",
+                    "expression": "amplitude * width * sinc(f * width)"
+                  },
+                  {
+                    "label": "|X(f)|",
+                    "expression": "abs(amplitude * width * sinc(f * width))"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
     }
   ]
 }

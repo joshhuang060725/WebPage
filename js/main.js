@@ -182,13 +182,15 @@
 
     list.innerHTML = "";
     (state.data.projects || []).forEach((project) => {
-      const card = document.createElement("article");
+      const card = document.createElement("a");
       card.className = "project-card";
+      card.href = project.route || `/project.html?id=${encodeURIComponent(project.id)}`;
       card.innerHTML = `
         <span>${project.status || "active"}</span>
         <h3>${localized(project.title)}</h3>
         <p>${localized(project.description)}</p>
         <div class="project-tags"></div>
+        <strong class="project-open">Open project</strong>
       `;
 
       const tags = card.querySelector(".project-tags");
@@ -234,8 +236,9 @@
 
     list.innerHTML = "";
     (state.data.tools || []).forEach((tool) => {
-      const card = document.createElement("article");
+      const card = document.createElement("a");
       card.className = "tool-card";
+      card.href = tool.url || `/tools.html#${encodeURIComponent(tool.id || tool.name || "tool")}`;
       card.dataset.status = tool.status === "ready" ? "ready" : "planned";
       card.innerHTML = `
         <h3>${tool.name}</h3>
