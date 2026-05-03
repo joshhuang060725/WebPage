@@ -1,3 +1,5 @@
+import { claimYoutubeUnits, quotaFailure } from "../../_lib/quota-guard.js";
+
 const SEARCH_ENDPOINT = "https://www.googleapis.com/youtube/v3/search";
 const CACHE_SECONDS = 3600;
 const MAX_QUERY_LENGTH = 80;
@@ -80,6 +82,9 @@ export async function onRequestGet(context) {
       return json({ ...cachedPayload, cached: true }, 200, { "X-Cache": "HIT" });
     }
   }
+
+  const youtubeQuota = await claimYoutubeUnits(env, 100);
+  if (!youtubeQuota.ok) return quotaFailure(youtubeQuota);
 
   const apiUrl = new URL(SEARCH_ENDPOINT);
   apiUrl.searchParams.set("part", "snippet");

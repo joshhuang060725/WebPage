@@ -8,6 +8,45 @@ Production domain:
 https://joshhuang.ccwu.cc/
 ```
 
+## Architecture Direction
+
+JATSWeb now follows an asset/data decoupling path:
+
+- Cloudflare Pages keeps the static presentation layer: HTML, CSS, JS, SEO, and small assets.
+- `data/*.json` is the content layer for profile, projects, links, tools, formulas, wallpapers, and file metadata.
+- Cloudflare R2 is the asset layer for larger public files such as PDF, ZIP, DOCX, wallpapers, and future media.
+- The local Admin Tool remains the only write surface for editing, previewing, uploading, checking, committing, and pushing.
+- Public pages are read-only and must not expose upload/delete APIs, R2 credentials, API keys, or private service URLs.
+
+Recommended R2 public asset domain:
+
+```text
+files.joshhuang.ccwu.cc
+```
+
+For quota protection, this domain should route through the guarded Pages Function proxy, not directly to a public R2 bucket:
+
+```text
+https://files.joshhuang.ccwu.cc/api/assets/<r2-object-key>
+```
+
+Quota guard bindings and environment variables:
+
+```text
+USAGE_KV=<Workers KV namespace binding>
+ASSETS_BUCKET=<R2 bucket binding>
+ENFORCE_QUOTA_GUARD=true
+LIMIT_API_DAILY_REQUESTS=90000
+LIMIT_YOUTUBE_DAILY_UNITS=9000
+LIMIT_R2_MONTHLY_CLASS_B=9000000
+```
+
+Detailed architecture and schema rules are documented in:
+
+```text
+docs/CONTENT_ASSET_ARCHITECTURE.md
+```
+
 ## Current Direction
 
 首頁是個人宣傳與 JATS 入口。`JATS` 是固定品牌標題，不跟語言切換：

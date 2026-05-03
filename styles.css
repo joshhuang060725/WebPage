@@ -1230,10 +1230,17 @@ li {
   box-shadow: var(--shadow);
 }
 
-.file-type {
+.file-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.file-type,
+.file-provider {
   display: inline-flex;
   width: fit-content;
-  margin-bottom: 14px;
   padding: 6px 9px;
   border: 1px solid rgba(42, 170, 206, 0.34);
   border-radius: 999px;
@@ -1241,6 +1248,16 @@ li {
   font-size: 0.78rem;
   font-weight: 950;
   text-transform: uppercase;
+}
+
+.file-provider {
+  border-color: rgba(255, 217, 0, 0.34);
+  color: var(--notice);
+}
+
+.file-card[data-storage-provider="r2"] .file-provider {
+  border-color: rgba(42, 170, 206, 0.48);
+  color: var(--info-blue);
 }
 
 .file-meta {

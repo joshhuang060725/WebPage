@@ -416,3 +416,49 @@ git push origin main
 5. 更新 `docs/DEVELOPMENT_LOG.md`。
 6. Commit 或 amend。
 7. 等待使用者明確同意後才 push。
+
+## Asset and Content Decoupling Rules
+
+JATSWeb now follows an asset/data decoupling model. The public website stays static on Cloudflare Pages, while file metadata lives in `data/files.json` and larger assets move to Cloudflare R2.
+
+Rules:
+
+- Public file metadata must include `storage_provider`.
+- Supported providers are `git` and `r2`.
+- `git` means the file is stored in this repository, usually under `assets/files/`.
+- `r2` means the file is stored in Cloudflare R2 and exposed through a public URL.
+- Keep Git assets below 10 MiB by default.
+- Never commit a single static asset above 25 MiB because Cloudflare Pages rejects it.
+- Files above 10 MiB should go to R2.
+- Files above 25 MiB must go to R2 or another external object store.
+- Public pages only read `public_url`; they never receive upload permissions or credentials.
+- The local Admin Tool is the only write surface for upload, metadata editing, preview, checks, commit, and push.
+
+Required `data/files.json` fields:
+
+```json
+{
+  "id": "file-id",
+  "name": "Display name",
+  "description": "Public description",
+  "fileName": "example.pdf",
+  "storage_provider": "git",
+  "storage_key": "assets/files/example.pdf",
+  "public_url": "/assets/files/example.pdf",
+  "extension": "pdf",
+  "size": 12345,
+  "uploadedAt": "2026-05-02T00:00:00.000Z"
+}
+```
+
+For R2:
+
+```json
+{
+  "storage_provider": "r2",
+  "storage_key": "documents/example.pdf",
+  "public_url": "https://files.joshhuang.ccwu.cc/documents/example.pdf"
+}
+```
+
+See `docs/CONTENT_ASSET_ARCHITECTURE.md` for the full architecture.

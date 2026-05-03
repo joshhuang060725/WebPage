@@ -263,6 +263,30 @@
     }).format(new Date(value));
   }
 
+  function normalizeProvider(value) {
+    return String(value || "git").trim().toLowerCase();
+  }
+
+  function resolveFileHref(file) {
+    if (!file) return "#";
+    if (file.public_url) return file.public_url;
+    if (file.url) return file.url;
+    if (file.path) return file.path;
+
+    const key = file.storage_key || file.object_key;
+    if (!key) return "#";
+
+    if (normalizeProvider(file.storage_provider) === "git") {
+      return `/${String(key).replace(/^\/+/, "")}`;
+    }
+
+    return "#";
+  }
+
+  function isExternalHref(href) {
+    return /^https?:\/\//i.test(href) && !href.startsWith(location.origin);
+  }
+
   function renderFiles() {
     const list = document.getElementById("file-list");
     const summary = document.getElementById("file-summary");
@@ -288,11 +312,17 @@
     }
 
     files.forEach((file) => {
+      const href = resolveFileHref(file);
+      const provider = normalizeProvider(file.storage_provider);
       const card = document.createElement("article");
       card.className = "file-card";
+      card.dataset.storageProvider = provider;
       card.innerHTML = `
         <div>
-          <span class="file-type"></span>
+          <div class="file-badges">
+            <span class="file-type"></span>
+            <span class="file-provider"></span>
+          </div>
           <h3></h3>
           <p></p>
         </div>
@@ -306,10 +336,16 @@
         </div>
       `;
       card.querySelector(".file-type").textContent = file.extension || t("files.type");
+      card.querySelector(".file-provider").textContent = provider === "r2" ? "R2" : "Git";
       card.querySelector("h3").textContent = file.name || file.fileName || "File";
       card.querySelector("p").textContent = file.description || "";
       card.querySelectorAll("a").forEach((link) => {
-        link.href = file.path || "#";
+        link.href = href;
+        if (isExternalHref(href)) {
+          link.target = "_blank";
+          link.rel = "noreferrer";
+          link.removeAttribute("download");
+        }
       });
       list.append(card);
     });

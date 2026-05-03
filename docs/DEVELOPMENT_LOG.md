@@ -1,5 +1,57 @@
 # Development Log
 
+## 2026-05-02 - Asset and Data Decoupling Path
+
+### Context
+
+The architecture decision is to keep the core website static while decoupling large assets and structured content. The first stage prioritizes Cloudflare Pages + JSON metadata + Cloudflare R2 for larger public files.
+
+### Decisions
+
+1. Keep Cloudflare Pages as the presentation layer.
+2. Use `data/*.json` as the content layer.
+3. Add `storage_provider` metadata so public files can be rendered from either Git assets or R2.
+4. Use `files.joshhuang.ccwu.cc` as the recommended R2 public asset subdomain.
+5. Keep Admin Tool local-only and visual-preview oriented.
+
+### Implemented
+
+- Added `docs/CONTENT_ASSET_ARCHITECTURE.md`.
+- Updated `data/files.json` with `storage_provider`, `storage_key`, and `public_url`.
+- Updated public Files rendering to resolve Git and R2 metadata.
+- Added provider badges to file cards.
+- Documented Git/R2 thresholds and the 25 MiB Pages asset limit.
+
+### Pending User Setup
+
+- Create Cloudflare R2 bucket.
+- Bind the R2 bucket to `files.joshhuang.ccwu.cc`.
+- Create local-only R2 credentials for Admin upload automation.
+- Add those credentials to `C:\Code\WebPageAdmin\.env`.
+
+## 2026-05-03 - Free Tier Quota Guard
+
+### Context
+
+User requested code that keeps Cloudflare usage below the free-tier boundary and stops usage immediately when configured limits are reached until the next reset period.
+
+### Decisions
+
+1. Static Pages traffic remains outside Functions by adding `_routes.json` with only `/api/*` included.
+2. API traffic is guarded by a Workers KV-backed counter.
+3. YouTube searches claim 100 API units only when the cache misses and a real YouTube API call is required.
+4. R2 downloads must be proxied through `/api/assets/*`; direct public R2 URLs cannot be stopped by site code.
+5. The quota guard is opt-in through `ENFORCE_QUOTA_GUARD=true` so setup can be completed safely.
+
+### Implemented
+
+- Added `functions/_lib/quota-guard.js`.
+- Added `functions/api/_middleware.js` to count API requests.
+- Added `functions/api/quota/status.js` to inspect current guard state.
+- Added `functions/api/assets/[[path]].js` as a guarded R2 download proxy.
+- Updated YouTube search to claim daily API units before external API calls.
+- Documented required bindings: `USAGE_KV` and `ASSETS_BUCKET`.
+
 ## 2026-05-01 - Cloudflare Pages Asset Size Deployment Fix
 
 ### Context
