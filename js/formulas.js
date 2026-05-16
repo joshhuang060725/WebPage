@@ -11,6 +11,12 @@
     query: ""
   };
 
+  const copy = {
+    en: { empty: "No formulas match the current filter.", open: "open", wait: "wait", openModule: "Open module", waiting: "Waiting" },
+    "zh-TW": { empty: "目前篩選條件下沒有符合的公式。", open: "開放", wait: "待補", openModule: "開啟模組", waiting: "等待中" },
+    "zh-CN": { empty: "当前筛选条件下没有符合的公式。", open: "开放", wait: "待补", openModule: "打开模块", waiting: "等待中" }
+  };
+
   function detectLanguage() {
     const saved = localStorage.getItem("portal-lang");
     if (saved) return saved;
@@ -18,6 +24,10 @@
     if (/^zh-(tw|hk|mo)$/i.test(lang)) return "zh-TW";
     if (/^zh/i.test(lang)) return "zh-CN";
     return "en";
+  }
+
+  function t(key) {
+    return copy[state.lang]?.[key] || copy.en[key] || key;
   }
 
   function localized(value) {
@@ -94,7 +104,7 @@
     if (!formulas.length) {
       const empty = document.createElement("article");
       empty.className = "panel formula-empty";
-      empty.textContent = state.lang === "en" ? "No formulas match the current filter." : "目前沒有符合條件的公式。";
+      empty.textContent = t("empty");
       target.append(empty);
       return;
     }
@@ -118,8 +128,8 @@
         <p>${localized(formula.description)}</p>
         <div class="formula-math">$$${formula.formula || ""}$$</div>
         <div class="formula-card-footer">
-          <span>${isOpen ? "open" : "wait"}</span>
-          <strong>${isOpen ? "Open module" : "Waiting"}</strong>
+          <span>${isOpen ? t("open") : t("wait")}</span>
+          <strong>${isOpen ? t("openModule") : t("waiting")}</strong>
         </div>
       `;
       target.append(node);

@@ -47,6 +47,12 @@ Detailed architecture and schema rules are documented in:
 docs/CONTENT_ASSET_ARCHITECTURE.md
 ```
 
+Formula derivation content and Admin maintenance rules are documented in:
+
+```text
+docs/FORMULA_LAB_MAINTENANCE.md
+```
+
 ## Current Direction
 
 首頁是個人宣傳與 JATS 入口。`JATS` 是固定品牌標題，不跟語言切換：
