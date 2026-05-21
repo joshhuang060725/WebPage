@@ -55,6 +55,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://joshhuang.ccwu.cc/finance.html</loc>
+    <lastmod>2026-05-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://joshhuang.ccwu.cc/tools.html</loc>
     <lastmod>2026-04-30</lastmod>
     <changefreq>weekly</changefreq>

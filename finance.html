@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Finance Module | Josh Huang</title>
+    <meta name="description" content="A public-safe currency and FX workbench for conversion, cross rates, derived quotes, and trend inspection." />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="Josh Huang" />
+    <meta name="theme-color" content="#202020" />
+    <link rel="canonical" href="https://joshhuang.ccwu.cc/finance.html" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/styles.css?v=20260501-1" />
+  </head>
+  <body data-page="finance">
+    <div class="shell">
+      <aside class="side-nav" aria-label="Primary navigation" data-nav-collapsible>
+        <a class="brand" href="/" aria-label="Josh Huang portal home"><span class="brand-mark">J</span><span><strong>JOSH</strong><small data-i18n="nav.system">Personal Portal</small></span></a>
+        <nav class="nav-links">
+          <a href="/" data-i18n="nav.portal">Portal</a>
+          <a href="/profile.html" data-i18n="nav.bio">Bio</a>
+          <a href="/wallpapers.html" data-i18n="nav.wallpapers">Wallpapers</a>
+          <a href="/projects.html" data-i18n="nav.projects">Projects</a>
+          <a href="/formulas.html" data-i18n="nav.formulas">Formula Lab</a>
+          <a href="/links.html" data-i18n="nav.links">Quick Links</a>
+          <a href="/youtube.html" data-i18n="nav.youtube">YouTube</a>
+          <a href="/finance.html" aria-current="page" data-i18n="nav.finance">Finance</a>
+          <a href="/tools.html" data-i18n="nav.tools">Tools</a>
+          <a href="/files.html" data-i18n="nav.files">Files</a>
+        </nav>
+        <div class="language-panel" aria-label="Language selector">
+          <button type="button" data-lang-button="zh-TW">TW</button>
+          <button type="button" data-lang-button="zh-CN">CN</button>
+          <button type="button" data-lang-button="en">EN</button>
+        </div>
+        <div class="theme-panel" aria-label="Theme selector">
+          <button type="button" data-theme-button="auto">AUTO</button>
+          <button type="button" data-theme-button="light">DAY</button>
+          <button type="button" data-theme-button="dark">NIGHT</button>
+        </div>
+        <p class="nav-meta"><span data-i18n="meta.version">Static build</span><strong id="last-modified">--</strong></p>
+      </aside>
+      <header class="mobile-header">
+        <a class="brand" href="/" aria-label="Josh Huang portal home"><span class="brand-mark">J</span><span>JOSH</span></a>
+        <div class="language-panel" aria-label="Language selector">
+          <button type="button" data-lang-button="zh-TW">TW</button>
+          <button type="button" data-lang-button="zh-CN">CN</button>
+          <button type="button" data-lang-button="en">EN</button>
+        </div>
+        <div class="theme-panel" aria-label="Theme selector">
+          <button type="button" data-theme-button="auto">AUTO</button>
+          <button type="button" data-theme-button="light">DAY</button>
+          <button type="button" data-theme-button="dark">NIGHT</button>
+        </div>
+      </header>
+      <main>
+        <section class="page-hero finance-hero">
+          <div>
+            <p class="eyebrow" data-i18n="finance.eyebrow">Exchange console</p>
+            <h1 data-i18n="finance.title">Exchange module</h1>
+            <p data-i18n="finance.description">
+              Public-safe FX workbench for conversion, cross-rate comparison, derived quotes, and trend inspection.
+            </p>
+            <p class="finance-risk-note" data-i18n="finance.riskWarning">
+              This website is for personal learning only. Market data and calculations may be delayed, incomplete, or incorrect, and should not be used as financial advice.
+            </p>
+          </div>
+          <strong id="finance-source-status">Currency API loading</strong>
+        </section>
+
+        <section class="section finance-workbench" aria-label="Exchange module">
+          <div class="finance-toolbar panel">
+            <div>
+              <span class="eyebrow" data-i18n="finance.categoryLabel">Function switch</span>
+              <div class="finance-tabs" role="tablist" aria-label="Finance modules" id="finance-category-tabs">
+                <button type="button" class="is-active" data-finance-category="fx" data-i18n="finance.categoryFx">Currencies & FX</button>
+                <button type="button" data-finance-category="equity" data-i18n="finance.categoryEquity">Global equities / stocks</button>
+                <button type="button" data-finance-category="bonds" data-i18n="finance.categoryBonds">Fixed income / treasuries</button>
+                <button type="button" data-finance-category="haven" data-i18n="finance.categoryHaven">Haven & commodities</button>
+                <button type="button" data-finance-category="real" data-i18n="finance.categoryReal">Real economy / property</button>
+                <button type="button" data-finance-category="crypto" data-i18n="finance.categoryCrypto">Decentralized digital assets</button>
+              </div>
+            </div>
+            <label class="finance-input" for="finance-search">
+              <span data-i18n="finance.searchLabel">Search FX / quotes</span>
+              <input id="finance-search" type="search" autocomplete="off" data-i18n-placeholder="finance.searchPlaceholder" placeholder="Search currency, code, or quote..." />
+            </label>
+          </div>
+          <div class="finance-module-notice panel" id="finance-module-notice" hidden></div>
+
+          <div class="finance-board">
+            <div class="finance-left-stack">
+              <section class="finance-converter panel">
+                <div class="finance-section-head">
+                  <div class="finance-converter-title">
+                    <strong data-i18n="finance.converterTitle">Auto exchange</strong>
+                    <button id="finance-swap-currencies" type="button" aria-label="Swap currencies" title="Swap currencies">&harr;</button>
+                  </div>
+                  <span aria-hidden="true">&#8942;</span>
+                </div>
+                <label class="finance-input" for="finance-amount-from">
+                  <span data-i18n="finance.amountLabel">Amount</span>
+                  <div class="finance-money-field">
+                    <input id="finance-amount-from" type="number" min="0" step="0.01" value="1.00" />
+                    <select id="finance-currency-from" aria-label="Source currency"></select>
+                  </div>
+                </label>
+                <div class="finance-swap-line" aria-hidden="true"><span></span><b>-&gt;</b><span></span></div>
+                <label class="finance-input" for="finance-amount-to">
+                  <span data-i18n="finance.convertedLabel">Converted</span>
+                  <div class="finance-money-field">
+                    <input id="finance-amount-to" type="text" value="7.00" readonly />
+                    <select id="finance-currency-to" aria-label="Target currency"></select>
+                  </div>
+                </label>
+              </section>
+
+              <div class="finance-mode-row">
+                <div class="finance-mode-buttons" id="finance-chart-modes">
+                  <button type="button" class="is-active" data-chart-mode="single" data-i18n="finance.singleTrend">Single currency trend (vs USD)</button>
+                  <button type="button" data-chart-mode="compare" data-i18n="finance.compareTrend">Two-currency comparison</button>
+                </div>
+                <div class="finance-chart-title-tools">
+                  <span id="finance-chart-label">CNY vs USD</span>
+                  <button id="finance-chart-swap" type="button" aria-label="Swap chart currencies" title="Swap currencies">&harr;</button>
+                </div>
+              </div>
+
+              <section class="finance-chart-card panel">
+                <div class="finance-section-head">
+                  <strong data-i18n="finance.chartTitle">Currency trend</strong>
+                  <div class="finance-timeframes" id="finance-timeframes"></div>
+                </div>
+                <div class="finance-legend" id="finance-legend"></div>
+                <div class="finance-chart-status" id="finance-chart-status">Historical data loading</div>
+                <svg id="finance-chart" class="finance-chart" viewBox="0 0 1000 420" preserveAspectRatio="none" role="img" aria-label="Exchange rate trend chart"></svg>
+              </section>
+            </div>
+
+            <aside class="finance-right-stack">
+              <section class="finance-matrix panel">
+                <div class="finance-section-head">
+                  <strong data-i18n="finance.matrixTitle">Cross-rate matrix (FX Matrix)</strong>
+                </div>
+                <div class="finance-table-scroll">
+                  <table class="finance-table">
+                    <thead>
+                      <tr>
+                        <th data-i18n="finance.currencyColumn">Currency</th>
+                        <th data-i18n="finance.convertColumn">Input conversion</th>
+                        <th data-i18n="finance.floatColumn">Float</th>
+                      </tr>
+                    </thead>
+                    <tbody id="finance-matrix-body"></tbody>
+                  </table>
+                </div>
+              </section>
+
+              <section class="finance-bank-card panel">
+                <div class="finance-section-head">
+                  <strong data-i18n="finance.bankTitle">Derived bank quotes</strong>
+                  <span id="finance-derived-note">Derived quote</span>
+                </div>
+                <div class="finance-table-scroll">
+                  <table class="finance-table">
+                    <thead>
+                      <tr>
+                        <th data-i18n="finance.bankColumn">Quote line</th>
+                        <th>Buy</th>
+                        <th>Sell</th>
+                      </tr>
+                    </thead>
+                    <tbody id="finance-bank-body"></tbody>
+                  </table>
+                </div>
+              </section>
+            </aside>
+          </div>
+        </section>
+      </main>
+    </div>
+    <script src="/js/data-loader.js?v=20260501-1"></script>
+    <script src="/js/main.js?v=20260501-1"></script>
+    <script src="/js/finance.js?v=20260520-2"></script>
+  </body>
+</html>
