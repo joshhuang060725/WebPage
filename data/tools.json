@@ -31,5 +31,16 @@
     },
     "status": "planned",
     "url": "/tools.html#ux-lab"
+  },
+  {
+    "id": "flower-language-test",
+    "name": "花語測試",
+    "description": {
+      "en": "A cozy 64-dimension flower language personality test built as a standalone class project.",
+      "zh-TW": "溫馨手繪風的 64 維度花語測試，透過 6 題找出你的專屬花語。",
+      "zh-CN": "温馨手绘风的 64 维度花语测试，通过 6 题找出你的专属花语。"
+    },
+    "status": "ready",
+    "url": "/flower-language-test.html"
   }
 ]

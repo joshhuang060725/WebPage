@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>花語測試 | 64 維度花語篩選器</title>
+    <meta
+      name="description"
+      content="一個溫馨手繪風的 64 維度花語測試，透過 6 題輕鬆情境題找出你的專屬花語。"
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#f7d8b8" />
+    <link rel="canonical" href="https://joshhuang.ccwu.cc/flower-language-test.html" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/flower-language-test.css?v=20260525-2" />
+  </head>
+  <body>
+    <main class="flower-app" id="flower-app" aria-live="polite">
+      <div class="flower-scene" aria-hidden="true">
+        <span class="sun-patch"></span>
+        <span class="window-line one"></span>
+        <span class="window-line two"></span>
+        <span class="leaf leaf-a"></span>
+        <span class="leaf leaf-b"></span>
+        <span class="leaf leaf-c"></span>
+        <span class="pot pot-a"></span>
+        <span class="pot pot-b"></span>
+        <span class="petal petal-a"></span>
+        <span class="petal petal-b"></span>
+        <span class="petal petal-c"></span>
+      </div>
+
+      <section class="test-shell" data-view="loading">
+        <a class="back-link" href="/tools.html">回到工具入口</a>
+
+        <div class="soft-bubble">
+          <div class="loading-view" data-loading-view>
+            <p class="kicker">64 維度花語篩選器</p>
+            <h1>正在整理花園小卡...</h1>
+            <p>請等一下，花瓣正在排隊。</p>
+          </div>
+
+          <div class="question-view" data-question-view hidden>
+            <p class="kicker" data-question-kicker>Question 1 / 6</p>
+            <h1 data-question-title></h1>
+            <div class="option-stack" data-options></div>
+          </div>
+
+          <div class="result-view" data-result-view hidden>
+            <p class="kicker">專屬診斷報告</p>
+            <div class="result-flower" data-result-symbol aria-hidden="true"></div>
+            <h1 data-result-title></h1>
+            <p class="result-language" data-result-language></p>
+            <p class="result-summary" data-result-summary></p>
+            <div class="result-note">
+              <strong>今日小建議</strong>
+              <span data-result-advice></span>
+            </div>
+            <div class="result-actions">
+              <button class="restart-button" type="button" data-restart>重新測試</button>
+              <button class="catalog-button" type="button" data-open-catalog>查看所有花語</button>
+            </div>
+          </div>
+
+          <div class="catalog-view" data-catalog-view hidden>
+            <p class="kicker">花語圖鑑</p>
+            <h1>所有花語結果</h1>
+            <p class="catalog-intro">你可以在這裡看看其他沒有選到的花，每一朵都有自己的小性格。</p>
+            <div class="catalog-grid" data-catalog-grid></div>
+            <div class="result-actions">
+              <button class="catalog-button" type="button" data-back-result>回到我的結果</button>
+              <button class="restart-button" type="button" data-restart-catalog>重新測試</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="idle-tooltip" data-idle-tooltip>
+          欸欸快選啦！花瓣都快把答案偷偷告訴你了。
+        </div>
+
+        <div class="progress-tracker" data-progress-tracker aria-label="測驗進度">
+          <div class="progress-line"></div>
+          <div class="progress-nodes" data-progress-nodes></div>
+          <div class="progress-sprite" data-progress-sprite aria-hidden="true">芽</div>
+        </div>
+      </section>
+    </main>
+
+    <script src="/js/flower-language-test.js?v=20260525-2"></script>
+  </body>
+</html>
