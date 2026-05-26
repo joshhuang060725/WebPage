@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>聖誕樹狀經濟時序分析圖 | Josh Huang</title>
+    <meta
+      name="description"
+      content="Christmas Tree Economic Time-Series Visualization: a horizontal helical 3D interface for economic time-series analysis."
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="Josh Huang" />
+    <meta name="theme-color" content="#111827" />
+    <link rel="canonical" href="https://joshhuang.ccwu.cc/christmas-tree-economic.html" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/christmas-tree-economic.css?v=20260526-1" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.183.2/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.183.2/examples/jsm/"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <main class="cte-app" data-app>
+      <header class="cte-topbar">
+        <a class="cte-back" href="/tools.html" aria-label="Back to tools">Tools</a>
+        <div class="cte-title-block">
+          <p>Christmas Tree Economic Time-Series Visualization</p>
+          <h1>聖誕樹狀經濟時序分析圖</h1>
+        </div>
+        <div class="cte-controls" aria-label="Visualization controls">
+          <label>
+            指標
+            <select data-metric-select>
+              <option value="revenue">Revenue</option>
+            </select>
+          </label>
+          <label>
+            數值模式
+            <select data-value-mode>
+              <option value="raw">Raw Value</option>
+              <option value="yoy" disabled>YoY planned</option>
+              <option value="qoq" disabled>QoQ / WoW planned</option>
+              <option value="ma" disabled>Moving Average planned</option>
+              <option value="seasonal" disabled>Seasonal Deviation planned</option>
+            </select>
+          </label>
+          <div class="cte-segmented" role="group" aria-label="View mode">
+            <button type="button" class="is-active" data-mode-button="v0">V0</button>
+            <button type="button" data-mode-button="v1">V1</button>
+            <button type="button" data-mode-button="v2">V2</button>
+          </div>
+          <label class="cte-check">
+            <input type="checkbox" checked data-toggle-ribbon />
+            Ribbon
+          </label>
+          <label class="cte-check">
+            <input type="checkbox" checked data-toggle-events />
+            Events
+          </label>
+        </div>
+      </header>
+
+      <section class="cte-workbench">
+        <section class="cte-stage" aria-label="3D economic time-series visualization">
+          <div class="cte-view-toolbar" aria-label="Camera presets">
+            <button type="button" class="is-active" data-camera-button="side">Side View</button>
+            <button type="button" data-camera-button="base">Base View</button>
+            <button type="button" data-camera-button="free">Free Orbit</button>
+          </div>
+          <div class="cte-canvas-wrap" data-canvas-wrap>
+            <div class="cte-loading" data-loading>
+              <strong>Loading topology</strong>
+              <span>Preparing 3D economic time-series scene...</span>
+            </div>
+            <div class="cte-fallback" hidden data-fallback>
+              <strong>3D runtime unavailable</strong>
+              <span>Three.js CDN could not be loaded. The data remains public JSON and can be inspected later.</span>
+            </div>
+            <div class="cte-tooltip" hidden data-tooltip></div>
+          </div>
+        </section>
+
+        <aside class="cte-panel" aria-label="Events and slice controls">
+          <section class="cte-card cte-year-card">
+            <p class="cte-kicker" data-flip-kicker>Active Year</p>
+            <div class="cte-flip-card" data-year-card>2024</div>
+            <div class="cte-row">
+              <button type="button" data-year-prev>Previous</button>
+              <button type="button" data-year-next>Next</button>
+            </div>
+          </section>
+
+          <section class="cte-card">
+            <p class="cte-kicker">Slice</p>
+            <label>
+              Quarter
+              <select data-quarter-select>
+                <option value="Q1">Q1 W01-W13</option>
+                <option value="Q2" selected>Q2 W14-W26</option>
+                <option value="Q3">Q3 W27-W39</option>
+                <option value="Q4">Q4 W40-W52</option>
+              </select>
+            </label>
+            <label>
+              Same Week
+              <select data-week-select></select>
+            </label>
+            <div class="cte-row">
+              <button type="button" data-same-week>Same Week</button>
+              <button type="button" data-same-quarter>Same Quarter</button>
+            </div>
+          </section>
+
+          <section class="cte-card">
+            <p class="cte-kicker">Events</p>
+            <div class="cte-events" data-events></div>
+          </section>
+
+          <section class="cte-card">
+            <p class="cte-kicker">Analysis Suggestions</p>
+            <div class="cte-suggestions" data-suggestions>
+              <button type="button" data-suggest="v1">查看當前年份 V1 展開</button>
+              <button type="button" data-suggest="v2">查看季度 V2 同期比較</button>
+              <button type="button" data-suggest="range">事件前後 ±4 週</button>
+            </div>
+          </section>
+
+          <section class="cte-card">
+            <p class="cte-kicker">Transition</p>
+            <strong class="cte-transition-phase" data-transition-phase>Idle</strong>
+          </section>
+        </aside>
+      </section>
+
+      <footer class="cte-bottom">
+        <div class="cte-timeline" data-timeline></div>
+        <div class="cte-scale">
+          <span data-scale-label>Scale Disk: auto</span>
+          <span class="cte-dot q1"></span><span>Q1</span>
+          <span class="cte-dot q2"></span><span>Q2</span>
+          <span class="cte-dot q3"></span><span>Q3</span>
+          <span class="cte-dot q4"></span><span>Q4</span>
+        </div>
+      </footer>
+    </main>
+
+    <script type="module" src="/js/christmas-tree-economic.js?v=20260526-1"></script>
+  </body>
+</html>
