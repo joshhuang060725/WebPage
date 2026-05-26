@@ -18,6 +18,13 @@ const state = {
   activeWeek: 10,
   activeQuarter: "Q2",
   sliceType: "quarter",
+  cameraMode: "side",
+  v0AxisMode: "time-x",
+  compareYear: null,
+  activeToolPanel: "v0",
+  v0Tool: "side",
+  selectedRecord: null,
+  selectedEvent: null,
   showRibbon: true,
   showEvents: true,
   isBusy: false,
@@ -40,14 +47,20 @@ const els = {
   loading: document.querySelector("[data-loading]"),
   fallback: document.querySelector("[data-fallback]"),
   tooltip: document.querySelector("[data-tooltip]"),
+  app: document.querySelector("[data-app]"),
   flipKicker: document.querySelector("[data-flip-kicker]"),
   modeButtons: [...document.querySelectorAll("[data-mode-button]")],
+  modePanels: [...document.querySelectorAll("[data-mode-panel]")],
   cameraButtons: [...document.querySelectorAll("[data-camera-button]")],
+  axisToggle: document.querySelector("[data-v0-axis-toggle]"),
   ribbonToggle: document.querySelector("[data-toggle-ribbon]"),
   eventsToggle: document.querySelector("[data-toggle-events]"),
   yearCard: document.querySelector("[data-year-card]"),
   yearPrev: document.querySelector("[data-year-prev]"),
   yearNext: document.querySelector("[data-year-next]"),
+  quarterCard: document.querySelector("[data-quarter-card]"),
+  quarterPrev: document.querySelector("[data-quarter-prev]"),
+  quarterNext: document.querySelector("[data-quarter-next]"),
   quarterSelect: document.querySelector("[data-quarter-select]"),
   weekSelect: document.querySelector("[data-week-select]"),
   sameWeek: document.querySelector("[data-same-week]"),
@@ -56,6 +69,8 @@ const els = {
   suggestions: document.querySelector("[data-suggestions]"),
   timeline: document.querySelector("[data-timeline]"),
   scaleLabel: document.querySelector("[data-scale-label]"),
+  inspectorSummary: document.querySelector("[data-inspector-summary]"),
+  selectionDetail: document.querySelector("[data-selection-detail]"),
   transitionPhase: document.querySelector("[data-transition-phase]")
 };
 
@@ -125,14 +140,43 @@ function recordsForYearQuarter(year, quarter) {
   return state.records.filter((record) => record.year === year && record.quarter === quarter);
 }
 
+function absoluteWeekIndex(record) {
+  return state.years.indexOf(record.year) * WEEK_COUNT + record.week - 1;
+}
+
+function v0TimeOffset(record) {
+  return absoluteWeekIndex(record) * 0.12 - ((state.years.length * WEEK_COUNT) * 0.12) / 2;
+}
+
+function v0Radius(record) {
+  return 0.62 + (record.value / state.maxValue) * 5.8;
+}
+
+function v0Angle(record) {
+  return -((record.week - 1) / WEEK_COUNT) * Math.PI * 2;
+}
+
 function v0Position(record) {
   const T = state.THREE;
-  const yearIndex = state.years.indexOf(record.year);
-  const absolute = yearIndex * WEEK_COUNT + record.week - 1;
-  const x = absolute * 0.12 - ((state.years.length * WEEK_COUNT) * 0.12) / 2;
-  const angle = -((record.week - 1) / WEEK_COUNT) * Math.PI * 2;
-  const radius = 0.62 + (record.value / state.maxValue) * 5.8;
-  return new T.Vector3(x, Math.cos(angle) * radius, Math.sin(angle) * radius);
+  const time = v0TimeOffset(record);
+  const angle = v0Angle(record);
+  const radius = v0Radius(record);
+  if (state.v0AxisMode === "amount-x") {
+    return new T.Vector3(Math.cos(angle) * radius, Math.sin(angle) * radius, time);
+  }
+  return new T.Vector3(time, Math.cos(angle) * radius, Math.sin(angle) * radius);
+}
+
+function v0BasePosition(record) {
+  return new state.THREE.Vector3(v0TimeOffset(record), (record.value / state.maxValue) * 10, 0);
+}
+
+function v0TimeFadedColor(record) {
+  const total = Math.max(1, state.years.length * WEEK_COUNT - 1);
+  const recency = absoluteWeekIndex(record) / total;
+  const color = new state.THREE.Color(QUARTER_COLORS[record.quarter]);
+  color.lerp(new state.THREE.Color("#f8fafc"), 0.12 + recency * 0.5);
+  return color.getHex();
 }
 
 function v1Position(record, year = state.activeYear) {
@@ -272,18 +316,96 @@ function addLabel(group, text, position, color = "#e5edf8", size = 0.55) {
 }
 
 function addV0Guides(group) {
-  const start = v0Position(state.records[0]).x + 3.6;
+  const first = v0Position(state.records[0]);
+  const start = state.v0AxisMode === "amount-x" ? first.z + 3.6 : first.x + 3.6;
   const maxRadius = 6.4;
-  addLine(group, [new state.THREE.Vector3(-22, 0, 0), new state.THREE.Vector3(22, 0, 0)], "#94a3b8", 0.55);
+  if (state.v0AxisMode === "amount-x") {
+    addLine(group, [new state.THREE.Vector3(0, 0, -22), new state.THREE.Vector3(0, 0, 22)], "#94a3b8", 0.55);
+  } else {
+    addLine(group, [new state.THREE.Vector3(-22, 0, 0), new state.THREE.Vector3(22, 0, 0)], "#94a3b8", 0.55);
+  }
   [0.25, 0.5, 0.75, 1].forEach((step) => {
     const curve = new state.THREE.EllipseCurve(0, 0, maxRadius * step, maxRadius * step, 0, Math.PI * 2);
-    addLine(group, curve.getPoints(96).map((point) => new state.THREE.Vector3(start, point.x, point.y)), "#94a3b8", 0.44);
-    addLabel(group, formatValue(state.maxValue * step), new state.THREE.Vector3(start, maxRadius * step + 0.35, 0), "#cbd5e1", 0.42);
+    const points = curve.getPoints(96).map((point) => state.v0AxisMode === "amount-x"
+      ? new state.THREE.Vector3(point.x, point.y, start)
+      : new state.THREE.Vector3(start, point.x, point.y));
+    addLine(group, points, "#94a3b8", 0.44);
+    const labelPosition = state.v0AxisMode === "amount-x"
+      ? new state.THREE.Vector3(maxRadius * step + 0.35, 0, start)
+      : new state.THREE.Vector3(start, maxRadius * step + 0.35, 0);
+    addLabel(group, formatValue(state.maxValue * step), labelPosition, "#cbd5e1", 0.42);
   });
+}
+
+function addV0BaseGuides(group) {
+  const points = state.records.map(v0BasePosition);
+  const minX = Math.min(...points.map((point) => point.x));
+  const maxX = Math.max(...points.map((point) => point.x));
+  addLine(group, [new state.THREE.Vector3(minX - 0.8, 0, 0), new state.THREE.Vector3(maxX + 0.8, 0, 0)], "#64748b", 0.72);
+  addLine(group, [new state.THREE.Vector3(minX - 0.8, 0, 0), new state.THREE.Vector3(minX - 0.8, 10.7, 0)], "#64748b", 0.72);
+  [0.25, 0.5, 0.75, 1].forEach((step) => {
+    const y = step * 10;
+    addLine(group, [new state.THREE.Vector3(minX - 0.55, y, 0), new state.THREE.Vector3(maxX + 0.55, y, 0)], "#334155", 0.38);
+    addLabel(group, formatValue(state.maxValue * step), new state.THREE.Vector3(minX - 1.65, y, 0), "#cbd5e1", 0.38);
+  });
+}
+
+function renderV0BaseProjection(group = state.root) {
+  addV0BaseGuides(group);
+  for (let index = 0; index < state.records.length - 1; index += 1) {
+    const current = state.records[index];
+    const next = state.records[index + 1];
+    addLine(group, [v0BasePosition(current), v0BasePosition(next)], v0TimeFadedColor(current), 0.96);
+  }
+  state.years.forEach((year) => {
+    const records = recordsForYear(year);
+    const labelAt = new state.THREE.Vector3(v0BasePosition(records[0]).x, -0.65, 0);
+    addLabel(group, String(year), labelAt, "#e5edf8", 0.4);
+  });
+  state.records.filter((record) => record.week % 4 === 1).forEach((record) => {
+    addPoint(group, v0BasePosition(record), v0TimeFadedColor(record), record, 0.045);
+  });
+  if (state.showEvents) {
+    state.data.events.forEach((event) => {
+      const record = state.records.find((item) => item.year === event.year && item.week === event.weekStart);
+      if (record) addPoint(group, v0BasePosition(record), event.impactLevel === "high" ? "#fb7185" : "#f59e0b", { ...record, eventTitle: event.title }, 0.11);
+    });
+  }
+}
+
+function renderV0CompareRing(group, year) {
+  const records = recordsForYear(year);
+  if (!records.length) return;
+  const center = new state.THREE.Vector3(8.2, 0.8, 7.2);
+  const getRingPoint = (record) => {
+    const angle = v0Angle(record);
+    const radius = 0.7 + (record.value / state.maxValue) * 4.4;
+    return center.clone().add(new state.THREE.Vector3(0, Math.cos(angle) * radius, Math.sin(angle) * radius));
+  };
+  QUARTERS.forEach((quarter) => {
+    const quarterRecords = recordsForYearQuarter(year, quarter);
+    for (let index = 0; index < quarterRecords.length - 1; index += 1) {
+      addLine(group, [getRingPoint(quarterRecords[index]), getRingPoint(quarterRecords[index + 1])], QUARTER_COLORS[quarter], 1);
+    }
+  });
+  addLine(group, [getRingPoint(records[12]), getRingPoint(records[13])], QUARTER_COLORS.Q1, 1);
+  addLine(group, [getRingPoint(records[25]), getRingPoint(records[26])], QUARTER_COLORS.Q2, 1);
+  addLine(group, [getRingPoint(records[38]), getRingPoint(records[39])], QUARTER_COLORS.Q3, 1);
+  addLine(group, [getRingPoint(records[51]), getRingPoint(records[0])], QUARTER_COLORS.Q4, 1);
+  [0.33, 0.66, 1].forEach((step) => {
+    const curve = new state.THREE.EllipseCurve(0, 0, 5.1 * step, 5.1 * step, 0, Math.PI * 2);
+    addLine(group, curve.getPoints(90).map((point) => center.clone().add(new state.THREE.Vector3(0, point.x, point.y))), "#94a3b8", 0.18);
+  });
+  records.filter((record) => record.week % 4 === 1).forEach((record) => addPoint(group, getRingPoint(record), QUARTER_COLORS[record.quarter], record, 0.052));
+  addLabel(group, `${year} ring compare`, center.clone().add(new state.THREE.Vector3(0, 5.85, 0)), "#f8fafc", 0.48);
 }
 
 function renderV0(group = state.root, options = {}) {
   const dim = options.dim ?? false;
+  if (state.cameraMode === "base" && !dim) {
+    renderV0BaseProjection(group);
+    return;
+  }
   addV0Guides(group);
   const records = state.records;
   for (let index = 0; index < records.length - 1; index += 1) {
@@ -303,6 +425,7 @@ function renderV0(group = state.root, options = {}) {
     point.material.opacity = opacity;
   });
   addEventMarkers(group);
+  if (state.compareYear) renderV0CompareRing(group, state.compareYear);
 }
 
 function renderV1(group = state.root, year = state.activeYear) {
@@ -320,6 +443,18 @@ function renderV1(group = state.root, year = state.activeYear) {
   });
   addLine(group, [new state.THREE.Vector3(-9, 0, 0), new state.THREE.Vector3(9, 0, 0)], "#94a3b8", 0.55);
   addLine(group, [new state.THREE.Vector3(-9, 0, 0), new state.THREE.Vector3(-9, 10.5, 0)], "#94a3b8", 0.55);
+  [1, 13, 26, 39, 52].forEach((week) => {
+    const x = (week - 26.5) * 0.34;
+    addLine(group, [new state.THREE.Vector3(x, 0, 0), new state.THREE.Vector3(x, -0.18, 0)], "#64748b", 0.7);
+    addLabel(group, `W${String(week).padStart(2, "0")}`, new state.THREE.Vector3(x, -0.58, 0), "#cbd5e1", 0.38);
+  });
+  [0.25, 0.5, 0.75, 1].forEach((step) => {
+    const y = step * 10;
+    addLine(group, [new state.THREE.Vector3(-9, y, 0), new state.THREE.Vector3(9, y, 0)], "#334155", 0.34);
+    addLabel(group, formatValue(state.maxValue * step), new state.THREE.Vector3(-10.15, y, 0), "#cbd5e1", 0.38);
+  });
+  addLabel(group, "Week", new state.THREE.Vector3(9.6, -0.52, 0), "#94a3b8", 0.36);
+  addLabel(group, "Value", new state.THREE.Vector3(-10.15, 10.9, 0), "#94a3b8", 0.36);
 }
 
 function v2QuarterTotalPoint(year, quarter, total, totals) {
@@ -331,12 +466,37 @@ function v2QuarterTotalPoint(year, quarter, total, totals) {
   return new state.THREE.Vector3((yearIndex - (state.years.length - 1) / 2) * segmentWidth, 10.9 + normalized * 2.1, quarterDepth(quarter));
 }
 
-function addV2Guides(group) {
-  const z = quarterDepth(state.activeQuarter) - 3.6;
+function v2QuarterBounds(quarter = state.activeQuarter) {
+  const allPoints = state.records
+    .filter((record) => record.quarter === quarter)
+    .map((record) => v2QuarterPosition(record, quarter));
+  const minX = Math.min(...allPoints.map((point) => point.x));
+  const maxX = Math.max(...allPoints.map((point) => point.x));
+  const z = quarterDepth(quarter);
+  return {
+    minX,
+    maxX,
+    axisX: minX - 0.35,
+    labelX: minX - 1.05,
+    z,
+    guideZ: z - 0.18
+  };
+}
+
+function addV2Guides(group, quarter = state.activeQuarter) {
+  const bounds = v2QuarterBounds(quarter);
   [1000, 2000, 3000].forEach((value) => {
     const y = (value / state.maxValue) * 10;
-    addLine(group, [new state.THREE.Vector3(-9.4, y, z), new state.THREE.Vector3(9.4, y, z)], "#334155", 0.52);
-    addLabel(group, `${value}${value === 2000 ? " (基準面)" : value === 3000 ? " (主數據)" : ""}`, new state.THREE.Vector3(-10.3, y, z), "#94a3b8", 0.45);
+    addLine(group, [new state.THREE.Vector3(bounds.axisX, y, bounds.guideZ), new state.THREE.Vector3(bounds.maxX + 0.35, y, bounds.guideZ)], "#334155", 0.52);
+    addLabel(group, `${value}${value === 2000 ? " (基準面)" : value === 3000 ? " (主數據)" : ""}`, new state.THREE.Vector3(bounds.labelX, y, bounds.guideZ), "#94a3b8", 0.45);
+  });
+  addLine(group, [new state.THREE.Vector3(bounds.axisX, 0, bounds.guideZ), new state.THREE.Vector3(bounds.axisX, 10.8, bounds.guideZ)], "#64748b", 0.72);
+  addLine(group, [new state.THREE.Vector3(bounds.axisX, 0, bounds.guideZ), new state.THREE.Vector3(bounds.maxX + 0.35, 0, bounds.guideZ)], "#64748b", 0.72);
+  state.years.forEach((year) => {
+    const mid = recordsForYearQuarter(year, quarter)[6];
+    if (!mid) return;
+    const point = v2QuarterPosition(mid, quarter);
+    addLabel(group, String(year), new state.THREE.Vector3(point.x, -0.55, bounds.guideZ), "#cbd5e1", 0.42);
   });
 }
 
@@ -348,7 +508,7 @@ function renderV2Week(group = state.root, selectedWeek = state.activeWeek) {
 }
 
 function renderV2Quarter(group = state.root, selectedQuarter = state.activeQuarter) {
-  addV2Guides(group);
+  addV2Guides(group, selectedQuarter);
   QUARTERS.forEach((quarter) => {
     const active = quarter === selectedQuarter;
     const color = QUARTER_COLORS[quarter];
@@ -424,7 +584,7 @@ function renderCurrent() {
   if (state.mode === "v1") renderV1(state.root, state.activeYear);
   if (state.mode === "v2") renderV2(state.root);
   updateUi();
-  applyCamera(state.mode === "v0" ? "side" : state.mode === "v1" ? "free" : "side");
+  applyCamera(state.mode === "v0" ? state.cameraMode : state.mode === "v1" ? "free" : "side");
 }
 
 function buildStaticRootForCurrent() {
@@ -687,6 +847,9 @@ function lockUi(locked) {
     els.eventsToggle,
     els.yearPrev,
     els.yearNext,
+    els.quarterPrev,
+    els.quarterNext,
+    els.axisToggle,
     els.quarterSelect,
     els.weekSelect,
     els.sameWeek,
@@ -694,13 +857,34 @@ function lockUi(locked) {
   ].forEach((element) => {
     if (element) element.disabled = locked;
   });
+  if (!locked) {
+    els.cameraButtons.forEach((button) => {
+      if (button.dataset.cameraButton === "base" && state.mode !== "v0") button.disabled = true;
+    });
+    if (els.axisToggle && state.mode !== "v0") els.axisToggle.disabled = true;
+  }
 }
 
 function applyCamera(mode) {
+  if (mode === "base" && state.mode !== "v0") mode = state.mode === "v1" ? "free" : "side";
+  state.cameraMode = mode;
+  state.v0Tool = mode;
   const target = new state.THREE.Vector3(0, 0, 0);
-  if (mode === "base") {
-    target.set(v0Position(state.records[0]).x + 3.6, 0, 0);
-    state.camera.position.set(target.x - 22, 0.2, 0.1);
+  if (state.root) {
+    state.root.rotation.set(0, 0, 0);
+    state.root.scale.set(1, 1, 1);
+    state.root.position.set(0, 0, 0);
+  }
+  if (state.mode === "v1") {
+    target.set(0, 5.1, 0);
+    state.camera.position.set(0, 5.6, 19);
+  } else if (state.mode === "v2") {
+    const z = state.sliceType === "quarter" ? quarterDepth(state.activeQuarter) - 0.18 : quarterDepth(quarterForWeek(state.activeWeek));
+    target.set(0, 5.4, z);
+    state.camera.position.set(0, 6.0, z + 20);
+  } else if (mode === "base") {
+    target.set(0, 5.0, 0);
+    state.camera.position.set(0, 5.0, 34);
   } else if (mode === "free") {
     state.camera.position.set(15, 12, 22);
   } else {
@@ -708,17 +892,86 @@ function applyCamera(mode) {
   }
   state.controls.target.copy(target);
   state.controls.update();
-  els.cameraButtons.forEach((button) => button.classList.toggle("is-active", button.dataset.cameraButton === mode));
+  els.cameraButtons.forEach((button) => {
+    const isBase = button.dataset.cameraButton === "base";
+    button.disabled = state.isBusy || (isBase && state.mode !== "v0");
+    button.classList.toggle("is-active", button.dataset.cameraButton === mode);
+  });
+}
+
+function modeSummary() {
+  if (state.mode === "v1") {
+    const records = recordsForYear(state.activeYear);
+    const total = records.reduce((sum, record) => sum + record.value, 0);
+    return `
+      <strong>V1 年內週期 / Intra-year</strong>
+      <p>${state.activeYear} 年 52 週展開。用 Previous / Next 翻頁比較前後年份。</p>
+      <span>Year total: ${formatValue(total)}</span>
+    `;
+  }
+  if (state.mode === "v2") {
+    const quarterRecords = recordsForQuarter(state.activeQuarter);
+    const total = quarterRecords.reduce((sum, record) => sum + record.value, 0);
+    const slice = state.sliceType === "week" ? `W${String(state.activeWeek).padStart(2, "0")}` : state.activeQuarter;
+    return `
+      <strong>V2 同期切片 / Cross-year Slice</strong>
+      <p>${slice} 依年份排列。Q1-Q4 使用左側季度卡翻頁。</p>
+      <span>Current quarter total: ${formatValue(total)}</span>
+    `;
+  }
+  const toolText = state.cameraMode === "base"
+    ? "Base Projection: z=0 扁平投影，隱藏面積。"
+    : state.v0AxisMode === "amount-x"
+      ? "Axis Swap: Z=Time，X/Y=Value Radius。"
+      : "Side View: X=Time，Y/Z=Value Radius。";
+  return `
+    <strong>V0 總覽 / Topology Overview</strong>
+    <p>${toolText}</p>
+    <span>${state.compareYear ? `Pulled ring: ${state.compareYear}` : "Timeline click pulls one year ring for comparison."}</span>
+  `;
+}
+
+function selectionDetail() {
+  const record = state.selectedRecord;
+  if (!record) {
+    return `
+      <strong>No fixed selection</strong>
+      <p>Hover 顯示 tooltip；點擊資料點會固定在這裡。</p>
+    `;
+  }
+  const event = state.data?.events?.find((item) => item.year === record.year && record.week >= item.weekStart && record.week <= (item.weekEnd || item.weekStart));
+  return `
+    <strong>${record.year} W${String(record.week).padStart(2, "0")} ${record.quarter}</strong>
+    <span>${escapeHtml(record.date)} | ${formatValue(record.value)}</span>
+    ${record.eventTitle || event ? `<p>Event: ${escapeHtml(record.eventTitle || event.title)}</p>` : "<p>Click V1/V2 controls to slice around this point.</p>"}
+  `;
 }
 
 function updateUi() {
+  if (els.app) els.app.dataset.mode = state.mode;
+  state.activeToolPanel = state.mode;
   els.modeButtons.forEach((button) => button.classList.toggle("is-active", button.dataset.modeButton === state.mode));
-  if (els.flipKicker) els.flipKicker.textContent = state.mode === "v2" ? "Active Quarter" : "Active Year";
-  els.yearCard.textContent = state.mode === "v2" ? state.activeQuarter : state.activeYear;
+  els.modePanels.forEach((panel) => {
+    panel.hidden = panel.dataset.modePanel !== state.mode;
+  });
+  if (els.flipKicker) els.flipKicker.textContent = "Active Year";
+  if (els.yearCard) els.yearCard.textContent = state.activeYear;
+  if (els.quarterCard) els.quarterCard.textContent = state.activeQuarter;
   els.quarterSelect.value = state.activeQuarter;
   els.weekSelect.value = String(state.activeWeek);
   els.timeline.querySelectorAll("button").forEach((button) => button.classList.toggle("is-active", Number(button.dataset.year) === state.activeYear));
   els.scaleLabel.textContent = `Scale Disk: max ${formatValue(state.maxValue)}`;
+  els.cameraButtons.forEach((button) => {
+    button.disabled = state.isBusy || state.mode !== "v0";
+    button.classList.toggle("is-active", state.mode === "v0" && button.dataset.cameraButton === state.cameraMode);
+  });
+  if (els.axisToggle) {
+    els.axisToggle.disabled = state.isBusy || state.mode !== "v0";
+    els.axisToggle.classList.toggle("is-active", state.v0AxisMode === "amount-x");
+    els.axisToggle.textContent = state.v0AxisMode === "amount-x" ? "X Amount / Z Time" : "X Time / Z Radius";
+  }
+  if (els.inspectorSummary) els.inspectorSummary.innerHTML = modeSummary();
+  if (els.selectionDetail) els.selectionDetail.innerHTML = selectionDetail();
 }
 
 function showTooltip(record, event) {
@@ -754,9 +1007,11 @@ function onPointerMove(event) {
 function onPointerClick(event) {
   const record = pick(event);
   if (!record || state.isBusy) return;
-  if (state.mode === "v0") runCinematic("v1", "year", { year: record.year });
-  else if (state.mode === "v1") runCinematic("v2", "week", { week: record.week });
-  else runCinematic("v1", "year", { year: record.year });
+  state.selectedRecord = record;
+  state.activeYear = record.year;
+  state.activeWeek = record.week;
+  state.activeQuarter = record.quarter;
+  updateUi();
 }
 
 function onResize() {
@@ -786,6 +1041,13 @@ function buildStaticUi() {
     button.dataset.year = String(year);
     button.textContent = String(year);
     button.addEventListener("click", () => {
+      if (state.mode === "v0") {
+        state.activeYear = year;
+        state.compareYear = state.compareYear === year ? null : year;
+        if (state.cameraMode === "base") state.cameraMode = "side";
+        renderCurrent();
+        return;
+      }
       if (state.mode === "v1") runPageFlip({ year });
       else runCinematic("v1", "year", { year });
     });
@@ -797,7 +1059,13 @@ function buildStaticUi() {
     button.type = "button";
     button.className = "cte-event";
     button.innerHTML = `<strong>${escapeHtml(event.title)}</strong><span>${event.year} W${String(event.weekStart).padStart(2, "0")} | ${escapeHtml(event.category)}</span>`;
-    button.addEventListener("click", () => runCinematic("v2", "event", { event }));
+    button.addEventListener("click", () => {
+      state.selectedEvent = event;
+      state.activeYear = event.year;
+      state.activeWeek = event.weekStart;
+      state.activeQuarter = quarterForWeek(event.weekStart);
+      runCinematic("v2", "event", { event });
+    });
     els.events.append(button);
   });
 }
@@ -812,7 +1080,20 @@ function bindEvents() {
       if (target === "v2") runCinematic("v2", state.sliceType === "week" ? "week" : "quarter", { week: state.activeWeek, quarter: state.activeQuarter });
     });
   });
-  els.cameraButtons.forEach((button) => button.addEventListener("click", () => applyCamera(button.dataset.cameraButton)));
+  els.cameraButtons.forEach((button) => button.addEventListener("click", () => {
+    const mode = button.dataset.cameraButton;
+    if (state.mode === "v0") {
+      state.cameraMode = mode;
+      renderCurrent();
+      return;
+    }
+    applyCamera(mode);
+  }));
+  els.axisToggle?.addEventListener("click", () => {
+    if (state.mode !== "v0" || state.isBusy) return;
+    state.v0AxisMode = state.v0AxisMode === "time-x" ? "amount-x" : "time-x";
+    renderCurrent();
+  });
   els.ribbonToggle.addEventListener("change", () => {
     state.showRibbon = els.ribbonToggle.checked;
     renderCurrent();
@@ -822,24 +1103,24 @@ function bindEvents() {
     renderCurrent();
   });
   els.yearPrev.addEventListener("click", () => {
-    if (state.mode === "v2") {
-      const index = Math.max(0, QUARTERS.indexOf(state.activeQuarter) - 1);
-      runPageFlip({ quarter: QUARTERS[index] });
-      return;
-    }
     const index = Math.max(0, state.years.indexOf(state.activeYear) - 1);
     if (state.mode === "v1") runPageFlip({ year: state.years[index] });
     else runCinematic("v1", "year", { year: state.years[index] });
   });
   els.yearNext.addEventListener("click", () => {
-    if (state.mode === "v2") {
-      const index = Math.min(QUARTERS.length - 1, QUARTERS.indexOf(state.activeQuarter) + 1);
-      runPageFlip({ quarter: QUARTERS[index] });
-      return;
-    }
     const index = Math.min(state.years.length - 1, state.years.indexOf(state.activeYear) + 1);
     if (state.mode === "v1") runPageFlip({ year: state.years[index] });
     else runCinematic("v1", "year", { year: state.years[index] });
+  });
+  els.quarterPrev?.addEventListener("click", () => {
+    const index = Math.max(0, QUARTERS.indexOf(state.activeQuarter) - 1);
+    if (state.mode === "v2" && state.sliceType === "quarter") runPageFlip({ quarter: QUARTERS[index] });
+    else runCinematic("v2", "quarter", { quarter: QUARTERS[index] });
+  });
+  els.quarterNext?.addEventListener("click", () => {
+    const index = Math.min(QUARTERS.length - 1, QUARTERS.indexOf(state.activeQuarter) + 1);
+    if (state.mode === "v2" && state.sliceType === "quarter") runPageFlip({ quarter: QUARTERS[index] });
+    else runCinematic("v2", "quarter", { quarter: QUARTERS[index] });
   });
   els.quarterSelect.addEventListener("change", () => {
     const quarter = els.quarterSelect.value;

@@ -10,10 +10,10 @@
     />
     <meta name="robots" content="index, follow" />
     <meta name="author" content="Josh Huang" />
-    <meta name="theme-color" content="#111827" />
+    <meta name="theme-color" content="#070b14" />
     <link rel="canonical" href="https://joshhuang.ccwu.cc/christmas-tree-economic.html" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="/christmas-tree-economic.css?v=20260526-1" />
+    <link rel="stylesheet" href="/christmas-tree-economic.css?v=20260526-2" />
     <script type="importmap">
       {
         "imports": {
@@ -24,22 +24,22 @@
     </script>
   </head>
   <body>
-    <main class="cte-app" data-app>
+    <main class="cte-app" data-app data-mode="v0">
       <header class="cte-topbar">
         <a class="cte-back" href="/tools.html" aria-label="Back to tools">Tools</a>
         <div class="cte-title-block">
-          <p>Christmas Tree Economic Time-Series Visualization</p>
-          <h1>聖誕樹狀經濟時序分析圖</h1>
+          <h1>聖誕樹狀經濟時序</h1>
+          <p>Christmas Tree Economic Time-Series</p>
         </div>
-        <div class="cte-controls" aria-label="Visualization controls">
+        <div class="cte-top-controls" aria-label="Data controls">
           <label>
-            指標
+            指標 Metric
             <select data-metric-select>
               <option value="revenue">Revenue</option>
             </select>
           </label>
           <label>
-            數值模式
+            數值模式 Value Mode
             <select data-value-mode>
               <option value="raw">Raw Value</option>
               <option value="yoy" disabled>YoY planned</option>
@@ -48,29 +48,72 @@
               <option value="seasonal" disabled>Seasonal Deviation planned</option>
             </select>
           </label>
-          <div class="cte-segmented" role="group" aria-label="View mode">
-            <button type="button" class="is-active" data-mode-button="v0">V0</button>
-            <button type="button" data-mode-button="v1">V1</button>
-            <button type="button" data-mode-button="v2">V2</button>
-          </div>
-          <label class="cte-check">
-            <input type="checkbox" checked data-toggle-ribbon />
-            Ribbon
-          </label>
-          <label class="cte-check">
-            <input type="checkbox" checked data-toggle-events />
-            Events
-          </label>
         </div>
       </header>
 
       <section class="cte-workbench">
+        <aside class="cte-rail" aria-label="Visualization tools">
+          <section class="cte-tool-block">
+            <p class="cte-kicker">View Mode</p>
+            <div class="cte-mode-stack" role="group" aria-label="View mode">
+              <button type="button" class="is-active" data-mode-button="v0">
+                <span>V0</span>
+                <strong>總覽 Overview</strong>
+              </button>
+              <button type="button" data-mode-button="v1">
+                <span>V1</span>
+                <strong>年內 Year</strong>
+              </button>
+              <button type="button" data-mode-button="v2">
+                <span>V2</span>
+                <strong>同期 Slice</strong>
+              </button>
+            </div>
+          </section>
+
+          <section class="cte-tool-block" data-mode-panel="v0">
+            <p class="cte-kicker">V0 Tools</p>
+            <div class="cte-tool-grid" aria-label="V0 tools">
+              <button type="button" class="is-active" data-camera-button="side">Side View</button>
+              <button type="button" data-camera-button="base">Base Projection</button>
+              <button type="button" data-camera-button="free">Free Orbit</button>
+              <button type="button" data-v0-axis-toggle>X Time / Z Radius</button>
+            </div>
+            <p class="cte-help">點擊底部年份可拉出年度圓環比較。</p>
+          </section>
+
+          <section class="cte-tool-block" data-mode-panel="v1" hidden>
+            <p class="cte-kicker" data-flip-kicker>Active Year</p>
+            <div class="cte-flip-card" data-year-card>2024</div>
+            <div class="cte-row">
+              <button type="button" data-year-prev>Previous</button>
+              <button type="button" data-year-next>Next</button>
+            </div>
+          </section>
+
+          <section class="cte-tool-block" data-mode-panel="v2" hidden>
+            <p class="cte-kicker">Active Quarter</p>
+            <div class="cte-flip-card" data-quarter-card>Q2</div>
+            <div class="cte-row">
+              <button type="button" data-quarter-prev>Previous</button>
+              <button type="button" data-quarter-next>Next</button>
+            </div>
+          </section>
+
+          <section class="cte-tool-block">
+            <p class="cte-kicker">Display</p>
+            <label class="cte-check">
+              <input type="checkbox" checked data-toggle-ribbon />
+              Ribbon 面積
+            </label>
+            <label class="cte-check">
+              <input type="checkbox" checked data-toggle-events />
+              Events 事件
+            </label>
+          </section>
+        </aside>
+
         <section class="cte-stage" aria-label="3D economic time-series visualization">
-          <div class="cte-view-toolbar" aria-label="Camera presets">
-            <button type="button" class="is-active" data-camera-button="side">Side View</button>
-            <button type="button" data-camera-button="base">Base View</button>
-            <button type="button" data-camera-button="free">Free Orbit</button>
-          </div>
           <div class="cte-canvas-wrap" data-canvas-wrap>
             <div class="cte-loading" data-loading>
               <strong>Loading topology</strong>
@@ -84,20 +127,17 @@
           </div>
         </section>
 
-        <aside class="cte-panel" aria-label="Events and slice controls">
-          <section class="cte-card cte-year-card">
-            <p class="cte-kicker" data-flip-kicker>Active Year</p>
-            <div class="cte-flip-card" data-year-card>2024</div>
-            <div class="cte-row">
-              <button type="button" data-year-prev>Previous</button>
-              <button type="button" data-year-next>Next</button>
-            </div>
+        <aside class="cte-inspector" aria-label="Inspector">
+          <section class="cte-panel-section">
+            <p class="cte-kicker">Inspector</p>
+            <div class="cte-summary" data-inspector-summary></div>
+            <div class="cte-selection" data-selection-detail></div>
           </section>
 
-          <section class="cte-card">
-            <p class="cte-kicker">Slice</p>
+          <section class="cte-panel-section">
+            <p class="cte-kicker">Slice Controls</p>
             <label>
-              Quarter
+              Quarter 季度
               <select data-quarter-select>
                 <option value="Q1">Q1 W01-W13</option>
                 <option value="Q2" selected>Q2 W14-W26</option>
@@ -106,7 +146,7 @@
               </select>
             </label>
             <label>
-              Same Week
+              Same Week 同週
               <select data-week-select></select>
             </label>
             <div class="cte-row">
@@ -115,21 +155,21 @@
             </div>
           </section>
 
-          <section class="cte-card">
+          <section class="cte-panel-section">
             <p class="cte-kicker">Events</p>
             <div class="cte-events" data-events></div>
           </section>
 
-          <section class="cte-card">
+          <section class="cte-panel-section">
             <p class="cte-kicker">Analysis Suggestions</p>
             <div class="cte-suggestions" data-suggestions>
-              <button type="button" data-suggest="v1">查看當前年份 V1 展開</button>
-              <button type="button" data-suggest="v2">查看季度 V2 同期比較</button>
+              <button type="button" data-suggest="v1">展開當前年份 V1</button>
+              <button type="button" data-suggest="v2">查看同季度 V2</button>
               <button type="button" data-suggest="range">事件前後 ±4 週</button>
             </div>
           </section>
 
-          <section class="cte-card">
+          <section class="cte-panel-section">
             <p class="cte-kicker">Transition</p>
             <strong class="cte-transition-phase" data-transition-phase>Idle</strong>
           </section>
@@ -148,6 +188,6 @@
       </footer>
     </main>
 
-    <script type="module" src="/js/christmas-tree-economic.js?v=20260526-1"></script>
+    <script type="module" src="/js/christmas-tree-economic.js?v=20260526-2"></script>
   </body>
 </html>
