@@ -42,5 +42,16 @@
     },
     "status": "ready",
     "url": "/flower-language-test.html"
+  },
+  {
+    "id": "christmas-tree-pattern",
+    "name": "聖誕樹狀經濟時序分析圖",
+    "description": {
+      "en": "Christmas Tree Economic Time-Series Visualization: a horizontal helical 3D interface for economic data analysis.",
+      "zh-TW": "以橫向螺旋拓撲呈現經濟時序資料，整合長期趨勢、年內週期、跨年同期與事件切片分析。",
+      "zh-CN": "以横向螺旋拓扑呈现经济时序资料，整合长期趋势、年内周期、跨年同期与事件切片分析。"
+    },
+    "status": "ready",
+    "url": "/christmas-tree-economic.html"
   }
 ]
