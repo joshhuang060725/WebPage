@@ -1,0 +1,186 @@
+{
+  "meta": {
+    "title": "四季花卉",
+    "titleEn": "Four Seasons Flowers",
+    "version": 1,
+    "description": "在柔和绘本温室里培育属于你的四季花卉。"
+  },
+  "growth": {
+    "water": 12,
+    "fertilize": 20,
+    "thresholds": {
+      "seedling": 35,
+      "growing": 75,
+      "bloom": 100
+    }
+  },
+  "pots": [
+    {
+      "id": "terracotta",
+      "name": "陶土花盆",
+      "nameEn": "Terracotta Pot",
+      "tag": "经典",
+      "asset": "/assets/four-seasons-flowers/pot-terracotta.webp",
+      "accent": "#c97d55"
+    },
+    {
+      "id": "cream",
+      "name": "奶油陶瓷",
+      "nameEn": "Cream Ceramic",
+      "tag": "柔和",
+      "asset": "/assets/four-seasons-flowers/pot-cream.webp",
+      "accent": "#d9c7a8"
+    },
+    {
+      "id": "sage",
+      "name": "鼠尾草条纹",
+      "nameEn": "Sage Stripes",
+      "tag": "自然",
+      "asset": "/assets/four-seasons-flowers/pot-sage.webp",
+      "accent": "#91a47a"
+    },
+    {
+      "id": "stone",
+      "name": "斑点石质",
+      "nameEn": "Speckled Stone",
+      "tag": "沉静",
+      "asset": "/assets/four-seasons-flowers/pot-stone.webp",
+      "accent": "#aaa28d"
+    }
+  ],
+  "flowers": [
+    {
+      "id": "tulip",
+      "name": "郁金香",
+      "nameEn": "Tulip",
+      "season": "春季花卉",
+      "seasonEn": "Spring",
+      "meaning": "温柔的勇气，会在耐心照顾中慢慢盛开。",
+      "theme": { "accent": "#e88982", "soft": "#f9d8d0", "leaf": "#7f9b69" },
+      "assets": {
+        "seedling": "/assets/four-seasons-flowers/flower-cuts-user/normalized-512/tulip-seedling.webp",
+        "growing": "/assets/four-seasons-flowers/flower-cuts-user/normalized-512/tulip-growing.webp",
+        "bloom": "/assets/four-seasons-flowers/flower-cuts-user/normalized-512/tulip-bloom.webp"
+      }
+    },
+    {
+      "id": "hydrangea",
+      "name": "绣球花",
+      "nameEn": "Hydrangea",
+      "season": "夏季花卉",
+      "seasonEn": "Summer",
+      "meaning": "细小的心意聚在一起，也能成为丰盛的温柔。",
+      "theme": { "accent": "#8c8fc0", "soft": "#ddd9ef", "leaf": "#6f946a" },
+      "assets": {
+        "seedling": "/assets/four-seasons-flowers/flower-cuts-user/normalized-512/hydrangea-seedling.webp",
+        "growing": "/assets/four-seasons-flowers/flower-cuts-user/normalized-512/hydrangea-growing.webp",
+        "bloom": "/assets/four-seasons-flowers/flower-cuts-user/normalized-512/hydrangea-bloom.webp"
+      }
+    },
+    {
+      "id": "chrysanthemum",
+      "name": "菊花",
+      "nameEn": "Chrysanthemum",
+      "season": "秋季花卉",
+      "seasonEn": "Autumn",
+      "meaning": "在安静的时光里，也能守住明亮与从容。",
+      "theme": { "accent": "#d5a33f", "soft": "#f5e4b4", "leaf": "#7f9864" },
+      "assets": {
+        "seedling": "/assets/four-seasons-flowers/flower-cuts-user/normalized-512/chrysanthemum-seedling.webp",
+        "growing": "/assets/four-seasons-flowers/flower-cuts-user/normalized-512/chrysanthemum-growing.webp",
+        "bloom": "/assets/four-seasons-flowers/flower-cuts-user/normalized-512/chrysanthemum-bloom.webp"
+      }
+    },
+    {
+      "id": "camellia",
+      "name": "山茶花",
+      "nameEn": "Camellia",
+      "season": "冬季花卉",
+      "seasonEn": "Winter",
+      "meaning": "即使天气清冷，心里仍可以保留一朵暖意。",
+      "theme": { "accent": "#d96f76", "soft": "#f5ccd0", "leaf": "#668561" },
+      "assets": {
+        "seedling": "/assets/four-seasons-flowers/flower-cuts-user/normalized-512/camellia-seedling.webp",
+        "growing": "/assets/four-seasons-flowers/flower-cuts-user/normalized-512/camellia-growing.webp",
+        "bloom": "/assets/four-seasons-flowers/flower-cuts-user/normalized-512/camellia-bloom.webp"
+      }
+    },
+    {
+      "id": "sunflower",
+      "name": "向日葵",
+      "nameEn": "Sunflower",
+      "season": "夏季花卉",
+      "seasonEn": "Summer",
+      "meaning": "朝着光的方向生长，把明朗留给每一天。",
+      "theme": { "accent": "#d9a42c", "soft": "#f6e6a8", "leaf": "#6f9361" },
+      "assets": {
+        "seedling": "/assets/four-seasons-flowers/flower-cuts-user/normalized-512/sunflower-seedling.webp",
+        "growing": "/assets/four-seasons-flowers/flower-cuts-user/normalized-512/sunflower-growing.webp",
+        "bloom": "/assets/four-seasons-flowers/flower-cuts-user/normalized-512/sunflower-bloom.webp"
+      }
+    },
+    {
+      "id": "lavender",
+      "name": "薰衣草",
+      "nameEn": "Lavender",
+      "season": "夏季花卉",
+      "seasonEn": "Summer",
+      "meaning": "让缓慢的香气，安放今天还没有说完的心情。",
+      "theme": { "accent": "#9278b5", "soft": "#dfd4ee", "leaf": "#6f956d" },
+      "assets": {
+        "seedling": "/assets/four-seasons-flowers/flower-cuts-user/normalized-512/lavender-seedling.webp",
+        "growing": "/assets/four-seasons-flowers/flower-cuts-user/normalized-512/lavender-growing.webp",
+        "bloom": "/assets/four-seasons-flowers/flower-cuts-user/normalized-512/lavender-bloom.webp"
+      }
+    },
+    {
+      "id": "daisy",
+      "name": "雏菊",
+      "nameEn": "Daisy",
+      "season": "春季花卉",
+      "seasonEn": "Spring",
+      "meaning": "简单的小快乐，也值得被认真收藏。",
+      "theme": { "accent": "#d5aa4d", "soft": "#f5edc7", "leaf": "#739365" },
+      "assets": {
+        "seedling": "/assets/four-seasons-flowers/flower-cuts-user/normalized-512/daisy-seedling.webp",
+        "growing": "/assets/four-seasons-flowers/flower-cuts-user/normalized-512/daisy-growing.webp",
+        "bloom": "/assets/four-seasons-flowers/flower-cuts-user/normalized-512/daisy-bloom.webp"
+      }
+    },
+    {
+      "id": "lily",
+      "name": "百合",
+      "nameEn": "Lily",
+      "season": "夏季花卉",
+      "seasonEn": "Summer",
+      "meaning": "把纯净的祝福留在心里，等待合适的时刻开放。",
+      "theme": { "accent": "#d3a982", "soft": "#f3e4d5", "leaf": "#668c68" },
+      "assets": {
+        "seedling": "/assets/four-seasons-flowers/flower-cuts-user/normalized-512/lily-seedling.webp",
+        "growing": "/assets/four-seasons-flowers/flower-cuts-user/normalized-512/lily-growing.webp",
+        "bloom": "/assets/four-seasons-flowers/flower-cuts-user/normalized-512/lily-bloom.webp"
+      }
+    }
+  ],
+  "tools": {
+    "wateringCan": "/assets/four-seasons-flowers/watering-can.webp",
+    "nutrientBottle": "/assets/four-seasons-flowers/nutrient-bottle.webp"
+  },
+  "messages": {
+    "water": [
+      "水滴落下，叶片也跟着舒展开来。",
+      "今天的照顾，正在悄悄变成新的生长。",
+      "慢一点没有关系，花会记得每一次浇灌。"
+    ],
+    "fertilize": [
+      "补充了一点营养，根系正在积蓄力量。",
+      "一份刚刚好的养分，让花更有精神了。",
+      "温室里多了一点踏实的成长气息。"
+    ],
+    "photo": [
+      "这一刻已经被温柔地保存下来。",
+      "成长值得记录，哪怕今天只是多了一片叶子。",
+      "照片会记得这朵花今天的样子。"
+    ]
+  }
+}
