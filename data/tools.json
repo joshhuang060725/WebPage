@@ -44,6 +44,17 @@
     "url": "/flower-language-test.html"
   },
   {
+    "id": "four-seasons-flowers",
+    "name": "四季花卉 / Four Seasons Flowers",
+    "description": {
+      "en": "A gentle storybook flower-growing experience with pots, instant growth, care actions, photos, and local progress.",
+      "zh-TW": "柔和繪本風的即時花卉養成體驗，可選花盆與花卉，透過澆水、施肥和拍照陪伴植物盛開。",
+      "zh-CN": "柔和绘本风的即时花卉养成体验，可选花盆与花卉，通过浇水、施肥和拍照陪伴植物盛开。"
+    },
+    "status": "ready",
+    "url": "/four-seasons-flowers.html"
+  },
+  {
     "id": "christmas-tree-pattern",
     "name": "聖誕樹狀經濟時序分析圖",
     "description": {

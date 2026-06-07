@@ -7,6 +7,9 @@
 /christmas-tree-economic.css
   Cache-Control: public, max-age=0, must-revalidate
 
+/four-seasons-flowers.css
+  Cache-Control: public, max-age=0, must-revalidate
+
 /js/*
   Cache-Control: public, max-age=0, must-revalidate
 
