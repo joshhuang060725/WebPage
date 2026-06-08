@@ -45,11 +45,11 @@
   },
   {
     "id": "four-seasons-flowers",
-    "name": "四季花卉 / Four Seasons Flowers",
+    "name": "四季花卉",
     "description": {
-      "en": "A gentle storybook flower-growing experience with pots, instant growth, care actions, photos, and local progress.",
+      "en": "四季花卉培育體驗，可選花盆與花卉，透過澆水、施肥和拍照陪伴植物盛開。",
       "zh-TW": "柔和繪本風的即時花卉養成體驗，可選花盆與花卉，透過澆水、施肥和拍照陪伴植物盛開。",
-      "zh-CN": "柔和绘本风的即时花卉养成体验，可选花盆与花卉，通过浇水、施肥和拍照陪伴植物盛开。"
+      "zh-CN": "柔和繪本風的即時花卉養成體驗，可選花盆與花卉，透過澆水、施肥和拍照陪伴植物盛開。"
     },
     "status": "ready",
     "url": "/four-seasons-flowers.html"
@@ -70,8 +70,8 @@
     "name": "Zhu Bloom",
     "description": {
       "en": "An independent floral market concept page for flowers, craft booths, workshops, and seasonal lifestyle events.",
-      "zh-TW": "\u7368\u7acb\u82b1\u85dd\u5e02\u96c6\u6982\u5ff5\u9801\uff0c\u6574\u7406\u82b1\u5349\u3001\u624b\u4f5c\u6524\u4f4d\u3001\u5de5\u4f5c\u574a\u8207\u5b63\u7bc0\u751f\u6d3b\u6d3b\u52d5\u5167\u5bb9\u3002",
-      "zh-CN": "\u72ec\u7acb\u82b1\u827a\u5e02\u96c6\u6982\u5ff5\u9875\uff0c\u6574\u7406\u82b1\u5349\u3001\u624b\u4f5c\u644a\u4f4d\u3001\u5de5\u4f5c\u574a\u4e0e\u5b63\u8282\u751f\u6d3b\u6d3b\u52a8\u5185\u5bb9\u3002"
+      "zh-TW": "獨立花藝市集概念頁，整理花卉、手作攤位、工作坊與季節生活活動內容。",
+      "zh-CN": "独立花艺市集概念页，整理花卉、手作摊位、工作坊与季节生活活动内容。"
     },
     "status": "ready",
     "url": "/zhu-bloom.html"
