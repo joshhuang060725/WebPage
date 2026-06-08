@@ -1,0 +1,970 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>築花市集 Zhu Bloom</title>
+    <meta
+      name="description"
+      content="築花市集 Zhu Bloom，以花卉、工藝、生活風格、甜點美食與音樂表演為核心的花藝市集概念頁。"
+    />
+    <link rel="icon" href="/assets/zhu-bloom/logo.jpg" type="image/jpeg" />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --ink: #4e4244;
+        --muted: #8f8583;
+        --soft: #fbf8f6;
+        --line: #eee6e2;
+        --purple: #dcb5e5;
+        --purple-deep: #c795d2;
+        --orange: #e39a62;
+        --brown: #5a4548;
+        --panel: #ffffff;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "Noto Sans TC", "Microsoft JhengHei", Arial, sans-serif;
+        background: var(--soft);
+        color: var(--ink);
+        line-height: 1.7;
+      }
+
+      img {
+        display: block;
+        max-width: 100%;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .page {
+        width: min(1180px, calc(100% - 48px));
+        margin: 0 auto;
+        background: #fff;
+        border-top: 4px solid #b882de;
+        box-shadow: 0 18px 70px rgba(94, 75, 77, 0.08);
+      }
+
+      .inner {
+        width: min(1060px, calc(100% - 56px));
+        margin: 0 auto;
+      }
+
+      .site-header {
+        padding: 24px 0 10px;
+        background: rgba(255, 255, 255, 0.96);
+      }
+
+      .nav {
+        display: grid;
+        grid-template-columns: 220px minmax(0, 1fr) 120px;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .brand img {
+        width: 62px;
+        height: 54px;
+        object-fit: contain;
+      }
+
+      .brand strong,
+      .footer-brand strong {
+        display: block;
+        color: #4f4546;
+        font-size: 18px;
+        letter-spacing: 0.04em;
+      }
+
+      .brand span,
+      .footer-brand span {
+        display: block;
+        margin-top: -2px;
+        color: #6a5b5d;
+        font-size: 15px;
+      }
+
+      .nav-links {
+        display: flex;
+        justify-content: center;
+        gap: 34px;
+        color: #6f6365;
+        font-size: 13px;
+        font-weight: 700;
+        white-space: nowrap;
+      }
+
+      .social-links {
+        display: flex;
+        justify-content: flex-end;
+        gap: 18px;
+        color: var(--brown);
+        font-size: 21px;
+        font-weight: 800;
+      }
+
+      .hero {
+        position: relative;
+        min-height: 780px;
+        overflow: hidden;
+        padding: 12px 0 72px;
+      }
+
+      .hero-dot,
+      .about-dot {
+        position: absolute;
+        width: 118px;
+        height: 150px;
+        background-image: radial-gradient(var(--purple) 3px, transparent 4px);
+        background-size: 22px 22px;
+        opacity: 0.6;
+        pointer-events: none;
+      }
+
+      .hero-dot {
+        left: 0;
+        top: 285px;
+      }
+
+      .hero-layout {
+        position: relative;
+        z-index: 3;
+        display: grid;
+        grid-template-columns: 150px minmax(560px, 1fr) 310px;
+        align-items: center;
+        column-gap: 26px;
+        row-gap: 42px;
+        min-height: 640px;
+      }
+
+      .vertical-copy {
+        position: relative;
+        z-index: 4;
+        grid-column: 1;
+        grid-row: 1;
+        justify-self: center;
+        display: flex;
+        gap: 28px;
+        color: #5d4b4e;
+        font-size: 32px;
+        font-weight: 600;
+        line-height: 1.25;
+        letter-spacing: 0.15em;
+        writing-mode: vertical-rl;
+      }
+
+      .hero-art {
+        position: relative;
+        z-index: 4;
+        grid-column: 1 / 3;
+        grid-row: 1;
+        align-self: end;
+        justify-self: stretch;
+        width: 100%;
+        height: 500px;
+        margin-left: 0;
+        overflow: hidden;
+        background-image: url("/assets/zhu-bloom/market-hero.png");
+        background-position: center top;
+        background-repeat: no-repeat;
+        background-size: cover;
+      }
+
+      .event-panel {
+        grid-column: 3;
+        grid-row: 1;
+      }
+
+      .app-interfaces {
+        grid-column: 1 / -1;
+        justify-self: center;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(220px, 1fr));
+        gap: 18px;
+        width: min(780px, calc(100% - 220px));
+        margin-top: -8px;
+      }
+
+      .app-link {
+        display: grid;
+        gap: 7px;
+        min-height: 118px;
+        padding: 22px 24px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: #fff;
+        box-shadow: 0 14px 34px rgba(94, 75, 77, 0.08);
+      }
+
+      .app-link strong {
+        color: #4f4546;
+        font-size: 20px;
+        letter-spacing: 0.06em;
+      }
+
+      .app-link span {
+        color: #8c7f82;
+        font-size: 14px;
+        line-height: 1.7;
+      }
+
+      .app-link small {
+        color: var(--purple-deep);
+        font-size: 13px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+      }
+
+      .event-panel {
+        position: relative;
+        z-index: 4;
+        padding-top: 30px;
+      }
+
+      .event-year {
+        color: #8f7c80;
+        font-size: 20px;
+        letter-spacing: 0.16em;
+      }
+
+      .event-row {
+        display: grid;
+        grid-template-columns: 1fr 44px;
+        align-items: center;
+        gap: 12px;
+        margin: 12px 0;
+      }
+
+      .event-date {
+        color: #5a494c;
+        font-size: 56px;
+        line-height: 1;
+        letter-spacing: 0.1em;
+        font-weight: 300;
+      }
+
+      .event-day {
+        width: 36px;
+        height: 36px;
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        background: var(--purple);
+        color: #fff;
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .event-divider {
+        width: 18px;
+        height: 1px;
+        margin: 2px 0 4px 4px;
+        background: var(--purple);
+      }
+
+      .event-time {
+        margin-top: 18px;
+        color: #67585a;
+        font-size: 20px;
+        letter-spacing: 0.08em;
+      }
+
+      .event-location {
+        display: grid;
+        grid-template-columns: 24px 1fr;
+        gap: 10px;
+        margin-top: 28px;
+        color: #6d6062;
+        font-size: 16px;
+        font-weight: 700;
+      }
+
+      .event-location small {
+        display: block;
+        margin-top: 3px;
+        color: #8b7e80;
+        font-size: 12px;
+        letter-spacing: 0.12em;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 160px;
+        min-height: 44px;
+        margin-top: 34px;
+        padding: 0 24px;
+        border: 1px solid #b8aca8;
+        border-radius: 999px;
+        background: #fff;
+        color: #5a4d4f;
+        font-size: 14px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+      }
+
+      .category-strip {
+        border-top: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+      }
+
+      .categories {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        min-height: 104px;
+      }
+
+      .category {
+        display: grid;
+        grid-template-columns: 42px 1fr;
+        align-items: center;
+        gap: 14px;
+        padding: 22px 24px;
+        border-right: 1px solid var(--line);
+      }
+
+      .category:last-child {
+        border-right: 0;
+      }
+
+      .category svg {
+        width: 34px;
+        height: 34px;
+        color: #d69a70;
+        stroke-width: 1.8;
+      }
+
+      .category strong {
+        display: block;
+        color: #65585a;
+        font-size: 15px;
+      }
+
+      .category span {
+        display: block;
+        color: #938789;
+        font-size: 12px;
+      }
+
+      .section {
+        position: relative;
+        padding: 74px 0;
+      }
+
+      .section-heading {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: #6f6264;
+        font-size: 28px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+      }
+
+      .flower-mark {
+        color: var(--purple);
+        font-size: 28px;
+        line-height: 1;
+      }
+
+      .about {
+        display: grid;
+        grid-template-columns: 0.95fr 1.15fr;
+        gap: 70px;
+        align-items: center;
+      }
+
+      .about-copy p {
+        max-width: 500px;
+        margin-top: 28px;
+        color: #928689;
+        font-size: 16px;
+        line-height: 2.3;
+        letter-spacing: 0.08em;
+      }
+
+      .about-image {
+        position: relative;
+      }
+
+      .about-image img {
+        width: 100%;
+        aspect-ratio: 1.9 / 1;
+        object-fit: cover;
+        border-radius: 28px;
+      }
+
+      .about-dot {
+        right: -76px;
+        top: 110px;
+      }
+
+      .about-corner {
+        position: absolute;
+        right: -70px;
+        bottom: -52px;
+        width: 180px;
+        height: 120px;
+        border-radius: 120px 120px 0 0;
+        background: var(--purple);
+        opacity: 0.72;
+      }
+
+      .brands {
+        border-top: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+        padding: 44px 0 54px;
+      }
+
+      .brands-title {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        margin-bottom: 38px;
+        color: #706365;
+        font-size: 25px;
+        letter-spacing: 0.08em;
+      }
+
+      .more-wrap {
+        text-align: center;
+      }
+
+      .mini-market {
+        margin: 36px 0 10px;
+        overflow: hidden;
+        -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+        mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+      }
+
+      .mini-track {
+        display: flex;
+        width: max-content;
+        gap: 18px;
+        animation: mini-scroll 24s linear infinite;
+      }
+
+      .mini-group {
+        display: flex;
+        gap: 18px;
+      }
+
+      .mini-market:hover .mini-track {
+        animation-play-state: paused;
+      }
+
+      .mini-item {
+        width: 190px;
+        flex: 0 0 190px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        overflow: hidden;
+        background: #fff;
+        box-shadow: 0 14px 34px rgba(94, 75, 77, 0.07);
+      }
+
+      .mini-item img {
+        width: 100%;
+        aspect-ratio: 1.24 / 1;
+        object-fit: cover;
+      }
+
+      @keyframes mini-scroll {
+        from {
+          transform: translateX(0);
+        }
+
+        to {
+          transform: translateX(calc(-50% - 9px));
+        }
+      }
+
+      .news-area {
+        padding: 60px 0 28px;
+      }
+
+      .news-layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 34px;
+        margin-top: 26px;
+      }
+
+      .news-card,
+      .subscribe-card {
+        min-height: 230px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: #fff;
+        box-shadow: 0 16px 44px rgba(94, 75, 77, 0.05);
+      }
+
+      .news-card {
+        padding: 30px 34px;
+      }
+
+      .news-item {
+        display: grid;
+        grid-template-columns: 110px 78px 1fr;
+        gap: 14px;
+        align-items: center;
+        padding: 14px 0;
+        border-bottom: 1px solid #f2ece9;
+        color: #84787a;
+        font-size: 13px;
+      }
+
+      .news-item time {
+        font-weight: 800;
+      }
+
+      .tag {
+        display: inline-flex;
+        justify-content: center;
+        padding: 3px 8px;
+        border-radius: 999px;
+        background: var(--purple);
+        color: #fff;
+        font-size: 12px;
+        white-space: nowrap;
+      }
+
+      .tag.orange {
+        background: #e5a470;
+      }
+
+      .subscribe-card {
+        position: relative;
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 170px;
+        gap: 20px;
+        padding: 34px 34px 28px;
+      }
+
+      .subscribe-card h3 {
+        color: #706365;
+        font-size: 25px;
+        letter-spacing: 0.08em;
+      }
+
+      .subscribe-card p {
+        margin-top: 16px;
+        color: #8f8385;
+        line-height: 2;
+      }
+
+      .subscribe-form {
+        display: flex;
+        max-width: 330px;
+        min-height: 46px;
+        margin-top: 22px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        overflow: hidden;
+      }
+
+      .subscribe-form input {
+        min-width: 0;
+        flex: 1;
+        border: 0;
+        padding: 0 18px;
+        color: #8f8385;
+        font: inherit;
+        outline: 0;
+      }
+
+      .subscribe-form button {
+        width: 92px;
+        border: 0;
+        background: var(--purple);
+        color: #fff;
+        font: inherit;
+        font-weight: 800;
+      }
+
+      .subscribe-card img {
+        align-self: end;
+        width: 160px;
+        height: 190px;
+        object-fit: cover;
+        border-radius: 90px 90px 16px 16px;
+      }
+
+      .site-footer {
+        padding: 30px 0 22px;
+      }
+
+      .footer-main {
+        display: grid;
+        grid-template-columns: 220px 1fr 240px 58px;
+        align-items: center;
+        gap: 22px;
+        padding-bottom: 30px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .footer-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .footer-brand img {
+        width: 58px;
+        height: 50px;
+        object-fit: contain;
+      }
+
+      .footer-slogan {
+        text-align: center;
+        color: #76686b;
+        font-size: 18px;
+        letter-spacing: 0.42em;
+      }
+
+      .footer-social {
+        color: #6a5b5d;
+        font-size: 16px;
+        font-weight: 800;
+      }
+
+      .top-button {
+        width: 56px;
+        height: 56px;
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        background: var(--purple);
+        color: #fff;
+        font-size: 28px;
+      }
+
+      .footer-bottom {
+        display: flex;
+        justify-content: center;
+        gap: 70px;
+        padding-top: 18px;
+        color: #a89fa1;
+        font-size: 12px;
+      }
+
+      @media (max-width: 980px) {
+        .page {
+          width: 100%;
+        }
+
+        .nav,
+        .about,
+        .news-layout,
+        .footer-main {
+          grid-template-columns: 1fr;
+        }
+
+        .nav-links,
+        .social-links {
+          justify-content: flex-start;
+          flex-wrap: wrap;
+          gap: 16px;
+        }
+
+        .hero {
+          min-height: auto;
+          padding-bottom: 40px;
+        }
+
+        .hero-layout {
+          grid-template-columns: 1fr;
+          gap: 20px;
+          min-height: auto;
+        }
+
+        .vertical-copy {
+          justify-self: start;
+          writing-mode: horizontal-tb;
+          font-size: 24px;
+        }
+
+        .hero-art {
+          grid-column: auto;
+          grid-row: auto;
+          width: 100%;
+          height: clamp(300px, 62vw, 470px);
+          margin: 0;
+        }
+
+        .event-panel {
+          padding-top: 0;
+        }
+
+        .app-interfaces {
+          grid-template-columns: 1fr;
+          width: 100%;
+          margin-top: 6px;
+        }
+
+        .categories {
+          grid-template-columns: 1fr;
+        }
+
+        .category {
+          border-right: 0;
+          border-bottom: 1px solid var(--line);
+        }
+
+        .subscribe-card {
+          grid-template-columns: 1fr;
+        }
+
+        .footer-slogan {
+          text-align: left;
+        }
+      }
+
+      @media (max-width: 560px) {
+        .inner {
+          width: min(100% - 28px, 1060px);
+        }
+
+        .event-date {
+          font-size: 42px;
+        }
+
+        .news-item {
+          grid-template-columns: 1fr;
+          gap: 6px;
+        }
+
+        .footer-bottom {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 8px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page" id="top">
+      <header class="site-header">
+        <div class="inner nav">
+          <a class="brand" href="#top" aria-label="築花市集首頁">
+            <img src="/assets/zhu-bloom/logo.jpg" alt="築花市集 Zhu Bloom Logo" />
+            <div>
+              <strong>築花市集</strong>
+              <span>Zhu Bloom</span>
+            </div>
+          </a>
+          <nav class="nav-links" aria-label="主選單">
+            <a href="#about">關於市集</a>
+            <a href="#brands">品牌介紹</a>
+            <a href="#event">市集資訊</a>
+            <a href="#recruit">品牌招募</a>
+            <a href="#news">最新消息</a>
+            <a href="#contact">聯絡我們</a>
+          </nav>
+          <div class="social-links" aria-label="社群連結">
+            <a href="#" aria-label="Facebook">f</a>
+            <a href="#" aria-label="Instagram">◎</a>
+            <a href="#" aria-label="Threads">@</a>
+          </div>
+        </div>
+      </header>
+
+      <main>
+        <section class="hero" id="event">
+          <span class="hero-dot" aria-hidden="true"></span>
+          <div class="inner">
+            <div class="hero-layout">
+              <div class="vertical-copy">
+                <span>在築造之間，</span>
+                <span>盛開一場花野</span>
+              </div>
+              <div class="hero-art" role="img" aria-label="花藝瓶器與柔和圖形組成的築花市集主視覺"></div>
+              <aside class="event-panel" aria-label="市集日期地點">
+                <p class="event-year">2026</p>
+                <div class="event-row">
+                  <p class="event-date">11 / 21</p>
+                  <span class="event-day">SAT</span>
+                </div>
+                <div class="event-divider"></div>
+                <div class="event-row">
+                  <p class="event-date">11 / 22</p>
+                  <span class="event-day">SUN</span>
+                </div>
+                <p class="event-time">10:00 — 18:00</p>
+                <p class="event-location">
+                  <span aria-hidden="true">⌖</span>
+                  <span>高雄駁二特區 B6 蓬萊倉庫<small>804 高雄市鼓山區麗興里蓬萊路 99 號</small></span>
+                </p>
+                <a class="btn" href="#about">關於市集　→</a>
+              </aside>
+              <div class="app-interfaces" id="flower-apps" aria-label="花卉小遊戲入口">
+                <a class="app-link" href="/flower-language-test.html">
+                  <strong>花語測試</strong>
+                  <span>透過 6 題情境題，找到你的 64 維度專屬花語。</span>
+                  <small>START TEST</small>
+                </a>
+                <a class="app-link" href="/four-seasons-flowers.html">
+                  <strong>四季花卉</strong>
+                  <span>選擇花盆與花卉，澆水、施肥，陪植物慢慢盛開。</span>
+                  <small>OPEN GARDEN</small>
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="category-strip" aria-label="市集分類">
+          <div class="inner categories">
+            <article class="category">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M12 21s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.6-7 10-7 10Z"/><path d="M12 8v13"/></svg>
+              <div><strong>花卉植栽</strong><span>Flowers & Plants</span></div>
+            </article>
+            <article class="category">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M9 21h6"/><path d="M10 21V10a4 4 0 1 1 4 0v11"/><path d="M7 11h10"/></svg>
+              <div><strong>手作工藝</strong><span>Crafts & Handmade</span></div>
+            </article>
+            <article class="category">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M5 12h14"/><path d="M7 12v6a3 3 0 0 0 3 3h4a3 3 0 0 0 3-3v-6"/><path d="M8 9c0-3 8-3 8 0"/></svg>
+              <div><strong>生活風格</strong><span>Lifestyle</span></div>
+            </article>
+            <article class="category">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M6 9h12l-1 11H7L6 9Z"/><path d="M8 9a4 4 0 0 1 8 0"/><path d="M9 13h6"/></svg>
+              <div><strong>甜點美食</strong><span>Desserts & Food</span></div>
+            </article>
+            <article class="category">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><rect x="4" y="7" width="16" height="13" rx="2"/><path d="M8 7l1.4-3h5.2L16 7"/><circle cx="12" cy="13.5" r="3"/></svg>
+              <div><strong>音樂表演</strong><span>Music & Performance</span></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="section" id="about">
+          <div class="inner about">
+            <div class="about-copy">
+              <h2 class="section-heading"><span class="flower-mark">✤</span>關於築花市集</h2>
+              <p>
+                築花市集是一場以「花卉 × 工藝 × 生活」為核心的創意聚落，
+                我們相信，生活就像一座花園，需要用心築造，才能讓美好在日常中綻放。
+              </p>
+              <a class="btn" href="#brands">了解更多　→</a>
+            </div>
+            <div class="about-image">
+              <span class="about-dot" aria-hidden="true"></span>
+              <span class="about-corner" aria-hidden="true"></span>
+              <img src="/assets/zhu-bloom/about-market.png" alt="築花市集現場空間與花藝攤位" />
+            </div>
+          </div>
+        </section>
+
+        <section class="brands" id="brands">
+          <div class="inner">
+            <h2 class="brands-title"><span class="flower-mark">✤</span>精選品牌</h2>
+            <div class="mini-market" aria-label="精緻小物展示">
+              <div class="mini-track">
+                <div class="mini-group">
+                  <article class="mini-item"><img src="/assets/zhu-bloom/market-items/01-lavender-sachet.png" alt="薰衣草香氛布包" /></article>
+                  <article class="mini-item"><img src="/assets/zhu-bloom/market-items/02-flower-tea.png" alt="花草茶組" /></article>
+                  <article class="mini-item"><img src="/assets/zhu-bloom/market-items/03-floral-cards.png" alt="乾燥花手作卡片" /></article>
+                  <article class="mini-item"><img src="/assets/zhu-bloom/market-items/04-botanical-candles.png" alt="植物香氛蠟燭" /></article>
+                  <article class="mini-item"><img src="/assets/zhu-bloom/market-items/05-ceramic-vase.png" alt="陶藝花器" /></article>
+                  <article class="mini-item"><img src="/assets/zhu-bloom/market-items/06-dried-bouquet.png" alt="乾燥花束" /></article>
+                </div>
+                <div class="mini-group" aria-hidden="true">
+                  <article class="mini-item"><img src="/assets/zhu-bloom/market-items/01-lavender-sachet.png" alt="" /></article>
+                  <article class="mini-item"><img src="/assets/zhu-bloom/market-items/02-flower-tea.png" alt="" /></article>
+                  <article class="mini-item"><img src="/assets/zhu-bloom/market-items/03-floral-cards.png" alt="" /></article>
+                  <article class="mini-item"><img src="/assets/zhu-bloom/market-items/04-botanical-candles.png" alt="" /></article>
+                  <article class="mini-item"><img src="/assets/zhu-bloom/market-items/05-ceramic-vase.png" alt="" /></article>
+                  <article class="mini-item"><img src="/assets/zhu-bloom/market-items/06-dried-bouquet.png" alt="" /></article>
+                </div>
+              </div>
+            </div>
+            <div class="more-wrap">
+              <a class="btn" href="#recruit">更多品牌介紹　→</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="news-area" id="news">
+          <div class="inner">
+            <h2 class="section-heading"><span class="flower-mark">✤</span>最新消息</h2>
+            <div class="news-layout">
+              <article class="news-card">
+                <div class="news-item">
+                  <time datetime="2026-09-20">2026.09.20</time>
+                  <span class="tag">活動公告</span>
+                  <p>築花市集 2026 冬季場來了！11/21-11/22 駁二見！</p>
+                </div>
+                <div class="news-item">
+                  <time datetime="2026-09-10">2026.09.10</time>
+                  <span class="tag orange">品牌招募</span>
+                  <p>2026 冬季場品牌招募中，9/30 前報名享早鳥優惠！</p>
+                </div>
+                <div class="news-item">
+                  <time datetime="2026-08-25">2026.08.25</time>
+                  <span class="tag">活動花絮</span>
+                  <p>2025 春季場精彩回顧，感謝每一位共築花野的你！</p>
+                </div>
+                <a class="btn" href="#news">更多最新消息　→</a>
+              </article>
+
+              <aside class="subscribe-card" id="contact">
+                <div>
+                  <h3>訂閱電子報</h3>
+                  <p>訂閱我們的電子報，接收最新市集資訊與花藝生活提案！</p>
+                  <form class="subscribe-form" action="#" method="post">
+                    <input type="email" name="email" placeholder="輸入您的 Email" aria-label="Email" />
+                    <button type="submit">訂閱</button>
+                  </form>
+                </div>
+                <img src="/assets/four-seasons-flowers/chrysanthemum-bloom.webp" alt="電子報花器裝飾" />
+              </aside>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <div class="inner footer-main">
+          <a class="footer-brand" href="#top">
+            <img src="/assets/zhu-bloom/logo.jpg" alt="築花市集 Zhu Bloom Logo" />
+            <div>
+              <strong>築花市集</strong>
+              <span>Zhu Bloom</span>
+            </div>
+          </a>
+          <p class="footer-slogan">一起築一場花的夢想</p>
+          <p class="footer-social">f　◎　Zhu_Bloom.market</p>
+          <a class="top-button" href="#top" aria-label="回到頁首">⌃</a>
+        </div>
+        <div class="inner footer-bottom">
+          <span>© 2026 Zhu Bloom Market. All Rights Reserved.</span>
+          <a href="#">隱私權政策</a>
+          <a href="#">服務條款</a>
+          <a href="#">聯絡我們</a>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
