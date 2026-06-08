@@ -4,7 +4,7 @@
   const DATA_URL = "/data/four-seasons-flowers.json";
   const STORAGE_KEY = "fourSeasonsFlowers:v1";
   const ACTION_LOCK_MS = 1350;
-  const DEFAULT_PHOTO_NOTE = "今天也认真照顾了这朵花。";
+  const DEFAULT_PHOTO_NOTE = "今天也認真照顧了這朵花。";
   // Snapshot-only placement. Adjust these numbers to move the saved PNG composition.
   const SNAPSHOT_PLANT = {
     x: 220,
@@ -20,9 +20,9 @@
   };
   const VALID_VIEWS = ["loading", "pot", "flower", "garden"];
   const STAGE_LABELS = {
-    seedling: "幼苗期 · Seedling",
-    growing: "生长期 · Growing",
-    bloom: "盛花期 · Blooming"
+    seedling: "幼苗期",
+    growing: "生長期",
+    bloom: "盛花期"
   };
 
   const app = document.querySelector("[data-app]");
@@ -141,7 +141,7 @@
     try {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     } catch (_error) {
-      updateMessage("进度暂时无法保存", "浏览器阻止了本地存储，但本次仍可继续体验。");
+      updateMessage("進度暫時無法儲存", "瀏覽器阻止了本機儲存，但本次仍可繼續體驗。");
     }
   }
 
@@ -177,7 +177,7 @@
         <span class="card-tag">${pot.tag}</span>
         <img src="${pot.asset}" alt="${pot.name}" />
         <strong>${pot.name}</strong>
-        <small>${pot.nameEn}</small>
+        <small>${pot.tag}花盆</small>
       `;
       button.addEventListener("click", () => selectPot(pot.id));
       els.potGrid.append(button);
@@ -191,10 +191,10 @@
       button.dataset.choiceFlower = flower.id;
       button.style.setProperty("--card-accent", flower.theme.accent);
       button.innerHTML = `
-        <span class="card-tag">${flower.seasonEn}</span>
+        <span class="card-tag">${flower.season}</span>
         <img src="${flower.assets.bloom}" alt="${flower.name}" />
         <strong>${flower.name}</strong>
-        <small>${flower.nameEn}</small>
+        <small>當季花卉</small>
       `;
       button.addEventListener("click", () => selectFlower(flower.id));
       els.flowerGrid.append(button);
@@ -245,16 +245,16 @@
     app.style.setProperty("--leaf", flower.theme.leaf);
 
     const stage = getGrowthStage(state.growth);
-    els.seasonLabel.textContent = `${flower.season} · ${flower.seasonEn}`;
+    els.seasonLabel.textContent = flower.season;
     els.flowerName.textContent = flower.name;
-    els.flowerNameEn.textContent = flower.nameEn;
+    els.flowerNameEn.textContent = "四季花卉";
     els.level.textContent = state.level;
     els.stageLabel.textContent = STAGE_LABELS[stage];
     els.progressValue.textContent = `${Math.round(state.growth)}%`;
     els.progressTrack.setAttribute("aria-valuenow", String(Math.round(state.growth)));
     els.progressFill.style.width = `${state.growth}%`;
     els.plantImage.src = flower.assets[stage];
-    els.plantImage.alt = `${flower.name}${STAGE_LABELS[stage].split(" · ")[0]}`;
+    els.plantImage.alt = `${flower.name}${STAGE_LABELS[stage]}`;
     els.potImage.src = pot.asset;
     els.potImage.alt = pot.name;
     els.careCount.textContent = state.careCount;
@@ -306,7 +306,7 @@
   }
 
   function showGrowthFloat(amount, label) {
-    els.growthFloat.textContent = label || `成长 +${amount}`;
+    els.growthFloat.textContent = label || `成長 +${amount}`;
     replayClass(els.growthFloat, "is-visible", 1250);
   }
 
@@ -363,26 +363,26 @@
       replayClass(els.plantStage, "is-watering", 1320);
       createParticles(9, "water");
       if (wasBloomed) {
-        updateMessage("已经盛开", "花朵正保持在盛放状态，想进阶等级请使用施肥。");
+        updateMessage("已經盛開", "花朵正保持在盛放狀態，想提升等級請使用施肥。");
       } else {
-        updateMessage(reachedBloom ? "花朵盛开了！" : "浇水完成", reachedBloom ? getFlower().meaning : randomMessage("water"));
+        updateMessage(reachedBloom ? "花朵盛開了！" : "澆水完成", reachedBloom ? getFlower().meaning : randomMessage("water"));
       }
     } else {
       replayClass(els.plantStage, "is-fertilizing", 1280);
       createParticles(reachedBloom || advancedLevel ? 18 : 10, reachedBloom || advancedLevel ? "celebrate" : "fertilize");
       if (advancedLevel) {
-        updateMessage("花朵进阶成功", `等级提升到 Lv. ${state.level}，盛开状态已保留。`);
+        updateMessage("花朵進階成功", `等級提升到 ${state.level}，盛開狀態已保留。`);
       } else {
-        updateMessage(reachedBloom ? "花朵盛开了！" : "施肥完成", reachedBloom ? "继续照顾到 100% 后，就可以施肥进阶等级。" : randomMessage("fertilize"));
+        updateMessage(reachedBloom ? "花朵盛開了！" : "施肥完成", reachedBloom ? "繼續照顧到 100% 後，就可以施肥提升等級。" : randomMessage("fertilize"));
       }
     }
 
     if (advancedLevel) {
-      showGrowthFloat(amount, `Lv. ${state.level}`);
+      showGrowthFloat(amount, `等級 ${state.level}`);
     } else if (wasBloomed && type === "water") {
-      showGrowthFloat(amount, "已盛开");
+      showGrowthFloat(amount, "已盛開");
     } else {
-      showGrowthFloat(amount, reachedBloom ? "盛开！Bloom" : `成长 +${amount}`);
+      showGrowthFloat(amount, reachedBloom ? "盛開！" : `成長 +${amount}`);
     }
   }
 
@@ -424,7 +424,7 @@
       const image = new Image();
       image.decoding = "async";
       image.onload = () => resolve(image);
-      image.onerror = () => reject(new Error(`无法加载图片：${src}`));
+      image.onerror = () => reject(new Error(`無法載入圖片：${src}`));
       image.src = src;
     });
   }
@@ -516,21 +516,21 @@
     ctx.globalAlpha = 1;
 
     ctx.fillStyle = "#53614f";
-    ctx.font = '700 34px "Microsoft YaHei", "Noto Sans SC", sans-serif';
+    ctx.font = '700 34px "Microsoft JhengHei", "Noto Sans TC", sans-serif';
     ctx.fillText("四季花卉", 80, 94);
     ctx.fillStyle = "#7b8576";
     ctx.font = '24px Georgia, serif';
-    ctx.fillText("Four Seasons Flowers", 80, 132);
+    ctx.fillText("四季花卉培育紀錄", 80, 132);
 
     ctx.fillStyle = flower.theme.accent;
-    ctx.font = '700 24px "Microsoft YaHei", sans-serif';
-    ctx.fillText(`${flower.season} · ${flower.seasonEn}`, 80, 224);
+    ctx.font = '700 24px "Microsoft JhengHei", sans-serif';
+    ctx.fillText(flower.season, 80, 224);
     ctx.fillStyle = "#394437";
-    ctx.font = '700 70px "Microsoft YaHei", "Noto Serif SC", serif';
+    ctx.font = '700 70px "Microsoft JhengHei", "Noto Serif TC", serif';
     ctx.fillText(flower.name, 80, 308);
     ctx.fillStyle = "#727d6f";
     ctx.font = '32px Georgia, serif';
-    ctx.fillText(flower.nameEn, 82, 354);
+    ctx.fillText("四季花卉", 82, 354);
 
     drawRoundedRect(ctx, 770, 230, 220, 88, 44);
     ctx.fillStyle = "rgba(255,255,255,0.72)";
@@ -538,7 +538,7 @@
     ctx.fillStyle = "#4c5949";
     ctx.font = '700 34px Georgia, serif';
     ctx.textAlign = "center";
-    ctx.fillText(`Lv. ${state.level}`, 880, 286);
+    ctx.fillText(`等級 ${state.level}`, 880, 286);
     ctx.textAlign = "left";
 
     ctx.save();
@@ -559,23 +559,23 @@
     ctx.fillStyle = "rgba(228, 229, 224, 0.92)";
     ctx.fill();
     ctx.fillStyle = "#4b5549";
-    ctx.font = '36px "Microsoft YaHei", "Noto Sans SC", sans-serif';
+    ctx.font = '36px "Microsoft JhengHei", "Noto Sans TC", sans-serif';
     drawWrappedText(ctx, note, 120, 1152, 840, 54, 3);
 
-    const date = new Intl.DateTimeFormat("zh-CN", {
+    const date = new Intl.DateTimeFormat("zh-TW", {
       year: "numeric",
       month: "2-digit",
       day: "2-digit"
     }).format(new Date());
     ctx.fillStyle = "#7a8376";
-    ctx.font = '24px "Microsoft YaHei", sans-serif';
+    ctx.font = '24px "Microsoft JhengHei", sans-serif';
     ctx.fillText(`${STAGE_LABELS[stage]}  ·  ${date}`, 120, 1300);
 
     const safeFlowerName = flower.nameEn.toLowerCase().replace(/[^a-z0-9]+/g, "-");
     const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
     const fileName = `${safeFlowerName}-${stage}-${timestamp}.png`;
     const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
-    if (!blob) throw new Error("无法生成照片文件");
+    if (!blob) throw new Error("無法產生照片檔案");
 
     const link = document.createElement("a");
     const objectUrl = URL.createObjectURL(blob);
@@ -590,16 +590,16 @@
   async function savePhoto() {
     if (els.savePhoto.disabled) return;
     els.savePhoto.disabled = true;
-    els.savePhoto.textContent = "正在生成...";
+    els.savePhoto.textContent = "正在產生...";
     try {
       await downloadGardenSnapshot(els.photoNote.value);
       closePhotoModal();
-      updateMessage("照片已保存", "成长纪念已经下载为 PNG 图片。");
+      updateMessage("照片已儲存", "成長紀念已經下載為 PNG 圖片。");
     } catch (error) {
-      updateMessage("照片保存失败", String(error.message || error));
+      updateMessage("照片儲存失敗", String(error.message || error));
     } finally {
       els.savePhoto.disabled = false;
-      els.savePhoto.textContent = "保存照片";
+      els.savePhoto.textContent = "儲存照片";
     }
   }
 
@@ -624,16 +624,16 @@
     }
     saveState();
     renderGarden();
-    updateMessage("欢迎来到你的小温室", `${getFlower().meaning} 现在，从第一次浇水开始吧。`);
+    updateMessage("歡迎來到你的小溫室", `${getFlower().meaning} 現在，從第一次澆水開始吧。`);
     showView("garden");
   }
 
   function updateSettings() {
     const pot = getPot();
     const flower = getFlower();
-    els.settingsPot.textContent = pot ? pot.name : "尚未选择";
-    els.settingsFlower.textContent = flower ? flower.name : "尚未选择";
-    els.settingsLevel.textContent = flower ? `Lv. ${state.level}` : "--";
+    els.settingsPot.textContent = pot ? pot.name : "尚未選擇";
+    els.settingsFlower.textContent = flower ? flower.name : "尚未選擇";
+    els.settingsLevel.textContent = flower ? `等級 ${state.level}` : "--";
   }
 
   function resetAllProgress() {
@@ -668,7 +668,7 @@
     els.nextFlower.addEventListener("click", () => showView("flower"));
     els.startGrowing.addEventListener("click", startGrowing);
     els.backTools.addEventListener("click", () => {
-      window.location.href = "/tools.html";
+      window.location.href = "/zhu-bloom.html#flower-apps";
     });
     els.backPot.addEventListener("click", () => showView("pot"));
 
@@ -705,10 +705,10 @@
   async function init() {
     try {
       const response = await fetch(DATA_URL, { cache: "no-cache" });
-      if (!response.ok) throw new Error(`Unable to load data (${response.status})`);
+      if (!response.ok) throw new Error(`無法載入資料（${response.status}）`);
       data = await response.json();
       if (!Array.isArray(data.pots) || !Array.isArray(data.flowers) || !isObject(data.growth)) {
-        throw new Error("Invalid flower data");
+        throw new Error("花卉資料格式無效");
       }
 
       state = loadSavedState();
@@ -729,10 +729,10 @@
     } catch (error) {
       els.loadingView.innerHTML = `
         <div class="loading-mark" aria-hidden="true">!</div>
-        <p class="eyebrow">Greenhouse unavailable</p>
-        <h1>温室暂时无法打开</h1>
+        <p class="eyebrow">溫室無法使用</p>
+        <h1>溫室暫時無法開啟</h1>
         <p>${String(error.message || error)}</p>
-        <a class="primary-button" href="/tools.html">返回工具列表</a>
+        <a class="primary-button" href="/zhu-bloom.html#flower-apps">返回花卉小遊戲入口</a>
       `;
     }
   }
