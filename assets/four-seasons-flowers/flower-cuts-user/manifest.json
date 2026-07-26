@@ -1,0 +1,564 @@
+{
+  "source": "C:\\Users\\USER\\Downloads\\flower",
+  "output": "C:\\Code\\WebPage\\assets\\four-seasons-flowers\\flower-cuts-user",
+  "canvas": {
+    "width": 512,
+    "height": 512,
+    "mode": "transparent"
+  },
+  "placement": "bottom-center, 36px bottom margin; no cropping; scale down only if source exceeds 440px box",
+  "items": [
+    {
+      "number": "1-1",
+      "id": "tulip-seedling",
+      "source_size": {
+        "width": 135,
+        "height": 131
+      },
+      "source_alpha_bbox": [
+        0,
+        0,
+        135,
+        131
+      ],
+      "scale": 1.0,
+      "normalized_asset": "normalized-512/tulip-seedling.webp",
+      "root_asset": "tulip-seedling.webp",
+      "normalized_alpha_margins": {
+        "left": 188,
+        "top": 345,
+        "right": 189,
+        "bottom": 36
+      }
+    },
+    {
+      "number": "1-2",
+      "id": "tulip-growing",
+      "source_size": {
+        "width": 167,
+        "height": 231
+      },
+      "source_alpha_bbox": [
+        1,
+        0,
+        163,
+        231
+      ],
+      "scale": 1.0,
+      "normalized_asset": "normalized-512/tulip-growing.webp",
+      "root_asset": "tulip-growing.webp",
+      "normalized_alpha_margins": {
+        "left": 173,
+        "top": 245,
+        "right": 177,
+        "bottom": 36
+      }
+    },
+    {
+      "number": "1-3",
+      "id": "tulip-bloom",
+      "source_size": {
+        "width": 216,
+        "height": 267
+      },
+      "source_alpha_bbox": [
+        9,
+        0,
+        216,
+        267
+      ],
+      "scale": 1.0,
+      "normalized_asset": "normalized-512/tulip-bloom.webp",
+      "root_asset": "tulip-bloom.webp",
+      "normalized_alpha_margins": {
+        "left": 157,
+        "top": 209,
+        "right": 148,
+        "bottom": 36
+      }
+    },
+    {
+      "number": "2-1",
+      "id": "hydrangea-seedling",
+      "source_size": {
+        "width": 187,
+        "height": 165
+      },
+      "source_alpha_bbox": [
+        0,
+        0,
+        185,
+        165
+      ],
+      "scale": 1.0,
+      "normalized_asset": "normalized-512/hydrangea-seedling.webp",
+      "root_asset": "hydrangea-seedling.webp",
+      "normalized_alpha_margins": {
+        "left": 162,
+        "top": 311,
+        "right": 165,
+        "bottom": 36
+      }
+    },
+    {
+      "number": "2-2",
+      "id": "hydrangea-growing",
+      "source_size": {
+        "width": 227,
+        "height": 226
+      },
+      "source_alpha_bbox": [
+        0,
+        0,
+        224,
+        226
+      ],
+      "scale": 1.0,
+      "normalized_asset": "normalized-512/hydrangea-growing.webp",
+      "root_asset": "hydrangea-growing.webp",
+      "normalized_alpha_margins": {
+        "left": 142,
+        "top": 250,
+        "right": 146,
+        "bottom": 36
+      }
+    },
+    {
+      "number": "2-3",
+      "id": "hydrangea-bloom",
+      "source_size": {
+        "width": 260,
+        "height": 271
+      },
+      "source_alpha_bbox": [
+        11,
+        0,
+        260,
+        270
+      ],
+      "scale": 1.0,
+      "normalized_asset": "normalized-512/hydrangea-bloom.webp",
+      "root_asset": "hydrangea-bloom.webp",
+      "normalized_alpha_margins": {
+        "left": 137,
+        "top": 205,
+        "right": 126,
+        "bottom": 37
+      }
+    },
+    {
+      "number": "3-1",
+      "id": "chrysanthemum-seedling",
+      "source_size": {
+        "width": 182,
+        "height": 160
+      },
+      "source_alpha_bbox": [
+        0,
+        0,
+        179,
+        158
+      ],
+      "scale": 1.0,
+      "normalized_asset": "normalized-512/chrysanthemum-seedling.webp",
+      "root_asset": "chrysanthemum-seedling.webp",
+      "normalized_alpha_margins": {
+        "left": 165,
+        "top": 316,
+        "right": 168,
+        "bottom": 38
+      }
+    },
+    {
+      "number": "3-2",
+      "id": "chrysanthemum-growing",
+      "source_size": {
+        "width": 211,
+        "height": 233
+      },
+      "source_alpha_bbox": [
+        0,
+        0,
+        208,
+        233
+      ],
+      "scale": 1.0,
+      "normalized_asset": "normalized-512/chrysanthemum-growing.webp",
+      "root_asset": "chrysanthemum-growing.webp",
+      "normalized_alpha_margins": {
+        "left": 150,
+        "top": 243,
+        "right": 154,
+        "bottom": 36
+      }
+    },
+    {
+      "number": "3-3",
+      "id": "chrysanthemum-bloom",
+      "source_size": {
+        "width": 237,
+        "height": 263
+      },
+      "source_alpha_bbox": [
+        0,
+        0,
+        224,
+        263
+      ],
+      "scale": 1.0,
+      "normalized_asset": "normalized-512/chrysanthemum-bloom.webp",
+      "root_asset": "chrysanthemum-bloom.webp",
+      "normalized_alpha_margins": {
+        "left": 137,
+        "top": 213,
+        "right": 151,
+        "bottom": 36
+      }
+    },
+    {
+      "number": "4-1",
+      "id": "camellia-seedling",
+      "source_size": {
+        "width": 202,
+        "height": 155
+      },
+      "source_alpha_bbox": [
+        0,
+        0,
+        202,
+        155
+      ],
+      "scale": 1.0,
+      "normalized_asset": "normalized-512/camellia-seedling.webp",
+      "root_asset": "camellia-seedling.webp",
+      "normalized_alpha_margins": {
+        "left": 155,
+        "top": 321,
+        "right": 155,
+        "bottom": 36
+      }
+    },
+    {
+      "number": "4-2",
+      "id": "camellia-growing",
+      "source_size": {
+        "width": 223,
+        "height": 230
+      },
+      "source_alpha_bbox": [
+        0,
+        1,
+        223,
+        230
+      ],
+      "scale": 1.0,
+      "normalized_asset": "normalized-512/camellia-growing.webp",
+      "root_asset": "camellia-growing.webp",
+      "normalized_alpha_margins": {
+        "left": 144,
+        "top": 247,
+        "right": 145,
+        "bottom": 36
+      }
+    },
+    {
+      "number": "4-3",
+      "id": "camellia-bloom",
+      "source_size": {
+        "width": 271,
+        "height": 257
+      },
+      "source_alpha_bbox": [
+        0,
+        0,
+        271,
+        256
+      ],
+      "scale": 1.0,
+      "normalized_asset": "normalized-512/camellia-bloom.webp",
+      "root_asset": "camellia-bloom.webp",
+      "normalized_alpha_margins": {
+        "left": 120,
+        "top": 219,
+        "right": 121,
+        "bottom": 37
+      }
+    },
+    {
+      "number": "5-1",
+      "id": "sunflower-seedling",
+      "source_size": {
+        "width": 125,
+        "height": 96
+      },
+      "source_alpha_bbox": [
+        1,
+        1,
+        125,
+        96
+      ],
+      "scale": 1.0,
+      "normalized_asset": "normalized-512/sunflower-seedling.webp",
+      "root_asset": "sunflower-seedling.webp",
+      "normalized_alpha_margins": {
+        "left": 194,
+        "top": 381,
+        "right": 194,
+        "bottom": 36
+      }
+    },
+    {
+      "number": "5-2",
+      "id": "sunflower-growing",
+      "source_size": {
+        "width": 227,
+        "height": 255
+      },
+      "source_alpha_bbox": [
+        0,
+        2,
+        227,
+        254
+      ],
+      "scale": 1.0,
+      "normalized_asset": "normalized-512/sunflower-growing.webp",
+      "root_asset": "sunflower-growing.webp",
+      "normalized_alpha_margins": {
+        "left": 142,
+        "top": 223,
+        "right": 143,
+        "bottom": 37
+      }
+    },
+    {
+      "number": "5-3",
+      "id": "sunflower-bloom",
+      "source_size": {
+        "width": 230,
+        "height": 324
+      },
+      "source_alpha_bbox": [
+        0,
+        0,
+        230,
+        324
+      ],
+      "scale": 1.0,
+      "normalized_asset": "normalized-512/sunflower-bloom.webp",
+      "root_asset": "sunflower-bloom.webp",
+      "normalized_alpha_margins": {
+        "left": 141,
+        "top": 152,
+        "right": 141,
+        "bottom": 36
+      }
+    },
+    {
+      "number": "6-1",
+      "id": "lavender-seedling",
+      "source_size": {
+        "width": 120,
+        "height": 158
+      },
+      "source_alpha_bbox": [
+        0,
+        0,
+        120,
+        158
+      ],
+      "scale": 1.0,
+      "normalized_asset": "normalized-512/lavender-seedling.webp",
+      "root_asset": "lavender-seedling.webp",
+      "normalized_alpha_margins": {
+        "left": 196,
+        "top": 318,
+        "right": 196,
+        "bottom": 36
+      }
+    },
+    {
+      "number": "6-2",
+      "id": "lavender-growing",
+      "source_size": {
+        "width": 179,
+        "height": 266
+      },
+      "source_alpha_bbox": [
+        0,
+        0,
+        179,
+        266
+      ],
+      "scale": 1.0,
+      "normalized_asset": "normalized-512/lavender-growing.webp",
+      "root_asset": "lavender-growing.webp",
+      "normalized_alpha_margins": {
+        "left": 166,
+        "top": 210,
+        "right": 167,
+        "bottom": 36
+      }
+    },
+    {
+      "number": "6-3",
+      "id": "lavender-bloom",
+      "source_size": {
+        "width": 208,
+        "height": 309
+      },
+      "source_alpha_bbox": [
+        0,
+        0,
+        206,
+        309
+      ],
+      "scale": 1.0,
+      "normalized_asset": "normalized-512/lavender-bloom.webp",
+      "root_asset": "lavender-bloom.webp",
+      "normalized_alpha_margins": {
+        "left": 152,
+        "top": 167,
+        "right": 154,
+        "bottom": 36
+      }
+    },
+    {
+      "number": "7-1",
+      "id": "daisy-seedling",
+      "source_size": {
+        "width": 152,
+        "height": 117
+      },
+      "source_alpha_bbox": [
+        0,
+        0,
+        152,
+        117
+      ],
+      "scale": 1.0,
+      "normalized_asset": "normalized-512/daisy-seedling.webp",
+      "root_asset": "daisy-seedling.webp",
+      "normalized_alpha_margins": {
+        "left": 180,
+        "top": 359,
+        "right": 180,
+        "bottom": 36
+      }
+    },
+    {
+      "number": "7-2",
+      "id": "daisy-growing",
+      "source_size": {
+        "width": 200,
+        "height": 244
+      },
+      "source_alpha_bbox": [
+        0,
+        0,
+        200,
+        244
+      ],
+      "scale": 1.0,
+      "normalized_asset": "normalized-512/daisy-growing.webp",
+      "root_asset": "daisy-growing.webp",
+      "normalized_alpha_margins": {
+        "left": 156,
+        "top": 232,
+        "right": 156,
+        "bottom": 36
+      }
+    },
+    {
+      "number": "7-3",
+      "id": "daisy-bloom",
+      "source_size": {
+        "width": 218,
+        "height": 298
+      },
+      "source_alpha_bbox": [
+        3,
+        0,
+        218,
+        297
+      ],
+      "scale": 1.0,
+      "normalized_asset": "normalized-512/daisy-bloom.webp",
+      "root_asset": "daisy-bloom.webp",
+      "normalized_alpha_margins": {
+        "left": 150,
+        "top": 178,
+        "right": 147,
+        "bottom": 37
+      }
+    },
+    {
+      "number": "8-1",
+      "id": "lily-seedling",
+      "source_size": {
+        "width": 154,
+        "height": 150
+      },
+      "source_alpha_bbox": [
+        5,
+        0,
+        154,
+        150
+      ],
+      "scale": 1.0,
+      "normalized_asset": "normalized-512/lily-seedling.webp",
+      "root_asset": "lily-seedling.webp",
+      "normalized_alpha_margins": {
+        "left": 184,
+        "top": 326,
+        "right": 179,
+        "bottom": 36
+      }
+    },
+    {
+      "number": "8-2",
+      "id": "lily-growing",
+      "source_size": {
+        "width": 194,
+        "height": 273
+      },
+      "source_alpha_bbox": [
+        6,
+        2,
+        194,
+        273
+      ],
+      "scale": 1.0,
+      "normalized_asset": "normalized-512/lily-growing.webp",
+      "root_asset": "lily-growing.webp",
+      "normalized_alpha_margins": {
+        "left": 165,
+        "top": 205,
+        "right": 159,
+        "bottom": 36
+      }
+    },
+    {
+      "number": "8-3",
+      "id": "lily-bloom",
+      "source_size": {
+        "width": 233,
+        "height": 317
+      },
+      "source_alpha_bbox": [
+        0,
+        4,
+        233,
+        317
+      ],
+      "scale": 1.0,
+      "normalized_asset": "normalized-512/lily-bloom.webp",
+      "root_asset": "lily-bloom.webp",
+      "normalized_alpha_margins": {
+        "left": 139,
+        "top": 163,
+        "right": 140,
+        "bottom": 36
+      }
+    }
+  ]
+}
