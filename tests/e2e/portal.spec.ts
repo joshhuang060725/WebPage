@@ -5,7 +5,8 @@ test("navigation, language, and theme persist", async ({ page }) => {
   await expect(page.locator(".side-nav .brand-mark")).toHaveText("J");
   await page.locator(".side-nav").hover();
   await page.getByRole("button", { name: "繁體中文" }).click();
-  await expect(page.locator("#main h1").first()).toContainText("個人系統");
+  await expect(page.locator(".home-jats-lockup h1")).toHaveText("JATS");
+  await expect(page.locator(".home-motto")).toContainText("讓介面精準");
   const initialTheme = await page.locator("html").getAttribute("data-theme");
   const expectedTheme = initialTheme === "light" ? "dark" : "light";
   await page.getByRole("button", { name: initialTheme === "light" ? "NIGHT" : "DAY" }).click();
@@ -22,6 +23,105 @@ test("navigation, language, and theme persist", async ({ page }) => {
   await expect(page.locator("#primary-navigation")).toHaveJSProperty("inert", false);
   await page.keyboard.press("Escape");
   await expect(page.locator("#primary-navigation")).toHaveAttribute("aria-hidden", "true");
+});
+
+test("home restores the 1.0 terminal composition and readable type scale", async ({ page }) => {
+  await page.route("https://ipapi.co/json/", async (route) => {
+    await route.fulfill({
+      contentType: "application/json",
+      body: JSON.stringify({
+        city: "Taipei",
+        region: "Taiwan",
+        country_name: "Taiwan",
+        latitude: 25.033,
+        longitude: 121.5654,
+        timezone: "Asia/Taipei",
+        org: "Test network"
+      })
+    });
+  });
+  await page.route("https://api.open-meteo.com/**", async (route) => {
+    await route.fulfill({
+      contentType: "application/json",
+      body: JSON.stringify({
+        current: {
+          temperature_2m: 28,
+          relative_humidity_2m: 70,
+          weather_code: 0,
+          wind_speed_10m: 8
+        }
+      })
+    });
+  });
+
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.goto("/");
+  await expect(page.locator(".home-status-card")).toHaveCount(6);
+  await expect(page.locator(".home-jats-console")).toBeVisible();
+  await expect(page.locator("#home-place")).toContainText("Taipei");
+  await expect(page.locator("#home-weather")).toContainText("28°C");
+
+  await page.goto("/projects.html");
+  const desktopHeaderSize = await page
+    .locator(".page-header h1")
+    .evaluate((node) => Number.parseFloat(getComputedStyle(node).fontSize));
+  expect(desktopHeaderSize).toBeLessThanOrEqual(64);
+
+  await page.setViewportSize({ width: 360, height: 800 });
+  const mobileHeaderSize = await page
+    .locator(".page-header h1")
+    .evaluate((node) => Number.parseFloat(getComputedStyle(node).fontSize));
+  expect(mobileHeaderSize).toBeLessThanOrEqual(44);
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
+  expect(overflow).toBeLessThanOrEqual(1);
+});
+
+test("Wallpapers keeps the full-screen two-panel surface and rising background dock", async ({
+  page
+}) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/wallpapers.html");
+
+  const viewport = page.locator("#wallpaper-viewport");
+  await expect(viewport).toHaveAttribute("data-active-panel", "0");
+  await expect(page.locator(".wallpaper-screen-terminal")).toHaveAttribute("aria-hidden", "false");
+  await expect(page.locator(".wallpaper-screen-links")).toHaveAttribute("aria-hidden", "true");
+  await expect(page.locator(".wallpaper-link-tile")).toHaveCount(18);
+  await expect(page.locator(".site-footer")).toBeHidden();
+
+  const viewportBox = await viewport.boundingBox();
+  expect(viewportBox?.height).toBeGreaterThanOrEqual(890);
+
+  const dockHandle = page.locator(".wallpaper-bg-handle");
+  await expect(dockHandle).toHaveAttribute("aria-expanded", "false");
+  await dockHandle.click();
+  await expect(dockHandle).toHaveAttribute("aria-expanded", "true");
+  await expect(page.locator("#wallpaper-bg-dock")).toHaveClass(/is-open/);
+
+  const secondBackground = page.locator("[data-wallpaper-id]").nth(1);
+  const selectedId = await secondBackground.getAttribute("data-wallpaper-id");
+  await secondBackground.click();
+  await expect
+    .poll(() => page.evaluate(() => localStorage.getItem("jats:wallpaper")))
+    .toBe(selectedId);
+
+  await viewport.focus();
+  await page.keyboard.press("ArrowRight");
+  await expect(viewport).toHaveAttribute("data-active-panel", "1");
+  await expect(page.locator(".wallpaper-screen-links")).toHaveAttribute("aria-hidden", "false");
+  await expect(page.locator(".wallpaper-search")).toBeVisible();
+  await page.keyboard.press("ArrowLeft");
+  await expect(viewport).toHaveAttribute("data-active-panel", "0");
+  await viewport.hover();
+  await page.mouse.wheel(0, 180);
+  await expect(viewport).toHaveAttribute("data-active-panel", "1");
+
+  await page.goto("/wallpapers.html");
+  await expect(page.locator(`[data-wallpaper-id="${selectedId}"]`)).toHaveClass(/is-active/);
+
+  await page.setViewportSize({ width: 360, height: 800 });
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
+  expect(overflow).toBeLessThanOrEqual(1);
 });
 
 test("Compute Lab evaluates and switches modes", async ({ page }) => {

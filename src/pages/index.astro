@@ -1,252 +1,476 @@
 ---
 import PortalLayout from "@layouts/PortalLayout.astro";
 import Localized from "@components/Localized.astro";
-import StatusBadge from "@components/StatusBadge.astro";
+import "../styles/home.css";
 
-const title = { en: "Personal Auxiliary Terminal", "zh-TW": "個人輔助終端", "zh-CN": "个人辅助终端" };
-const description = {
-  en: "Josh Huang's public portal for identity, projects, engineering notes, and browser-based tools.",
-  "zh-TW": "黃昭詠的公開個人門戶，整合個人資料、專案、工程筆記與瀏覽器工具。",
-  "zh-CN": "黄昭詠的公开个人门户，整合个人资料、项目、工程笔记与浏览器工具。"
+const title = {
+  en: "Josh Huang | JATS Personal Portal",
+  "zh-TW": "Josh Huang｜JATS 個人入口",
+  "zh-CN": "Josh Huang｜JATS 个人入口"
 };
-const modules = [
-  {
-    href: "/profile.html",
-    code: "IDENTITY",
-    title: { en: "Profile", "zh-TW": "個人資料", "zh-CN": "个人资料" },
-    description: {
-      en: "Public identity, technical interests, and contact channels.",
-      "zh-TW": "公開身份、技術興趣與聯絡方式。",
-      "zh-CN": "公开身份、技术兴趣与联系方式。"
-    },
-    status: "ready"
-  },
-  {
-    href: "/projects.html",
-    code: "WORK",
-    title: { en: "Projects", "zh-TW": "專案紀錄", "zh-CN": "项目记录" },
-    description: {
-      en: "Implementation records, design decisions, and current limitations.",
-      "zh-TW": "實作紀錄、設計判斷與目前限制。",
-      "zh-CN": "实现记录、设计判断与当前限制。"
-    },
-    status: "ready"
-  },
-  {
-    href: "/formulas.html",
-    code: "KNOWLEDGE",
-    title: { en: "Formula Lab", "zh-TW": "公式推導", "zh-CN": "公式推导" },
-    description: {
-      en: "Twenty structured engineering derivations with interactive modules.",
-      "zh-TW": "20 個結構化工程推導與互動模組。",
-      "zh-CN": "20 个结构化工程推导与交互模块。"
-    },
-    status: "ready"
-  },
-  {
-    href: "/finance.html",
-    code: "UTILITY",
-    title: { en: "Finance / Exchange", "zh-TW": "匯率工具", "zh-CN": "汇率工具" },
-    description: {
-      en: "Public-source currency conversion with timestamps and source transparency.",
-      "zh-TW": "具更新時間與來源說明的公開匯率換算。",
-      "zh-CN": "具更新时间与来源说明的公开汇率换算。"
-    },
-    status: "beta"
-  },
-  {
-    href: "/compute-lab.html",
-    code: "COMPUTE",
-    title: { en: "Compute Lab", "zh-TW": "計算實驗室", "zh-CN": "计算实验室" },
-    description: {
-      en: "Expression, matrix, and chart tools that run entirely in the browser.",
-      "zh-TW": "完全在瀏覽器執行的表達式、矩陣與圖表工具。",
-      "zh-CN": "完全在浏览器运行的表达式、矩阵与图表工具。"
-    },
-    status: "beta"
-  },
-  {
-    href: "/wallpapers.html",
-    code: "SURFACE",
-    title: { en: "Wallpaper Surface", "zh-TW": "桌布介面", "zh-CN": "桌布界面" },
-    description: {
-      en: "A persistent start surface with backgrounds and public shortcuts.",
-      "zh-TW": "具背景選擇與公開捷徑的持久化起始介面。",
-      "zh-CN": "具背景选择与公开捷径的持久化起始界面。"
-    },
-    status: "ready"
-  }
-];
+
+const description = {
+  en: "Josh Huang's public portal for personal information, project notes, safe links, and browser tools.",
+  "zh-TW": "Josh Huang 的公開入口，用於個人介紹、專案筆記、安全連結與瀏覽器工具。",
+  "zh-CN": "Josh Huang 的公开入口，用于个人介绍、项目笔记、安全链接与浏览器工具。"
+};
 ---
 
-<PortalLayout title={title} description={description}>
-  <section class="hero">
-    <div>
-      <p class="eyebrow">JATS / SYSTEM DIRECTORY</p>
-      <h1>
+<PortalLayout title={title} description={description} active="portal">
+  <section class="home-terminal panel" aria-labelledby="home-title">
+    <div class="home-status-rail" aria-label="Portal status">
+      <article class="home-status-card home-time-card">
         <Localized
-          value={{
-            en: "A personal system, made public.",
-            "zh-TW": "一套公開運作的個人系統。",
-            "zh-CN": "一套公开运行的个人系统。"
-          }}
+          value={{ en: "Local time", "zh-TW": "本地時間", "zh-CN": "本地时间" }}
+          tag="span"
+          class="home-card-label"
         />
-      </h1>
-      <Localized value={description} tag="p" class="lead" />
-      <div class="button-row">
-        <a class="button primary" href="/tools.html">
-          <Localized value={{ en: "Open tool directory", "zh-TW": "開啟工具目錄", "zh-CN": "打开工具目录" }} />
+        <strong id="home-clock" aria-live="off">--:--:--</strong>
+        <small id="home-date">----</small>
+      </article>
+
+      <a class="home-status-card" href="/profile.html">
+        <Localized
+          value={{ en: "Place", "zh-TW": "位置", "zh-CN": "位置" }}
+          tag="span"
+          class="home-card-label"
+        />
+        <strong id="home-place" aria-live="polite">
+          <Localized
+            value={{
+              en: "Detecting location",
+              "zh-TW": "正在偵測位置",
+              "zh-CN": "正在检测位置"
+            }}
+          />
+        </strong>
+        <small id="home-place-meta">
+          <Localized
+            value={{
+              en: "IP-based estimate",
+              "zh-TW": "IP 估算／時區",
+              "zh-CN": "IP 估算／时区"
+            }}
+          />
+        </small>
+      </a>
+
+      <article class="home-status-card">
+        <Localized
+          value={{ en: "Weather", "zh-TW": "天氣", "zh-CN": "天气" }}
+          tag="span"
+          class="home-card-label"
+        />
+        <strong id="home-weather" aria-live="polite">
+          <Localized
+            value={{
+              en: "Loading weather",
+              "zh-TW": "正在載入天氣",
+              "zh-CN": "正在加载天气"
+            }}
+          />
+        </strong>
+        <small id="home-weather-meta">
+          <Localized
+            value={{
+              en: "Using estimated location",
+              "zh-TW": "使用估算位置",
+              "zh-CN": "使用估算位置"
+            }}
+          />
+        </small>
+      </article>
+
+      <a
+        class="home-status-card"
+        href="https://github.com/joshhuang060725"
+        target="_blank"
+        rel="noreferrer"
+      >
+        <span class="home-card-label">GitHub</span>
+        <strong>joshhuang060725</strong>
+        <small>
+          <Localized
+            value={{
+              en: "Public code profile",
+              "zh-TW": "公開程式碼資料",
+              "zh-CN": "公开代码资料"
+            }}
+          />
+        </small>
+      </a>
+
+      <article class="home-status-card">
+        <span class="home-card-label">Ping</span>
+        <strong id="home-ping" aria-live="polite">
+          <Localized
+            value={{
+              en: "Measuring latency",
+              "zh-TW": "正在測量延遲",
+              "zh-CN": "正在测量延迟"
+            }}
+          />
+        </strong>
+        <small id="home-ping-meta">Cloudflare Pages</small>
+      </article>
+
+      <a class="home-status-card" href="/tools.html">
+        <span class="home-card-label">Tool</span>
+        <strong>
+          <Localized
+            value={{
+              en: "Module entries",
+              "zh-TW": "模組入口",
+              "zh-CN": "模块入口"
+            }}
+          />
+        </strong>
+        <small>Exchange / Compute / UX</small>
+      </a>
+    </div>
+
+    <aside class="home-jats-console" aria-label="JATS identity">
+      <div class="home-jats-lockup">
+        <h1 id="home-title">JATS</h1>
+        <p>Josh Auxiliary Terminal System</p>
+      </div>
+
+      <p class="home-owner-line">- Josh Huang</p>
+      <Localized
+        value={{
+          en: "Keep the interface precise. Keep the system useful.",
+          "zh-TW": "讓介面精準，讓系統有用。",
+          "zh-CN": "让界面精准，让系统有用。"
+        }}
+        tag="p"
+        class="home-motto"
+      />
+      <Localized value={description} tag="p" class="home-summary" />
+
+      <form class="home-search" role="search" action="/links.html">
+        <label for="home-search-input">
+          <Localized
+            value={{ en: "Search portal", "zh-TW": "搜尋入口", "zh-CN": "搜索门户" }}
+          />
+        </label>
+        <div class="home-search-control">
+          <span aria-hidden="true">J&gt;</span>
+          <input
+            id="home-search-input"
+            name="q"
+            type="search"
+            autocomplete="off"
+            placeholder="Search modules..."
+          />
+        </div>
+      </form>
+
+      <div class="home-actions">
+        <a class="button primary" href="/profile.html">
+          <Localized
+            value={{
+              en: "View profile",
+              "zh-TW": "查看個人資料",
+              "zh-CN": "查看个人资料"
+            }}
+          />
         </a>
         <a class="button" href="/projects.html">
-          <Localized value={{ en: "Read project records", "zh-TW": "閱讀專案紀錄", "zh-CN": "阅读项目记录" }} />
+          <Localized
+            value={{
+              en: "Explore projects",
+              "zh-TW": "瀏覽專案",
+              "zh-CN": "浏览项目"
+            }}
+          />
         </a>
       </div>
-    </div>
-    <div class="system-summary panel" aria-label="System summary">
-      <div><strong>13+</strong><span>PUBLIC SURFACES</span></div>
-      <div><strong>03</strong><span>LANGUAGES</span></div>
-      <div><strong>20</strong><span>FORMULA MODULES</span></div>
-      <div><strong>LOCAL</strong><span>USER STATE</span></div>
-    </div>
-  </section>
 
-  <section class="section" aria-labelledby="directory-title">
-    <div class="section-heading">
-      <div>
-        <p class="eyebrow">MODULE INDEX</p>
-        <h2 id="directory-title">
-          <Localized value={{ en: "System directory", "zh-TW": "系統目錄", "zh-CN": "系统目录" }} />
-        </h2>
-      </div>
-      <div class="search-field directory-search">
-        <label class="visually-hidden" for="module-search">Search modules</label>
-        <input id="module-search" type="search" placeholder="Search modules…" autocomplete="off" />
-      </div>
-    </div>
-    <div class="grid three" id="module-grid">
-      {
-        modules.map((module) => (
-          <article
-            class="card module-card"
-            data-search={`${module.code} ${module.title.en} ${module.title["zh-TW"]} ${module.title["zh-CN"]}`}
-          >
-            <div class="meta-row">
-              <span class="eyebrow">{module.code}</span>
-              <StatusBadge status={module.status} />
-            </div>
-            <h3><Localized value={module.title} /></h3>
-            <Localized value={module.description} tag="p" />
-            <a class="card-link" href={module.href} aria-label={`Open ${module.title.en}`}>
-              <span>OPEN / →</span>
-            </a>
-          </article>
-        ))
-      }
-    </div>
-    <p class="empty-state" id="module-empty" hidden>
-      <Localized value={{ en: "No matching module.", "zh-TW": "找不到符合的模組。", "zh-CN": "找不到匹配的模块。" }} />
-    </p>
-  </section>
-
-  <section class="section grid two">
-    <article class="panel">
-      <p class="eyebrow">OPERATING PRINCIPLES</p>
-      <h2><Localized value={{ en: "Public by design", "zh-TW": "公開但有邊界", "zh-CN": "公开但有边界" }} /></h2>
-      <Localized
-        value={{
-          en: "The portal exposes public content and controlled read-only APIs. Preferences stay on the device; credentials and write operations stay outside the public site.",
-          "zh-TW": "網站只公開內容與受控唯讀 API。偏好保存在裝置上，憑證與寫入操作不進入公開站。",
-          "zh-CN": "网站只公开内容与受控只读 API。偏好保存在设备上，凭证与写入操作不进入公开站。"
-        }}
-        tag="p"
-      />
-    </article>
-    <article class="panel">
-      <p class="eyebrow">LATEST BASELINE</p>
-      <h2><Localized value={{ en: "Professionalization v2", "zh-TW": "專業化 v2", "zh-CN": "专业化 v2" }} /></h2>
-      <Localized
-        value={{
-          en: "Shared navigation, multilingual content, explicit maturity labels, accessible states, and a maintainable static build.",
-          "zh-TW": "統一導航、三語內容、明確成熟度、無障礙狀態與可維護的靜態建置。",
-          "zh-CN": "统一导航、三语内容、明确成熟度、无障碍状态与可维护的静态构建。"
-        }}
-        tag="p"
-      />
-    </article>
+      <p class="home-console-footer">
+        <strong>JATS</strong>
+        <span>Josh Auxiliary Terminal System</span>
+      </p>
+    </aside>
   </section>
 
   <script is:inline slot="scripts">
-    const moduleSearch = document.querySelector("#module-search");
-    const moduleCards = [...document.querySelectorAll(".module-card")];
-    const moduleEmpty = document.querySelector("#module-empty");
-    moduleSearch?.addEventListener("input", () => {
-      const query = moduleSearch.value.trim().toLowerCase();
-      let visible = 0;
-      moduleCards.forEach((card) => {
-        const match = !query || card.dataset.search.toLowerCase().includes(query);
-        card.hidden = !match;
-        if (match) visible += 1;
+    (() => {
+      const copy = {
+        en: {
+          detecting: "Detecting location",
+          locationEstimate: "IP-based estimate",
+          locationUnavailable: "Location unavailable",
+          locationDetail: "IP estimate / {timezone}",
+          weatherLoading: "Loading weather",
+          weatherEstimate: "Using estimated location",
+          weatherUnavailable: "Weather unavailable",
+          weatherDetail: "Humidity {humidity}% / Wind {wind} km/h",
+          pingLoading: "Measuring latency",
+          pingUnavailable: "Latency unavailable",
+          pingDetail: "Provider: {provider}",
+          providerUnknown: "Unknown",
+          searchPlaceholder: "Search modules...",
+          weather: {
+            clear: "Clear",
+            cloudy: "Cloudy",
+            fog: "Fog",
+            drizzle: "Drizzle",
+            rain: "Rain",
+            snow: "Snow",
+            storm: "Storm"
+          }
+        },
+        "zh-TW": {
+          detecting: "正在偵測位置",
+          locationEstimate: "IP 估算／時區",
+          locationUnavailable: "無法取得位置",
+          locationDetail: "IP 估算／{timezone}",
+          weatherLoading: "正在載入天氣",
+          weatherEstimate: "使用估算位置",
+          weatherUnavailable: "無法取得天氣",
+          weatherDetail: "濕度 {humidity}%／風速 {wind} km/h",
+          pingLoading: "正在測量延遲",
+          pingUnavailable: "無法取得延遲",
+          pingDetail: "服務商：{provider}",
+          providerUnknown: "未知",
+          searchPlaceholder: "搜尋模組…",
+          weather: {
+            clear: "晴朗",
+            cloudy: "多雲",
+            fog: "有霧",
+            drizzle: "毛毛雨",
+            rain: "下雨",
+            snow: "下雪",
+            storm: "雷雨"
+          }
+        },
+        "zh-CN": {
+          detecting: "正在检测位置",
+          locationEstimate: "IP 估算／时区",
+          locationUnavailable: "无法获取位置",
+          locationDetail: "IP 估算／{timezone}",
+          weatherLoading: "正在加载天气",
+          weatherEstimate: "使用估算位置",
+          weatherUnavailable: "无法获取天气",
+          weatherDetail: "湿度 {humidity}%／风速 {wind} km/h",
+          pingLoading: "正在测量延迟",
+          pingUnavailable: "无法获取延迟",
+          pingDetail: "服务商：{provider}",
+          providerUnknown: "未知",
+          searchPlaceholder: "搜索模块…",
+          weather: {
+            clear: "晴朗",
+            cloudy: "多云",
+            fog: "有雾",
+            drizzle: "毛毛雨",
+            rain: "下雨",
+            snow: "下雪",
+            storm: "雷雨"
+          }
+        }
+      };
+
+      const state = {
+        language: ["en", "zh-TW", "zh-CN"].includes(document.documentElement.lang)
+          ? document.documentElement.lang
+          : "en",
+        geo: null,
+        weather: null,
+        latency: null,
+        locationFailed: false,
+        weatherFailed: false,
+        pingFailed: false
+      };
+
+      const nodes = {
+        clock: document.querySelector("#home-clock"),
+        date: document.querySelector("#home-date"),
+        place: document.querySelector("#home-place"),
+        placeMeta: document.querySelector("#home-place-meta"),
+        weather: document.querySelector("#home-weather"),
+        weatherMeta: document.querySelector("#home-weather-meta"),
+        ping: document.querySelector("#home-ping"),
+        pingMeta: document.querySelector("#home-ping-meta"),
+        search: document.querySelector("#home-search-input")
+      };
+
+      const t = () => copy[state.language] || copy.en;
+      const interpolate = (value, variables) =>
+        Object.entries(variables).reduce(
+          (result, [key, replacement]) => result.replace(`{${key}}`, String(replacement)),
+          value
+        );
+
+      function updateClock() {
+        const now = new Date();
+        if (nodes.clock) {
+          nodes.clock.textContent = new Intl.DateTimeFormat(state.language, {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: false
+          }).format(now);
+        }
+        if (nodes.date) {
+          nodes.date.textContent = new Intl.DateTimeFormat(state.language, {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            weekday: "short"
+          }).format(now);
+        }
+      }
+
+      function weatherLabel(code) {
+        if (code === 0) return t().weather.clear;
+        if ([1, 2, 3].includes(code)) return t().weather.cloudy;
+        if ([45, 48].includes(code)) return t().weather.fog;
+        if ([51, 53, 55, 56, 57].includes(code)) return t().weather.drizzle;
+        if ([61, 63, 65, 66, 67, 80, 81, 82].includes(code)) return t().weather.rain;
+        if ([71, 73, 75, 77, 85, 86].includes(code)) return t().weather.snow;
+        if ([95, 96, 99].includes(code)) return t().weather.storm;
+        return t().weather.cloudy;
+      }
+
+      function renderRuntime() {
+        if (nodes.search) nodes.search.placeholder = t().searchPlaceholder;
+
+        if (nodes.place && nodes.placeMeta) {
+          if (state.geo) {
+            const location = [
+              state.geo.city,
+              state.geo.region || state.geo.country_name
+            ].filter(Boolean);
+            nodes.place.textContent = location.join(", ") || state.geo.country_name || t().locationUnavailable;
+            nodes.placeMeta.textContent = interpolate(t().locationDetail, {
+              timezone: state.geo.timezone || "--"
+            });
+          } else {
+            nodes.place.textContent = state.locationFailed
+              ? t().locationUnavailable
+              : t().detecting;
+            nodes.placeMeta.textContent = t().locationEstimate;
+          }
+        }
+
+        if (nodes.weather && nodes.weatherMeta) {
+          if (state.weather) {
+            nodes.weather.textContent = `${Math.round(state.weather.temperature)}°C / ${weatherLabel(state.weather.code)}`;
+            nodes.weatherMeta.textContent = interpolate(t().weatherDetail, {
+              humidity: state.weather.humidity ?? "--",
+              wind: Math.round(state.weather.wind ?? 0)
+            });
+          } else {
+            nodes.weather.textContent = state.weatherFailed
+              ? t().weatherUnavailable
+              : t().weatherLoading;
+            nodes.weatherMeta.textContent = t().weatherEstimate;
+          }
+        }
+
+        if (nodes.ping && nodes.pingMeta) {
+          const provider =
+            state.geo?.org || state.geo?.asn || t().providerUnknown;
+          nodes.ping.textContent =
+            state.latency !== null
+              ? `${state.latency} ms`
+              : state.pingFailed
+                ? t().pingUnavailable
+                : t().pingLoading;
+          nodes.pingMeta.textContent =
+            state.latency !== null || state.pingFailed
+              ? interpolate(t().pingDetail, { provider })
+              : "Cloudflare Pages";
+        }
+      }
+
+      async function fetchJson(url, timeout = 5500) {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), timeout);
+        try {
+          const response = await fetch(url, {
+            signal: controller.signal,
+            headers: { Accept: "application/json" }
+          });
+          if (!response.ok) throw new Error(`Request failed: ${response.status}`);
+          return await response.json();
+        } finally {
+          clearTimeout(timer);
+        }
+      }
+
+      async function loadLocationAndWeather() {
+        try {
+          const geo = await fetchJson("https://ipapi.co/json/");
+          if (!geo.latitude || !geo.longitude) throw new Error("Location coordinates unavailable");
+          state.geo = geo;
+          renderRuntime();
+
+          const params = new URLSearchParams({
+            latitude: geo.latitude,
+            longitude: geo.longitude,
+            current: "temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m",
+            timezone: "auto",
+            forecast_days: "1"
+          });
+          const weather = await fetchJson(
+            `https://api.open-meteo.com/v1/forecast?${params.toString()}`
+          );
+          state.weather = {
+            temperature: weather.current?.temperature_2m,
+            humidity: weather.current?.relative_humidity_2m,
+            code: weather.current?.weather_code,
+            wind: weather.current?.wind_speed_10m
+          };
+        } catch (error) {
+          console.warn("Home runtime status:", error);
+          if (!state.geo) state.locationFailed = true;
+          state.weatherFailed = true;
+        }
+        renderRuntime();
+      }
+
+      async function measureLatency() {
+        const samples = [];
+        for (let index = 0; index < 3; index += 1) {
+          try {
+            const started = performance.now();
+            const response = await fetch(`/robots.txt?ping=${Date.now()}-${index}`, {
+              cache: "no-store",
+              headers: { Accept: "text/plain" }
+            });
+            if (!response.ok) throw new Error(`Ping failed: ${response.status}`);
+            await response.text();
+            samples.push(performance.now() - started);
+          } catch (error) {
+            console.warn("Home latency:", error);
+          }
+        }
+
+        if (samples.length) {
+          state.latency = Math.round(
+            samples.reduce((sum, value) => sum + value, 0) / samples.length
+          );
+        } else {
+          state.pingFailed = true;
+        }
+        renderRuntime();
+      }
+
+      document.addEventListener("jats:language", (event) => {
+        const nextLanguage = event.detail?.language;
+        state.language = ["en", "zh-TW", "zh-CN"].includes(nextLanguage)
+          ? nextLanguage
+          : "en";
+        updateClock();
+        renderRuntime();
       });
-      moduleEmpty.hidden = visible > 0;
-    });
+
+      updateClock();
+      renderRuntime();
+      loadLocationAndWeather();
+      measureLatency();
+      setInterval(updateClock, 1000);
+    })();
   </script>
 </PortalLayout>
-
-<style>
-  .hero {
-    min-height: min(670px, calc(100vh - 150px));
-    display: grid;
-    grid-template-columns: minmax(0, 1.6fr) minmax(260px, 0.65fr);
-    gap: 2rem;
-    align-items: center;
-  }
-  .hero h1 {
-    max-width: 900px;
-  }
-  .hero .button-row {
-    margin-top: 1.6rem;
-  }
-  .system-summary {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1px;
-    padding: 0;
-    background: var(--line);
-  }
-  .system-summary div {
-    min-height: 120px;
-    padding: 1.15rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    background: var(--surface-strong);
-  }
-  .system-summary strong {
-    color: var(--yellow);
-    font: 900 1.6rem ui-monospace, monospace;
-  }
-  .system-summary span {
-    color: var(--muted);
-    font: 700 0.65rem ui-monospace, monospace;
-  }
-  .directory-search {
-    width: min(360px, 100%);
-  }
-  .module-card .meta-row {
-    justify-content: space-between;
-  }
-  .module-card .eyebrow {
-    margin: 0;
-  }
-  .module-card .card-link {
-    color: var(--yellow);
-    font: 800 0.75rem ui-monospace, monospace;
-  }
-  @media (max-width: 760px) {
-    .hero {
-      min-height: auto;
-      grid-template-columns: 1fr;
-      padding: 2rem 0;
-    }
-  }
-</style>

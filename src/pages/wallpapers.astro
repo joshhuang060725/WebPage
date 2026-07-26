@@ -1,97 +1,531 @@
 ---
 import PortalLayout from "@layouts/PortalLayout.astro";
-import PageHeader from "@components/PageHeader.astro";
 import Localized from "@components/Localized.astro";
 import { readData } from "@lib/content";
+import "../styles/wallpapers.css";
 
 const data = readData<any>("wallpapers.json");
-const title = { en: "Wallpaper Surface", "zh-TW": "桌布介面", "zh-CN": "桌布界面" };
-const description = {
-  en: "A persistent browser start surface with selectable backgrounds and public shortcut tiles.",
-  "zh-TW": "具背景選擇、公開捷徑與本機持久化的瀏覽器起始介面。",
-  "zh-CN": "具背景选择、公开快捷方式与本地持久化的浏览器起始界面。"
+const backgrounds = Array.isArray(data.backgrounds) ? data.backgrounds : [];
+const links = Array.isArray(data.links) ? data.links.slice(0, 18) : [];
+const initialWallpaper = backgrounds[0];
+
+const title = {
+  en: "Wallpapers",
+  "zh-TW": "桌布",
+  "zh-CN": "壁紙"
 };
+const description = {
+  en: "A full-screen JATS desktop surface with locally remembered backgrounds and a separate shortcut workspace.",
+  "zh-TW": "全螢幕 JATS 桌面介面，提供本機記憶的背景選擇與獨立快捷連結工作區。",
+  "zh-CN": "全屏 JATS 桌面界面，提供本地记忆的背景选择与独立快捷链接工作区。"
+};
+
+const copy = {
+  terminalLabel: {
+    en: "JATS WALLPAPER",
+    "zh-TW": "JATS 桌布",
+    "zh-CN": "JATS 壁纸"
+  },
+  terminalTitle: {
+    en: "Terminal Desktop",
+    "zh-TW": "終端桌面",
+    "zh-CN": "终端桌面"
+  },
+  terminalDescription: {
+    en: "Clean display surface / no widgets",
+    "zh-TW": "純淨顯示介面／無小工具",
+    "zh-CN": "纯净显示界面／无小组件"
+  },
+  searchLabel: {
+    en: "Search the web",
+    "zh-TW": "搜尋網路",
+    "zh-CN": "搜索网络"
+  },
+  searchPlaceholder: {
+    en: "Search the web…",
+    "zh-TW": "搜尋網路…",
+    "zh-CN": "搜索网络…"
+  },
+  searchAction: {
+    en: "Search",
+    "zh-TW": "搜尋",
+    "zh-CN": "搜索"
+  },
+  backgrounds: {
+    en: "Backgrounds",
+    "zh-TW": "背景選擇",
+    "zh-CN": "背景选择"
+  },
+  emptyBackgrounds: {
+    en: "No local backgrounds are available.",
+    "zh-TW": "目前沒有可用的本機背景。",
+    "zh-CN": "目前没有可用的本地背景。"
+  },
+  shortcuts: {
+    en: "Preset shortcuts",
+    "zh-TW": "預設快捷連結",
+    "zh-CN": "预设快捷链接"
+  }
+};
+
+const initialStyle = initialWallpaper
+  ? `--wallpaper-image: url("${initialWallpaper.src}"); --wallpaper-accent: ${initialWallpaper.accent || "#ffd900"};`
+  : "";
 ---
 
 <PortalLayout title={title} description={description} active="wallpapers">
-  <PageHeader eyebrow={{ en: "SURFACE / LOCAL PREFERENCE", "zh-TW": "介面／本機偏好", "zh-CN": "界面／本地偏好" }} title={title} description={description} />
-  <section class="wallpaper-stage panel" id="wallpaper-stage" tabindex="0" aria-label="Wallpaper preview">
-    <div class="wallpaper-shade"></div>
-    <div class="wallpaper-clock"><time id="wallpaper-time">--:--</time><span id="wallpaper-date">----</span></div>
-    <form class="wallpaper-search" action="https://www.google.com/search" method="get" target="_blank">
-      <label class="visually-hidden" for="web-search">Search the web</label>
-      <input id="web-search" name="q" type="search" placeholder="Search the web…" autocomplete="off" />
-      <button type="submit">↗</button>
-    </form>
-    <div class="shortcut-grid" id="shortcut-grid">
-      {data.links.map((link: any, index: number) => (
-        <a href={link.url} target={link.url.startsWith("http") ? "_blank" : undefined} rel="noreferrer">
-          <span>{String(index + 1).padStart(2, "0")}</span>{link.label}
-        </a>
-      ))}
-    </div>
-  </section>
-  <section class="section">
-    <div class="section-heading"><div><p class="eyebrow">BACKGROUND PRESETS</p><h2><Localized value={{ en: "Choose a surface", "zh-TW": "選擇桌面背景", "zh-CN": "选择桌面背景" }} /></h2></div></div>
-    <div class="wallpaper-list">
-      {data.backgrounds.map((wallpaper: any) => (
-        <button class="wallpaper-option" type="button" data-id={wallpaper.id} data-src={wallpaper.src}>
-          <img src={wallpaper.src} alt="" loading="lazy" />
-          <span><Localized value={wallpaper.title} /><small>{wallpaper.type || "image"}</small></span>
+  <div class="wallpaper-app">
+    <section
+      class="wallpaper-viewport"
+      id="wallpaper-viewport"
+      tabindex="0"
+      data-active-panel="0"
+      data-wallpaper-tone={initialWallpaper?.tone || "blue"}
+      style={initialStyle}
+      aria-label="Dynamic wallpaper workspace"
+      data-label-en="Dynamic wallpaper workspace"
+      data-label-zh-tw="動態桌布工作區"
+      data-label-zh-cn="动态壁纸工作区"
+    >
+      <div class="wallpaper-track" id="wallpaper-track">
+        <section
+          class="wallpaper-screen wallpaper-screen-terminal"
+          data-wallpaper-screen="0"
+          aria-label="Clean terminal wallpaper"
+          data-label-en="Clean terminal wallpaper"
+          data-label-zh-tw="純淨終端桌布"
+          data-label-zh-cn="纯净终端壁纸"
+        >
+          <div class="wallpaper-bg-layer" aria-hidden="true"></div>
+          <div class="wallpaper-terminal">
+            <Localized value={copy.terminalLabel} tag="p" />
+            <Localized value={copy.terminalTitle} tag="h1" />
+            <Localized value={copy.terminalDescription} />
+          </div>
+        </section>
+
+        <section
+          class="wallpaper-screen wallpaper-screen-links"
+          data-wallpaper-screen="1"
+          aria-label="Search and shortcut wallpaper"
+          data-label-en="Search and shortcut wallpaper"
+          data-label-zh-tw="搜尋與快捷連結桌布"
+          data-label-zh-cn="搜索与快捷链接壁纸"
+          aria-hidden="true"
+          inert
+        >
+          <div class="wallpaper-bg-layer" aria-hidden="true"></div>
+          <div class="wallpaper-links-workspace">
+            <form
+              class="wallpaper-search"
+              action="https://www.google.com/search"
+              method="get"
+              target="_blank"
+              role="search"
+            >
+              <label for="wallpaper-search-input" aria-hidden="true">J&gt;</label>
+              <span class="visually-hidden">
+                <Localized value={copy.searchLabel} />
+              </span>
+              <input
+                id="wallpaper-search-input"
+                name="q"
+                type="search"
+                placeholder={copy.searchPlaceholder.en}
+                data-placeholder-en={copy.searchPlaceholder.en}
+                data-placeholder-zh-tw={copy.searchPlaceholder["zh-TW"]}
+                data-placeholder-zh-cn={copy.searchPlaceholder["zh-CN"]}
+                autocomplete="off"
+                aria-label={copy.searchLabel.en}
+                data-label-en={copy.searchLabel.en}
+                data-label-zh-tw={copy.searchLabel["zh-TW"]}
+                data-label-zh-cn={copy.searchLabel["zh-CN"]}
+              />
+              <button type="submit">
+                <Localized value={copy.searchAction} />
+              </button>
+            </form>
+
+            <nav
+              class="wallpaper-link-grid"
+              id="wallpaper-link-grid"
+              aria-label={copy.shortcuts.en}
+              data-label-en={copy.shortcuts.en}
+              data-label-zh-tw={copy.shortcuts["zh-TW"]}
+              data-label-zh-cn={copy.shortcuts["zh-CN"]}
+            >
+              {
+                links.map((link: any, index: number) => {
+                  const external = /^https?:\/\//i.test(link.url || "");
+                  return (
+                    <a
+                      class="wallpaper-link-tile"
+                      href={link.url || "#"}
+                      target={external ? "_blank" : undefined}
+                      rel={external ? "noopener noreferrer" : undefined}
+                      style={`--tile-index: ${index}`}
+                    >
+                      <span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+                      <strong>{link.label || "Link"}</strong>
+                    </a>
+                  );
+                })
+              }
+            </nav>
+          </div>
+        </section>
+      </div>
+
+      <div
+        class="wallpaper-panel-switch"
+        role="group"
+        aria-label="Wallpaper panel selector"
+        data-label-en="Wallpaper panel selector"
+        data-label-zh-tw="桌布頁面選擇"
+        data-label-zh-cn="壁纸页面选择"
+      >
+        <button
+          class="is-active"
+          type="button"
+          data-wallpaper-panel="0"
+          aria-pressed="true"
+          aria-label="Show clean terminal"
+          data-label-en="Show clean terminal"
+          data-label-zh-tw="顯示純淨終端"
+          data-label-zh-cn="显示纯净终端"
+        ></button>
+        <button
+          type="button"
+          data-wallpaper-panel="1"
+          aria-pressed="false"
+          aria-label="Show search shortcuts"
+          data-label-en="Show search shortcuts"
+          data-label-zh-tw="顯示搜尋與快捷連結"
+          data-label-zh-cn="显示搜索与快捷链接"
+        ></button>
+      </div>
+
+      <aside
+        class="wallpaper-bg-dock"
+        id="wallpaper-bg-dock"
+        aria-label={copy.backgrounds.en}
+        data-label-en={copy.backgrounds.en}
+        data-label-zh-tw={copy.backgrounds["zh-TW"]}
+        data-label-zh-cn={copy.backgrounds["zh-CN"]}
+      >
+        <button
+          class="wallpaper-bg-handle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="wallpaper-bg-options"
+        >
+          <Localized value={copy.backgrounds} />
+          <span class="wallpaper-bg-chevron" aria-hidden="true"></span>
         </button>
-      ))}
-    </div>
-  </section>
-  <div id="wallpaper-status" class="notice" aria-live="polite">
-    <Localized value={{ en: "Selection is stored only in this browser.", "zh-TW": "選擇只會保存在此瀏覽器。", "zh-CN": "选择只会保存在此浏览器。" }} />
+        <div class="wallpaper-bg-options" id="wallpaper-bg-options">
+          {
+            backgrounds.length ? (
+              backgrounds.map((wallpaper: any) => (
+                <button
+                  class="wallpaper-bg-option"
+                  type="button"
+                  data-wallpaper-id={wallpaper.id}
+                  data-src={wallpaper.src}
+                  data-tone={wallpaper.tone || "blue"}
+                  data-accent={wallpaper.accent || "#ffd900"}
+                  data-title-en={wallpaper.title?.en || wallpaper.id}
+                  data-title-zh-tw={wallpaper.title?.["zh-TW"] || wallpaper.title?.en || wallpaper.id}
+                  data-title-zh-cn={wallpaper.title?.["zh-CN"] || wallpaper.title?.en || wallpaper.id}
+                  style={`--option-accent: ${wallpaper.accent || "#ffd900"}`}
+                  aria-pressed="false"
+                >
+                  <Localized value={wallpaper.title || wallpaper.id} />
+                  <small>{wallpaper.status || wallpaper.type || "image"}</small>
+                </button>
+              ))
+            ) : (
+              <Localized class="wallpaper-bg-empty" value={copy.emptyBackgrounds} />
+            )
+          }
+        </div>
+      </aside>
+
+      <p
+        class="wallpaper-status visually-hidden"
+        id="wallpaper-status"
+        role="status"
+        aria-live="polite"
+      >
+        Selection is stored only in this browser.
+      </p>
+    </section>
   </div>
 
   <script is:inline slot="scripts">
-    const stage = document.querySelector("#wallpaper-stage");
-    const options = [...document.querySelectorAll(".wallpaper-option")];
-    const time = document.querySelector("#wallpaper-time");
-    const date = document.querySelector("#wallpaper-date");
-    const applyWallpaper = (option) => {
-      stage.style.backgroundImage = `url("${option.dataset.src}")`;
-      options.forEach((item) => item.classList.toggle("is-active", item === option));
-      localStorage.setItem("jats:wallpaper", option.dataset.id);
-    };
-    const selected = localStorage.getItem("jats:wallpaper");
-    applyWallpaper(options.find((option) => option.dataset.id === selected) || options[0]);
-    options.forEach((option) => option.addEventListener("click", () => applyWallpaper(option)));
-    options.forEach((option) => option.querySelector("img")?.addEventListener("error", () => {
-      option.classList.add("is-error");
-      option.disabled = true;
-    }));
-    const updateClock = () => {
-      const now = new Date();
-      time.textContent = new Intl.DateTimeFormat(undefined, { hour: "2-digit", minute: "2-digit", hour12: false }).format(now);
-      date.textContent = new Intl.DateTimeFormat(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" }).format(now);
-    };
-    updateClock();
-    setInterval(updateClock, 30000);
+    // @ts-nocheck
+    (() => {
+      const viewport = document.querySelector("#wallpaper-viewport");
+      const track = document.querySelector("#wallpaper-track");
+      const dock = document.querySelector("#wallpaper-bg-dock");
+      const handle = dock?.querySelector(".wallpaper-bg-handle");
+      const status = document.querySelector("#wallpaper-status");
+      const options = [...document.querySelectorAll("[data-wallpaper-id]")];
+      const panelButtons = [...document.querySelectorAll("[data-wallpaper-panel]")];
+      const screens = [...document.querySelectorAll("[data-wallpaper-screen]")];
+      const searchInput = document.querySelector("#wallpaper-search-input");
+      if (!viewport || !track) return;
+
+      const messages = {
+        en: {
+          panel0: "Clean terminal wallpaper.",
+          panel1: "Search and shortcut workspace.",
+          loading: "Loading {name}…",
+          selected: "{name} selected. The choice is stored only in this browser.",
+          failed: "{name} could not be loaded.",
+          unavailable: "No wallpaper image is available.",
+          dockOpen: "Background selector opened.",
+          dockClosed: "Background selector closed."
+        },
+        "zh-TW": {
+          panel0: "純淨終端桌布。",
+          panel1: "搜尋與快捷連結工作區。",
+          loading: "正在載入{name}…",
+          selected: "已選擇{name}。此選擇只會保存在這個瀏覽器。",
+          failed: "無法載入{name}。",
+          unavailable: "目前沒有可用的桌布圖片。",
+          dockOpen: "背景選擇器已開啟。",
+          dockClosed: "背景選擇器已關閉。"
+        },
+        "zh-CN": {
+          panel0: "纯净终端壁纸。",
+          panel1: "搜索与快捷链接工作区。",
+          loading: "正在加载{name}…",
+          selected: "已选择{name}。此选择只会保存在这个浏览器。",
+          failed: "无法加载{name}。",
+          unavailable: "目前没有可用的壁纸图片。",
+          dockOpen: "背景选择器已打开。",
+          dockClosed: "背景选择器已关闭。"
+        }
+      };
+
+      let language = document.documentElement.lang || "en";
+      let activePanel = 0;
+      let wheelLocked = false;
+      let loadToken = 0;
+      let selectedOption = null;
+      let touchStartX = 0;
+      let touchStartY = 0;
+
+      const dictionary = () => messages[language] || messages.en;
+      const interpolate = (value, variables = {}) =>
+        Object.entries(variables).reduce(
+          (result, [key, replacement]) => result.replaceAll(`{${key}}`, String(replacement)),
+          value
+        );
+      const dataKey = () => (language === "zh-TW" ? "labelZhTw" : language === "zh-CN" ? "labelZhCn" : "labelEn");
+      const titleKey = () => (language === "zh-TW" ? "titleZhTw" : language === "zh-CN" ? "titleZhCn" : "titleEn");
+
+      function setStatus(message, isError = false) {
+        if (!status) return;
+        status.textContent = message;
+        status.classList.toggle("is-error", isError);
+        status.classList.toggle("visually-hidden", !isError);
+      }
+
+      function updateLocalizedAttributes() {
+        language = ["en", "zh-TW", "zh-CN"].includes(document.documentElement.lang)
+          ? document.documentElement.lang
+          : "en";
+        document.querySelectorAll("[data-label-en]").forEach((node) => {
+          const value = node.dataset[dataKey()] || node.dataset.labelEn;
+          if (value) node.setAttribute("aria-label", value);
+        });
+        if (searchInput) {
+          const placeholderKey =
+            language === "zh-TW" ? "placeholderZhTw" : language === "zh-CN" ? "placeholderZhCn" : "placeholderEn";
+          searchInput.placeholder = searchInput.dataset[placeholderKey] || searchInput.dataset.placeholderEn || "";
+        }
+      }
+
+      function setPanel(index, announce = true) {
+        activePanel = index > 0 ? 1 : 0;
+        viewport.dataset.activePanel = String(activePanel);
+        track.style.transform = `translateX(-${activePanel * 50}%)`;
+        panelButtons.forEach((button) => {
+          const selected = Number(button.dataset.wallpaperPanel) === activePanel;
+          button.classList.toggle("is-active", selected);
+          button.setAttribute("aria-pressed", String(selected));
+        });
+        screens.forEach((screen) => {
+          const selected = Number(screen.dataset.wallpaperScreen) === activePanel;
+          screen.toggleAttribute("inert", !selected);
+          screen.setAttribute("aria-hidden", String(!selected));
+        });
+        if (announce) setStatus(dictionary()[activePanel === 0 ? "panel0" : "panel1"]);
+      }
+
+      function closeDock(announce = false) {
+        if (!dock || !handle) return;
+        dock.classList.remove("is-open");
+        handle.setAttribute("aria-expanded", "false");
+        if (announce) setStatus(dictionary().dockClosed);
+      }
+
+      function toggleDock() {
+        if (!dock || !handle) return;
+        const open = !dock.classList.contains("is-open");
+        dock.classList.toggle("is-open", open);
+        handle.setAttribute("aria-expanded", String(open));
+        setStatus(dictionary()[open ? "dockOpen" : "dockClosed"]);
+        if (!open) viewport.focus({ preventScroll: true });
+      }
+
+      function optionTitle(option) {
+        return option.dataset[titleKey()] || option.dataset.titleEn || option.dataset.wallpaperId || "Wallpaper";
+      }
+
+      function markUnavailable(option) {
+        option.classList.add("is-error");
+        option.disabled = true;
+        option.setAttribute("aria-disabled", "true");
+      }
+
+      function applyWallpaper(option, persist = true) {
+        if (!option || option.disabled) return;
+        const token = ++loadToken;
+        const name = optionTitle(option);
+        const source = option.dataset.src;
+        setStatus(interpolate(dictionary().loading, { name }));
+        viewport.classList.add("is-loading");
+
+        const commit = () => {
+          if (token !== loadToken) return;
+          viewport.classList.remove("is-loading");
+          viewport.dataset.wallpaperTone = option.dataset.tone || "blue";
+          viewport.style.setProperty("--wallpaper-accent", option.dataset.accent || "#ffd900");
+          if (source) viewport.style.setProperty("--wallpaper-image", `url("${source}")`);
+          selectedOption = option;
+          options.forEach((item) => {
+            const selected = item === option;
+            item.classList.toggle("is-active", selected);
+            item.setAttribute("aria-pressed", String(selected));
+          });
+          if (persist) {
+            try {
+              localStorage.setItem("jats:wallpaper", option.dataset.wallpaperId);
+            } catch {}
+          }
+          setStatus(interpolate(dictionary().selected, { name }));
+        };
+
+        if (!source) {
+          commit();
+          return;
+        }
+
+        const image = new Image();
+        image.onload = commit;
+        image.onerror = () => {
+          if (token !== loadToken) return;
+          viewport.classList.remove("is-loading");
+          markUnavailable(option);
+          setStatus(interpolate(dictionary().failed, { name }), true);
+          const fallback = options.find((item) => !item.disabled && item !== option);
+          if (fallback) {
+            window.setTimeout(() => applyWallpaper(fallback), 900);
+          } else {
+            viewport.style.removeProperty("--wallpaper-image");
+            setStatus(dictionary().unavailable, true);
+          }
+        };
+        image.src = source;
+      }
+
+      panelButtons.forEach((button) => {
+        button.addEventListener("click", () => setPanel(Number(button.dataset.wallpaperPanel)));
+      });
+      options.forEach((option) => {
+        option.addEventListener("click", () => applyWallpaper(option));
+      });
+      handle?.addEventListener("click", toggleDock);
+
+      document.addEventListener("pointerdown", (event) => {
+        if (dock?.classList.contains("is-open") && !dock.contains(event.target)) closeDock();
+      });
+
+      viewport.addEventListener(
+        "wheel",
+        (event) => {
+          if (Math.max(Math.abs(event.deltaX), Math.abs(event.deltaY)) < 18) return;
+          event.preventDefault();
+          if (wheelLocked) return;
+          const delta = Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
+          setPanel(delta > 0 ? 1 : 0);
+          wheelLocked = true;
+          window.setTimeout(() => {
+            wheelLocked = false;
+          }, 660);
+        },
+        { passive: false }
+      );
+
+      viewport.addEventListener(
+        "touchstart",
+        (event) => {
+          const touch = event.touches[0];
+          touchStartX = touch.clientX;
+          touchStartY = touch.clientY;
+        },
+        { passive: true }
+      );
+      viewport.addEventListener(
+        "touchend",
+        (event) => {
+          const touch = event.changedTouches[0];
+          const dx = touch.clientX - touchStartX;
+          const dy = touch.clientY - touchStartY;
+          if (Math.max(Math.abs(dx), Math.abs(dy)) < 44) return;
+          if (Math.abs(dx) >= Math.abs(dy)) setPanel(dx < 0 ? 1 : 0);
+          else setPanel(dy < 0 ? 1 : 0);
+        },
+        { passive: true }
+      );
+
+      viewport.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && dock?.classList.contains("is-open")) {
+          event.preventDefault();
+          closeDock(true);
+          viewport.focus({ preventScroll: true });
+          return;
+        }
+        if (event.target.closest("input, button, a")) return;
+        if (["ArrowRight", "ArrowDown", "PageDown", "End"].includes(event.key)) {
+          event.preventDefault();
+          setPanel(1);
+        } else if (["ArrowLeft", "ArrowUp", "PageUp", "Home"].includes(event.key)) {
+          event.preventDefault();
+          setPanel(0);
+        }
+      });
+
+      document.addEventListener("jats:language", (event) => {
+        language = event.detail?.language || document.documentElement.lang || "en";
+        updateLocalizedAttributes();
+        if (selectedOption) {
+          setStatus(interpolate(dictionary().selected, { name: optionTitle(selectedOption) }));
+        }
+      });
+
+      updateLocalizedAttributes();
+      setPanel(0, false);
+      let savedWallpaper = null;
+      try {
+        savedWallpaper = localStorage.getItem("jats:wallpaper");
+      } catch {}
+      applyWallpaper(
+        options.find((option) => option.dataset.wallpaperId === savedWallpaper) || options[0],
+        Boolean(savedWallpaper)
+      );
+    })();
   </script>
 </PortalLayout>
-
-<style>
-  .wallpaper-stage { min-height: 610px; padding: 2rem; display: flex; flex-direction: column; justify-content: center; background-position: center; background-size: cover; isolation: isolate; }
-  .wallpaper-shade { position: absolute; z-index: -1; inset: 0; background: linear-gradient(90deg, rgba(5,8,10,.82), rgba(5,8,10,.36)); }
-  .wallpaper-clock { display: grid; color: white; text-shadow: 0 3px 16px #000; }
-  .wallpaper-clock time { font: 900 clamp(4rem, 10vw, 8rem)/.9 ui-monospace, monospace; letter-spacing: -.08em; }
-  .wallpaper-clock span { margin-top: .75rem; }
-  .wallpaper-search { width: min(620px, 100%); margin: 2rem 0 1rem; display: grid; grid-template-columns: 1fr auto; }
-  .wallpaper-search input { min-height: 52px; padding: .8rem 1rem; border: 1px solid rgba(255,255,255,.42); border-radius: 8px 0 0 8px; color: white; background: rgba(0,0,0,.48); }
-  .wallpaper-search button { width: 52px; border-radius: 0 8px 8px 0; color: #111; background: var(--yellow); }
-  .shortcut-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: .5rem; }
-  .shortcut-grid a { padding: .7rem; border: 1px solid rgba(255,255,255,.24); color: white; background: rgba(0,0,0,.42); text-decoration: none; backdrop-filter: blur(8px); }
-  .shortcut-grid span { display: block; color: var(--yellow); font: 700 .6rem ui-monospace, monospace; }
-  .wallpaper-list { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
-  .wallpaper-option { padding: .5rem; text-align: left; }
-  .wallpaper-option img { width: 100%; aspect-ratio: 16 / 10; display: block; object-fit: cover; border-radius: 5px; }
-  .wallpaper-option > span { padding: .65rem .25rem .15rem; display: flex; justify-content: space-between; }
-  .wallpaper-option small { color: var(--muted); }
-  .wallpaper-option.is-active { border-color: var(--yellow); }
-  .wallpaper-option.is-error { opacity: .45; }
-  @media (max-width: 1000px) { .shortcut-grid { grid-template-columns: repeat(3, 1fr); } .wallpaper-list { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 520px) { .wallpaper-stage { min-height: 560px; padding: 1rem; } .shortcut-grid { grid-template-columns: repeat(2, 1fr); } }
-</style>
