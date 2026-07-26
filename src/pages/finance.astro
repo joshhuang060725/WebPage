@@ -4,11 +4,13 @@ import PageHeader from "@components/PageHeader.astro";
 import Localized from "@components/Localized.astro";
 import StatusBadge from "@components/StatusBadge.astro";
 import FinanceRuntime from "@components/FinanceRuntime.astro";
+import Icon from "@components/Icon.astro";
 import { readData, type Localized as LocalizedValue } from "@lib/content";
 import "../styles/finance.css";
 
 const finance = readData<any>("finance.json");
 const regionIds = ["us", "hk", "cn", "tw", "sg"] as const;
+const matrixCurrencies = ["USD", "HKD", "CNY", "TWD", "SGD"] as const;
 const regions = regionIds.map((id) => finance[id]);
 const sourceMap = new Map(finance.sources.map((source: any) => [source.id, source]));
 const l = (en: string, zhTW: string, zhCN: string): LocalizedValue => ({
@@ -92,6 +94,9 @@ const ui = {
   currentView: l("Current view", "目前視圖", "当前视图"),
   moduleStatus: l("Finance module status", "金融模組狀態", "金融模块状态"),
   financeViews: l("Finance views", "金融視圖", "金融视图"),
+  search: l("Search metrics and sources", "搜尋指標與來源", "搜索指标与来源"),
+  searchPlaceholder: l("Filter the current terminal view", "篩選目前終端視圖", "筛选当前终端视图"),
+  noSearchResults: l("No matching terminal entries.", "沒有相符的終端項目。", "没有匹配的终端项目。"),
   coverageBoundaries: l("Coverage and data boundaries", "涵蓋範圍與資料邊界", "覆盖范围与数据边界"),
   swapCurrencies: l("Swap currencies", "交換幣別", "交换币种"),
   marketChart: l("Market context chart", "市場脈絡圖", "市场脉络图"),
@@ -126,6 +131,24 @@ const ui = {
   to: l("To", "目標貨幣", "目标货币"),
   result: l("Converted reference", "參考換算結果", "参考换算结果"),
   fxRefresh: l("Refresh rates", "更新匯率", "更新汇率"),
+  historyTitle: l("Reference-rate history", "參考匯率歷史", "参考汇率历史"),
+  historyBody: l(
+    "A bounded historical series from the named public provider. Hover or drag across the chart to inspect a point.",
+    "來自具名公開提供者的有限歷史序列；可在圖表上移動或拖曳以查看資料點。",
+    "来自具名公开提供者的有限历史序列；可在图表上移动或拖动以查看数据点。"
+  ),
+  historyLoading: l("Loading verified history…", "正在載入已核驗歷史資料…", "正在加载已核验历史数据…"),
+  historyUnavailable: l(
+    "Historical reference data is unavailable for this pair.",
+    "目前無法取得此貨幣對的歷史參考資料。",
+    "目前无法获取此货币对的历史参考数据。"
+  ),
+  matrixTitle: l("Regional cross-rate matrix", "區域交叉匯率矩陣", "区域交叉汇率矩阵"),
+  matrixBody: l(
+    "Calculated from the same fetched reference-rate set; diagonal values are always 1.",
+    "依同一組已取得的參考匯率計算；對角線固定為 1。",
+    "依据同一组已获取的参考汇率计算；对角线固定为 1。"
+  ),
   costTitle: l("Cost comparison", "換匯成本比較", "换汇成本比较"),
   costBody: l(
     "Enter the actual fee and quote you received. The tool never invents a bank spread.",
@@ -259,6 +282,24 @@ const tabItems = [
   { id: "sources", label: ui.tabs.sources }
 ];
 
+const tabIconMap: Record<string, string> = {
+  overview: "overview",
+  us: "region",
+  hk: "region",
+  cn: "region",
+  tw: "region",
+  sg: "region",
+  fx: "fx",
+  sources: "source"
+};
+
+const categoryIconMap: Record<string, string> = {
+  market: "market",
+  fx: "fx",
+  rates: "rates",
+  macro: "macro"
+};
+
 const clientCopy = {
   loading: ui.loading,
   awaiting: ui.awaiting,
@@ -278,6 +319,11 @@ const clientCopy = {
   invalidAmount: l("Enter a valid non-negative amount.", "請輸入有效的非負金額。", "请输入有效的非负金额。"),
   invalidCostInputs: l("Check the fee and quoted-rate inputs.", "請檢查手續費與實際報價欄位。", "请检查手续费与实际报价字段。"),
   ratesUnavailable: l("FX references are unavailable. Check the network and try again.", "目前無法取得匯率參考，請檢查網路後重試。", "目前无法取得汇率参考，请检查网络后重试。"),
+  historyLoading: ui.historyLoading,
+  historyUnavailable: ui.historyUnavailable,
+  historyLabel: ui.historyTitle,
+  matrixTitle: ui.matrixTitle,
+  noSearchResults: ui.noSearchResults,
   consentGranted: l("External market charts are enabled for this browser.", "已在這個瀏覽器啟用外部市場圖表。", "已在这个浏览器启用外部市场图表。"),
   consentRevoked: l("External widget consent was removed.", "已撤回外部元件同意。", "已撤回外部组件同意。"),
   statuses: {
@@ -351,15 +397,18 @@ const jsonLd = {
   <link slot="head" rel="dns-prefetch" href="https://api.frankfurter.dev" />
 
   <div class="finance-terminal">
-    <PageHeader eyebrow={ui.eyebrow} title={title} description={description} />
+    <section class="finance-hero-shell panel">
+      <div class="finance-hero-mark" aria-hidden="true"><Icon name="finance" size={44} /></div>
+      <PageHeader eyebrow={ui.eyebrow} title={title} description={description} />
 
-    <div class="finance-topline" role="region" aria-labelledby="finance-module-status-label">
-      <span id="finance-module-status-label" class="visually-hidden"><Localized value={ui.moduleStatus} /></span>
-      <StatusBadge status="beta" />
-      <span class="tag"><span class="finance-health-dot" aria-hidden="true"></span><Localized value={ui.dataStatus} /></span>
-      <span class="tag"><Localized value={ui.reviewed} /> · {finance.lastReviewedAt}</span>
-      <span class="tag"><Localized value={ui.delayedOnly} /></span>
-    </div>
+      <div class="finance-topline" role="region" aria-labelledby="finance-module-status-label">
+        <span id="finance-module-status-label" class="visually-hidden"><Localized value={ui.moduleStatus} /></span>
+        <StatusBadge status="beta" />
+        <span class="tag"><span class="finance-health-dot" aria-hidden="true"></span><Localized value={ui.dataStatus} /></span>
+        <span class="tag"><Localized value={ui.reviewed} /> · {finance.lastReviewedAt}</span>
+        <span class="tag"><Localized value={ui.delayedOnly} /></span>
+      </div>
+    </section>
 
     <nav class="finance-tabs-shell" aria-labelledby="finance-views-label">
       <span id="finance-views-label" class="visually-hidden"><Localized value={ui.financeViews} /></span>
@@ -376,6 +425,7 @@ const jsonLd = {
               tabindex={index === 0 ? "0" : "-1"}
               data-finance-tab={item.id}
             >
+              <Icon name={tabIconMap[item.id]} size={16} />
               <Localized value={item.label} />
             </button>
           ))
@@ -386,6 +436,12 @@ const jsonLd = {
         <select id="finance-view-select">
           {tabItems.map((item) => <option value={item.id}><Localized value={item.label} /></option>)}
         </select>
+      </div>
+      <div class="finance-search-field">
+        <Icon name="search" size={17} />
+        <label class="visually-hidden" for="finance-search"><Localized value={ui.search} /></label>
+        <input id="finance-search" type="search" autocomplete="off" placeholder={ui.searchPlaceholder.en} data-localized-placeholder={JSON.stringify(ui.searchPlaceholder)} />
+        <span id="finance-search-count" class="finance-search-count" aria-live="polite"></span>
       </div>
     </nav>
 
@@ -430,6 +486,7 @@ const jsonLd = {
           {
             regions.map((region: any, index: number) => (
               <a class="region-launch-card" href={`#${region.id}`} data-open-finance-tab={region.id}>
+                <span class="region-launch-icon" aria-hidden="true"><Icon name="region" size={24} /></span>
                 <span class="region-launch-code">{String(index + 1).padStart(2, "0")} / {region.id.toUpperCase()}</span>
                 <Localized value={region.name} tag="h3" />
                 <Localized value={regionSummaries[region.id]} tag="p" class="muted" />
@@ -450,17 +507,17 @@ const jsonLd = {
         </div>
         <div class="finance-scope-grid">
           <article class="panel scope-card">
-            <span class="scope-index">01</span>
+            <span class="scope-index"><Icon name="source" size={16} /></span>
             <h3><Localized value={ui.sourceFirst} /></h3>
             <Localized value={ui.sourceFirstBody} tag="p" class="muted" />
           </article>
           <article class="panel scope-card">
-            <span class="scope-index">02</span>
+            <span class="scope-index"><Icon name="status" size={16} /></span>
             <h3><Localized value={ui.cadenceAware} /></h3>
             <Localized value={ui.cadenceAwareBody} tag="p" class="muted" />
           </article>
           <article class="panel scope-card">
-            <span class="scope-index">03</span>
+            <span class="scope-index"><Icon name="market" size={16} /></span>
             <h3><Localized value={ui.noSignals} /></h3>
             <Localized value={ui.noSignalsBody} tag="p" class="muted" />
           </article>
@@ -482,7 +539,7 @@ const jsonLd = {
               return (
               <article class="metric-card" data-state="unavailable" data-overview-fx-card={pairCode}>
                 <div class="metric-card-top">
-                  <span class="metric-card-code">FX / DAILY</span>
+                  <span class="metric-card-code"><Icon name="fx" size={14} /> FX / DAILY</span>
                   <span class="data-status" data-state="unavailable" data-overview-fx-status={pairCode}><Localized value={ui.awaiting} /></span>
                 </div>
                 <h3>{pairCode.replace("/", " / ")}</h3>
@@ -529,7 +586,10 @@ const jsonLd = {
               </div>
               <div class="region-refresh-row">
                 <span class="data-status" data-state="partial" data-region-status={region.id}><Localized value={ui.awaiting} /></span>
-                <button class="button" type="button" data-region-refresh={region.id}><Localized value={ui.refresh} /></button>
+                <button class="button icon-button-label" type="button" data-region-refresh={region.id}>
+                  <Icon name="refresh" size={16} />
+                  <Localized value={ui.refresh} />
+                </button>
               </div>
             </aside>
           </div>
@@ -577,7 +637,10 @@ const jsonLd = {
                           data-state={initialState}
                         >
                           <div class="metric-card-top">
-                            <span class="metric-card-code">{indicator.category.toUpperCase()} / {indicator.availability.replaceAll("-", " ")}</span>
+                            <span class="metric-card-code">
+                              <Icon name={categoryIconMap[indicator.category] || "status"} size={14} />
+                              {indicator.category.toUpperCase()} / {indicator.availability.replaceAll("-", " ")}
+                            </span>
                             <span class="data-status" data-role="status" data-state={initialState}><Localized value={initialLabel} /></span>
                           </div>
                           <Localized value={indicator.name} tag="h4" />
@@ -615,7 +678,7 @@ const jsonLd = {
                 data-widget-symbols={JSON.stringify(regionWidgetSymbols[region.id])}
               >
                 <div class="widget-gate">
-                  <span class="widget-gate-icon" aria-hidden="true">EXT</span>
+                  <span class="widget-gate-icon" aria-hidden="true"><Icon name="external" size={24} /></span>
                   <h4><Localized value={ui.widgetTitle} /></h4>
                   <Localized value={ui.widgetBody} tag="p" />
                   <button class="button primary" type="button" data-load-widget={region.id}><Localized value={ui.widgetLoad} /></button>
@@ -700,7 +763,7 @@ const jsonLd = {
               <select id="fx-from"></select>
             </div>
             <button id="fx-swap" class="fx-swap" type="button">
-              <span aria-hidden="true">⇄</span>
+              <Icon name="swap" size={19} />
               <span class="visually-hidden"><Localized value={ui.swapCurrencies} /></span>
             </button>
             <div class="field">
@@ -712,8 +775,14 @@ const jsonLd = {
           <p id="fx-rate" class="fx-rate-line">—</p>
           <p id="fx-source" class="fx-source-line"><Localized value={ui.loading} /></p>
           <div class="button-row">
-            <button id="fx-refresh" class="button primary" type="button"><Localized value={ui.fxRefresh} /></button>
-            <a id="fx-source-link" class="button" href="#sources/frankfurter" data-open-finance-tab="sources"><Localized value={ui.source} /> ↗</a>
+            <button id="fx-refresh" class="button primary icon-button-label" type="button">
+              <Icon name="refresh" size={16} />
+              <Localized value={ui.fxRefresh} />
+            </button>
+            <a id="fx-source-link" class="button icon-button-label" href="#sources/frankfurter" data-open-finance-tab="sources">
+              <Icon name="source" size={16} />
+              <Localized value={ui.source} />
+            </a>
           </div>
         </article>
 
@@ -744,6 +813,68 @@ const jsonLd = {
           </div>
         </article>
       </div>
+
+      <section class="fx-workbench-grid section" aria-labelledby="fx-history-heading">
+        <article class="panel fx-history-panel">
+          <header class="finance-section-head fx-history-head">
+            <div>
+              <p class="eyebrow"><Icon name="chart" size={15} /> LIVE API / HISTORICAL</p>
+              <h3 id="fx-history-heading"><Localized value={ui.historyTitle} /></h3>
+              <Localized value={ui.historyBody} tag="p" class="muted" />
+            </div>
+            <div class="fx-timeframes" role="group" aria-label="Historical range">
+              {["7D", "1M", "3M", "1Y"].map((range) => (
+                <button class:list={["fx-timeframe", range === "1M" && "is-active"]} type="button" data-fx-range={range} aria-pressed={range === "1M" ? "true" : "false"}>
+                  {range}
+                </button>
+              ))}
+            </div>
+          </header>
+          <div class="fx-chart-status-row">
+            <span id="fx-history-pair">USD / TWD</span>
+            <span id="fx-history-status" class="data-status" data-state="partial"><Localized value={ui.historyLoading} /></span>
+          </div>
+          <div class="fx-chart-frame">
+            <svg id="fx-history-chart" class="fx-history-chart" viewBox="0 0 1000 380" preserveAspectRatio="none" role="img" aria-labelledby="fx-history-chart-title fx-history-chart-desc">
+              <title id="fx-history-chart-title"><Localized value={ui.historyTitle} /></title>
+              <desc id="fx-history-chart-desc"><Localized value={ui.historyBody} /></desc>
+            </svg>
+            <div id="fx-history-empty" class="fx-history-empty" hidden><Localized value={ui.historyUnavailable} /></div>
+          </div>
+          <footer class="fx-chart-footer">
+            <span id="fx-history-source"><Localized value={ui.loading} /></span>
+            <span id="fx-history-window">—</span>
+          </footer>
+        </article>
+
+        <article class="panel fx-matrix-panel">
+          <header class="finance-section-head">
+            <div>
+              <p class="eyebrow"><Icon name="fx" size={15} /> FX MATRIX</p>
+              <h3><Localized value={ui.matrixTitle} /></h3>
+              <Localized value={ui.matrixBody} tag="p" class="muted" />
+            </div>
+          </header>
+          <div class="table-wrap">
+            <table class="fx-matrix-table">
+              <thead>
+                <tr>
+                  <th scope="col">BASE</th>
+                  {matrixCurrencies.map((currency) => <th scope="col">{currency}</th>)}
+                </tr>
+              </thead>
+              <tbody id="fx-matrix-body">
+                {matrixCurrencies.map((currency) => (
+                  <tr>
+                    <th scope="row">{currency}</th>
+                    {matrixCurrencies.map(() => <td>—</td>)}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </article>
+      </section>
 
       <div class="notice section">
         <Localized value={finance.fx.sourcePolicy} tag="p" />
@@ -868,6 +999,7 @@ const jsonLd = {
     </section>
 
     <div id="finance-announcer" class="finance-announcer" role="status" aria-live="polite" hidden></div>
+    <template id="finance-external-icon-template"><Icon name="external" size={24} /></template>
     <script is:inline id="finance-config" type="application/json" set:html={JSON.stringify(clientConfig).replaceAll("<", "\\u003c")} />
     <FinanceRuntime />
   </div>
@@ -888,8 +1020,15 @@ const jsonLd = {
       const tabButtons = [...document.querySelectorAll("[data-finance-tab]")];
       const panes = [...document.querySelectorAll("[data-finance-pane]")];
       const mobileSelect = document.querySelector("#finance-view-select");
+      const searchInput = document.querySelector("#finance-search");
+      const searchCount = document.querySelector("#finance-search-count");
       let announceTimer = 0;
       let fxRequestId = 0;
+      let fxHistoryRequestId = 0;
+      let fxHistoryRange = "1M";
+      let fxHistoryPoints = [];
+      let fxHistoryMeta = null;
+      const fxHistoryCache = new Map();
       let fxRates = null;
       let fxMeta = null;
 
@@ -916,6 +1055,30 @@ const jsonLd = {
         const raw = decodeURIComponent(location.hash.slice(1));
         const id = raw.startsWith("sources/") ? "sources" : raw;
         return validTabs.includes(id) ? id : "overview";
+      }
+
+      function applyFinanceSearch() {
+        const query = String(searchInput?.value || "").trim().toLocaleLowerCase(language());
+        const activePane = panes.find((pane) => !pane.hidden);
+        if (!activePane) return;
+        const targets = [
+          ...activePane.querySelectorAll(
+            ".metric-card, .region-launch-card, .scope-card, .method-card, .source-row"
+          )
+        ];
+        let visible = 0;
+        targets.forEach((target) => {
+          const matches = !query || target.textContent.toLocaleLowerCase(language()).includes(query);
+          target.classList.toggle("is-search-hidden", !matches);
+          if (matches) visible += 1;
+        });
+        if (searchCount) {
+          searchCount.textContent = query
+            ? visible
+              ? String(visible)
+              : text(config.copy.noSearchResults)
+            : "";
+        }
       }
 
       function activateTab(id, options = {}) {
@@ -946,7 +1109,11 @@ const jsonLd = {
           loadWidget(next);
         }
         if (config.regions?.[next]) loadRegion(next);
-        if (next === "fx" && !fxRates) loadFxRates();
+        if (next === "fx") {
+          if (!fxRates) loadFxRates();
+          else loadFxHistory();
+        }
+        applyFinanceSearch();
 
         const sourceTarget = decodeURIComponent(location.hash.slice(1));
         if (next === "sources" && sourceTarget.startsWith("sources/")) {
@@ -987,6 +1154,7 @@ const jsonLd = {
       });
 
       mobileSelect?.addEventListener("change", () => activateTab(mobileSelect.value, { updateHash: true, scroll: true }));
+      searchInput?.addEventListener("input", applyFinanceSearch);
       addEventListener("hashchange", () => activateTab(tabFromHash(), { updateHash: false, preserveSourceHash: true }));
 
       function updateClocks() {
@@ -1028,7 +1196,8 @@ const jsonLd = {
         const icon = document.createElement("span");
         icon.className = "widget-gate-icon";
         icon.setAttribute("aria-hidden", "true");
-        icon.textContent = "EXT";
+        const iconTemplate = document.querySelector("#finance-external-icon-template");
+        if (iconTemplate) icon.append(iconTemplate.content.cloneNode(true));
         const heading = document.createElement("h4");
         heading.textContent = text(config.copy.widgetTitle);
         const body = document.createElement("p");
@@ -1328,19 +1497,17 @@ const jsonLd = {
             fxRates = cached.rates;
             fxMeta = cached;
             renderFx();
+            renderFxMatrix();
             if (sourceNode) sourceNode.textContent = text(cached.cacheState === "stale" ? config.copy.stale : config.copy.cached);
           }
         }
 
         const quotes = config.currencies.filter((code) => code !== "USD");
         let collected = { rates: { USD: 1 }, quoteMeta: {}, asOf: null, sources: [] };
-        const localHost = location.hostname === "127.0.0.1" || location.hostname === "localhost";
-        if (!localHost || window.__JATS_TEST_FINANCE_API__ === true) {
-          try {
-            const apiPayload = await fetchJson(`/api/finance/fx?base=USD&symbols=${regionalCurrencies.filter((code) => code !== "USD").join(",")}`);
-            collected = normalizeApiQuotes(apiPayload);
-          } catch {}
-        }
+        try {
+          const apiPayload = await fetchJson(`/api/finance/fx?base=USD&symbols=${regionalCurrencies.filter((code) => code !== "USD").join(",")}`);
+          collected = normalizeApiQuotes(apiPayload);
+        } catch {}
 
         const missing = quotes.filter((code) => !validRate(collected.rates[code]));
         if (missing.length) {
@@ -1375,6 +1542,7 @@ const jsonLd = {
           if (fxRates) {
             renderFx();
             renderOverviewFx();
+            renderFxMatrix();
           } else {
             if (sourceNode) sourceNode.textContent = text(config.copy.ratesUnavailable);
             document.querySelector("#fx-result").textContent = text(config.copy.ratesUnavailable);
@@ -1393,6 +1561,10 @@ const jsonLd = {
         storeFxCache({ rates: fxRates, ...fxMeta });
         renderFx();
         renderOverviewFx();
+        renderFxMatrix();
+        if (!document.querySelector('[data-finance-pane="fx"]')?.hidden) {
+          loadFxHistory();
+        }
         return true;
       }
 
@@ -1413,6 +1585,16 @@ const jsonLd = {
         difference: document.querySelector("#fx-cost-difference"),
         effective: document.querySelector("#fx-effective-rate"),
         costPercent: document.querySelector("#fx-cost-percent")
+      };
+
+      const historyView = {
+        chart: document.querySelector("#fx-history-chart"),
+        empty: document.querySelector("#fx-history-empty"),
+        pair: document.querySelector("#fx-history-pair"),
+        status: document.querySelector("#fx-history-status"),
+        source: document.querySelector("#fx-history-source"),
+        window: document.querySelector("#fx-history-window"),
+        buttons: [...document.querySelectorAll("[data-fx-range]")]
       };
 
       function readFxPrefs() {
@@ -1612,15 +1794,234 @@ const jsonLd = {
         });
       }
 
+      function renderFxMatrix() {
+        const body = document.querySelector("#fx-matrix-body");
+        if (!body) return;
+        body.innerHTML = "";
+        regionalCurrencies.forEach((base) => {
+          const row = document.createElement("tr");
+          const heading = document.createElement("th");
+          heading.scope = "row";
+          heading.textContent = base;
+          row.append(heading);
+          regionalCurrencies.forEach((quote) => {
+            const cell = document.createElement("td");
+            const rate = fxRates ? rateBetween(base, quote) : null;
+            cell.textContent = rate ? numberFormat(rate, rate >= 100 ? 2 : 4) : "—";
+            if (base === quote) cell.classList.add("is-diagonal");
+            if (base === fx.from?.value && quote === fx.to?.value) {
+              cell.classList.add("is-selected-pair");
+            }
+            row.append(cell);
+          });
+          body.append(row);
+        });
+      }
+
+      function setHistoryState(state, message) {
+        if (historyView.status) {
+          historyView.status.dataset.state = state;
+          historyView.status.textContent = text(message);
+        }
+      }
+
+      function formatHistoryDate(value, options = {}) {
+        const date = new Date(`${value}T00:00:00Z`);
+        if (!Number.isFinite(date.getTime())) return value;
+        return new Intl.DateTimeFormat(localeMap[language()], {
+          month: "short",
+          day: "2-digit",
+          ...(options.year ? { year: "numeric" } : {}),
+          timeZone: "UTC"
+        }).format(date);
+      }
+
+      function renderFxHistory() {
+        const chart = historyView.chart;
+        if (!chart) return;
+        const points = fxHistoryPoints;
+        if (historyView.pair) historyView.pair.textContent = `${fx.from.value} / ${fx.to.value}`;
+        if (points.length < 2) {
+          chart.innerHTML = "";
+          if (historyView.empty) historyView.empty.hidden = false;
+          if (historyView.window) historyView.window.textContent = "—";
+          setHistoryState("unavailable", config.copy.historyUnavailable);
+          return;
+        }
+
+        if (historyView.empty) historyView.empty.hidden = true;
+        const width = 1000;
+        const height = 380;
+        const padding = { top: 32, right: 30, bottom: 52, left: 82 };
+        const plotWidth = width - padding.left - padding.right;
+        const plotHeight = height - padding.top - padding.bottom;
+        const values = points.map((point) => Number(point.rate));
+        const rawMin = Math.min(...values);
+        const rawMax = Math.max(...values);
+        const spread = rawMax - rawMin || Math.max(Math.abs(rawMax) * 0.02, 0.01);
+        const min = rawMin - spread * 0.12;
+        const max = rawMax + spread * 0.12;
+        const xAt = (index) => padding.left + (index / (points.length - 1)) * plotWidth;
+        const yAt = (value) => padding.top + ((max - value) / (max - min)) * plotHeight;
+        const path = points
+          .map((point, index) => `${index ? "L" : "M"}${xAt(index).toFixed(2)},${yAt(point.rate).toFixed(2)}`)
+          .join(" ");
+        const area = `${path} L${xAt(points.length - 1).toFixed(2)},${(padding.top + plotHeight).toFixed(2)} L${padding.left},${(padding.top + plotHeight).toFixed(2)} Z`;
+        const yLines = Array.from({ length: 5 }, (_, index) => {
+          const ratio = index / 4;
+          const value = max - ratio * (max - min);
+          const y = padding.top + ratio * plotHeight;
+          return `<g class="fx-chart-gridline"><line x1="${padding.left}" x2="${width - padding.right}" y1="${y}" y2="${y}" /><text x="${padding.left - 12}" y="${y + 4}" text-anchor="end">${numberFormat(value, value >= 100 ? 2 : 4)}</text></g>`;
+        }).join("");
+        const labelIndexes = [...new Set([0, Math.round((points.length - 1) * 0.25), Math.round((points.length - 1) * 0.5), Math.round((points.length - 1) * 0.75), points.length - 1])];
+        const xLabels = labelIndexes
+          .map((index) => `<text class="fx-chart-date" x="${xAt(index)}" y="${height - 18}" text-anchor="${index === 0 ? "start" : index === points.length - 1 ? "end" : "middle"}">${formatHistoryDate(points[index].date, { year: fxHistoryRange === "1Y" })}</text>`)
+          .join("");
+
+        chart.innerHTML = `
+          <defs>
+            <linearGradient id="fx-history-area" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="currentColor" stop-opacity="0.34"></stop>
+              <stop offset="100%" stop-color="currentColor" stop-opacity="0"></stop>
+            </linearGradient>
+          </defs>
+          ${yLines}
+          ${xLabels}
+          <path class="fx-chart-area" d="${area}"></path>
+          <path class="fx-chart-line" d="${path}"></path>
+          <g class="fx-chart-tooltip" data-history-tooltip hidden>
+            <line data-history-crosshair y1="${padding.top}" y2="${padding.top + plotHeight}"></line>
+            <circle data-history-point r="6"></circle>
+            <rect data-history-label-bg rx="4" ry="4" width="184" height="34"></rect>
+            <text data-history-label></text>
+          </g>
+        `;
+        chart.setAttribute(
+          "aria-label",
+          `${text(config.copy.historyLabel)}: ${fx.from.value}/${fx.to.value}, ${formatHistoryDate(points[0].date, { year: true })}–${formatHistoryDate(points.at(-1).date, { year: true })}`
+        );
+
+        const tooltip = chart.querySelector("[data-history-tooltip]");
+        const crosshair = chart.querySelector("[data-history-crosshair]");
+        const pointNode = chart.querySelector("[data-history-point]");
+        const label = chart.querySelector("[data-history-label]");
+        const labelBg = chart.querySelector("[data-history-label-bg]");
+        const inspectPoint = (event) => {
+          const rect = chart.getBoundingClientRect();
+          const coordinate = ((event.clientX - rect.left) / rect.width) * width;
+          const ratio = Math.max(0, Math.min(1, (coordinate - padding.left) / plotWidth));
+          const index = Math.round(ratio * (points.length - 1));
+          const item = points[index];
+          const x = xAt(index);
+          const y = yAt(item.rate);
+          const labelX = x > width - 230 ? x - 194 : x + 10;
+          tooltip.hidden = false;
+          crosshair.setAttribute("x1", x);
+          crosshair.setAttribute("x2", x);
+          pointNode.setAttribute("cx", x);
+          pointNode.setAttribute("cy", y);
+          labelBg.setAttribute("x", labelX);
+          labelBg.setAttribute("y", Math.max(4, y - 44));
+          label.setAttribute("x", labelX + 10);
+          label.setAttribute("y", Math.max(26, y - 22));
+          label.textContent = `${formatHistoryDate(item.date, { year: true })}  ${numberFormat(item.rate, item.rate >= 100 ? 2 : 5)}`;
+        };
+        chart.onpointermove = inspectPoint;
+        chart.onpointerdown = (event) => {
+          chart.setPointerCapture?.(event.pointerId);
+          inspectPoint(event);
+        };
+        chart.onpointerleave = () => {
+          tooltip.hidden = true;
+        };
+
+        const sources = fxHistoryMeta?.sources || [];
+        if (historyView.source) {
+          historyView.source.textContent =
+            sources.map(sourceDisplayName).filter(Boolean).join(" + ") || text(config.copy.source);
+        }
+        if (historyView.window) {
+          historyView.window.textContent = `${formatHistoryDate(points[0].date, { year: true })} — ${formatHistoryDate(points.at(-1).date, { year: true })}`;
+        }
+        setHistoryState("fresh", config.copy.statuses.fresh);
+      }
+
+      async function loadFxHistory(force = false) {
+        if (!fx.from?.value || !fx.to?.value || fx.from.value === fx.to.value) {
+          fxHistoryPoints = [];
+          fxHistoryMeta = null;
+          renderFxHistory();
+          return false;
+        }
+        const key = `${fx.from.value}:${fx.to.value}:${fxHistoryRange}`;
+        if (!force && fxHistoryCache.has(key)) {
+          const cached = fxHistoryCache.get(key);
+          fxHistoryPoints = cached.points;
+          fxHistoryMeta = cached.meta;
+          renderFxHistory();
+          return true;
+        }
+
+        const requestId = ++fxHistoryRequestId;
+        setHistoryState("partial", config.copy.historyLoading);
+        if (historyView.empty) historyView.empty.hidden = true;
+        try {
+          const payload = await fetchJson(
+            `/api/finance/history?base=${encodeURIComponent(fx.from.value)}&symbol=${encodeURIComponent(fx.to.value)}&range=${encodeURIComponent(fxHistoryRange)}`,
+            12000
+          );
+          if (requestId !== fxHistoryRequestId) return false;
+          const points = (payload?.data?.points || [])
+            .map((point) => ({ date: String(point.date || ""), rate: Number(point.rate) }))
+            .filter((point) => /^\d{4}-\d{2}-\d{2}$/.test(point.date) && validRate(point.rate))
+            .sort((a, b) => a.date.localeCompare(b.date));
+          if (points.length < 2) throw new Error("history_unavailable");
+          fxHistoryPoints = points;
+          fxHistoryMeta = {
+            sources: payload?.meta?.sources || [],
+            asOf: payload?.meta?.asOf || points.at(-1)?.date || null
+          };
+          fxHistoryCache.set(key, { points: fxHistoryPoints, meta: fxHistoryMeta });
+          renderFxHistory();
+          return true;
+        } catch {
+          if (requestId !== fxHistoryRequestId) return false;
+          fxHistoryPoints = [];
+          fxHistoryMeta = null;
+          renderFxHistory();
+          return false;
+        }
+      }
+
       [fx.amount, fx.feePercent, fx.fixedFee, fx.quotedRate].forEach((node) => node?.addEventListener("input", renderFx));
-      [fx.precision, fx.from, fx.to].forEach((node) => node?.addEventListener("change", renderFx));
+      fx.precision?.addEventListener("change", renderFx);
+      [fx.from, fx.to].forEach((node) => node?.addEventListener("change", () => {
+        renderFx();
+        renderFxMatrix();
+        loadFxHistory();
+      }));
       document.querySelector("#fx-swap")?.addEventListener("click", () => {
         [fx.from.value, fx.to.value] = [fx.to.value, fx.from.value];
         renderFx();
+        renderFxMatrix();
+        loadFxHistory();
       });
       document.querySelector("#fx-refresh")?.addEventListener("click", async () => {
         const refreshed = await loadFxRates(true);
-        announce(refreshed ? config.copy.refreshed : config.copy.refreshFailed);
+        renderFxMatrix();
+        const historyRefreshed = await loadFxHistory(true);
+        announce(refreshed && historyRefreshed ? config.copy.refreshed : config.copy.refreshFailed);
+      });
+      historyView.buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+          fxHistoryRange = button.dataset.fxRange;
+          historyView.buttons.forEach((candidate) => {
+            const selected = candidate === button;
+            candidate.classList.toggle("is-active", selected);
+            candidate.setAttribute("aria-pressed", String(selected));
+          });
+          loadFxHistory();
+        });
       });
 
       document.querySelector("#source-region-filter")?.addEventListener("change", (event) => {
@@ -1631,10 +2032,19 @@ const jsonLd = {
       });
 
       document.addEventListener("jats:language", () => {
+        if (searchInput) {
+          try {
+            const values = JSON.parse(searchInput.dataset.localizedPlaceholder || "{}");
+            searchInput.placeholder = values[language()] || values.en || "";
+          } catch {}
+        }
         populateCurrencies();
         updateClocks();
         renderFx();
         renderOverviewFx();
+        renderFxMatrix();
+        if (fxHistoryPoints.length) renderFxHistory();
+        applyFinanceSearch();
         document.querySelectorAll('[data-widget-state="gated"]').forEach(renderWidgetGate);
       });
 

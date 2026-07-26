@@ -967,9 +967,9 @@
       }
     ],
     "historyPolicy": {
-      "en": "This beta view loads the latest daily reference only. Historical ranges are not plotted; use the linked provider pages when historical context is required.",
-      "zh-TW": "此 beta 版本僅載入最新每日參考值，不繪製歷史區間；需要歷史脈絡時，請使用已連結的提供者頁面。",
-      "zh-CN": "此 beta 版本仅加载最新每日参考值，不绘制历史区间；需要历史背景时，请使用已链接的提供者页面。"
+      "en": "Historical ranges use the same read-only Finance API, stay bounded to the selected window, and retain the contributing provider and covered dates.",
+      "zh-TW": "歷史區間使用相同的唯讀金融 API，資料點限制在所選時間範圍內，並保留實際貢獻來源與涵蓋日期。",
+      "zh-CN": "历史区间使用同一只读金融 API，数据点限制在所选时间范围内，并保留实际贡献来源与覆盖日期。"
     },
     "sourcePolicy": {
       "en": "The converter uses Frankfurter as its primary cross-currency dataset and the Fawaz official mirror for unsupported references such as TWD. It must display the actual contributing provider; regional cards retain their local official source definitions.",

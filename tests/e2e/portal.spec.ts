@@ -2,16 +2,26 @@ import { expect, test } from "@playwright/test";
 
 test("navigation, language, and theme persist", async ({ page }) => {
   await page.goto("/");
-  await expect(page.locator(".brand-mark")).toHaveText("JATS");
-  await page.getByRole("button", { name: "繁" }).click();
+  await expect(page.locator(".side-nav .brand-mark")).toHaveText("J");
+  await page.locator(".side-nav").hover();
+  await page.getByRole("button", { name: "繁體中文" }).click();
   await expect(page.locator("#main h1").first()).toContainText("個人系統");
   const initialTheme = await page.locator("html").getAttribute("data-theme");
   const expectedTheme = initialTheme === "light" ? "dark" : "light";
-  await page.locator(".theme-toggle").click();
+  await page.getByRole("button", { name: initialTheme === "light" ? "NIGHT" : "DAY" }).click();
   await expect(page.locator("html")).toHaveAttribute("data-theme", expectedTheme);
   await page.goto("/tools.html");
   await expect(page.locator("html")).toHaveAttribute("lang", "zh-TW");
   await expect(page.locator("html")).toHaveAttribute("data-theme", expectedTheme);
+  await page.setViewportSize({ width: 800, height: 800 });
+  await expect(page.locator("#primary-navigation")).toHaveAttribute("aria-hidden", "true");
+  await expect(page.locator("#primary-navigation")).toHaveJSProperty("inert", true);
+  await page.locator(".nav-toggle").click();
+  await expect(page.locator(".nav-toggle")).toHaveAttribute("aria-expanded", "true");
+  await expect(page.locator("#primary-navigation")).toHaveAttribute("aria-hidden", "false");
+  await expect(page.locator("#primary-navigation")).toHaveJSProperty("inert", false);
+  await page.keyboard.press("Escape");
+  await expect(page.locator("#primary-navigation")).toHaveAttribute("aria-hidden", "true");
 });
 
 test("Compute Lab evaluates and switches modes", async ({ page }) => {
@@ -73,6 +83,33 @@ test("Finance regional tabs, FX data, language, and source deep links work", asy
       })
     });
   });
+  await page.route("**/api/finance/history**", async (route) => {
+    await route.fulfill({
+      contentType: "application/json",
+      body: JSON.stringify({
+        ok: true,
+        data: {
+          points: [
+            { date: "2026-07-01", rate: 31.7 },
+            { date: "2026-07-08", rate: 31.85 },
+            { date: "2026-07-15", rate: 31.95 },
+            { date: "2026-07-24", rate: 32 }
+          ]
+        },
+        error: null,
+        meta: {
+          asOf: "2026-07-24",
+          sources: [
+            {
+              id: "fawaz-currency-api",
+              name: "Fawaz Currency API",
+              url: "https://github.com/fawazahmed0/exchange-api"
+            }
+          ]
+        }
+      })
+    });
+  });
   await page.route("https://api.frankfurter.dev/**", async (route) => {
     const quotes = ["EUR", "JPY", "GBP", "KRW", "AUD", "CAD", "CHF"];
     await route.fulfill({
@@ -99,6 +136,10 @@ test("Finance regional tabs, FX data, language, and source deep links work", asy
     "href",
     "#sources/fawaz-currency-api"
   );
+  await expect(page.locator(".finance-tab .icon")).toHaveCount(8);
+  await expect(page.locator("#fx-history-chart .fx-chart-line")).toBeVisible();
+  await expect(page.locator("#fx-history-source")).toContainText("Fawaz");
+  await expect(page.locator("#fx-matrix-body .is-selected-pair")).toContainText("32");
 
   await page.locator("#fx-amount").fill("-1");
   await expect(page.locator("#fx-amount")).toHaveAttribute("aria-invalid", "true");
@@ -119,6 +160,7 @@ test("Finance regional tabs, FX data, language, and source deep links work", asy
     "#sources/fawaz-currency-api"
   );
 
+  await page.locator(".side-nav").hover();
   await page.getByRole("button", { name: "繁體中文" }).click();
   await expect(page.getByRole("tab", { name: "總覽" })).toHaveAttribute("aria-selected", "true");
   await expect(page.locator("#fx-to option").filter({ hasText: "新臺幣" })).toHaveCount(1);

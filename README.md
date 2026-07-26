@@ -25,8 +25,8 @@ The project currently includes:
 - UX Lab concept record for the JATS design system.
 - Formula Lab with searchable formula cards, detailed derivation pages, KaTeX math, and Plotly/math.js interactive plots.
 - Standalone flower language personality test.
-- Standalone Four Seasons Flowers instant-growing experience.
-- Standalone Christmas Tree economic visualization and Zhu Bloom market surfaces.
+- Preserved legacy Four Seasons Flowers and Zhu Bloom source/assets (outside the current professionalization scope and not added to portal navigation).
+- Standalone Christmas Tree economic visualization.
 - Cloudflare Pages Functions for YouTube search, guarded R2 asset reads, and quota status.
 
 ## Architecture
@@ -35,7 +35,7 @@ The project currently includes:
 WebPage/
 |-- src/
 |   |-- components/       # shared localized UI and formula renderers
-|   |-- layouts/          # shared JATS portal shell and right navigation rail
+|   |-- layouts/          # shared JATS portal shell and left collapsible navigation rail
 |   |-- lib/              # content and compute utilities
 |   |-- pages/            # Astro static routes and generated detail pages
 |   `-- styles/           # design tokens and shared responsive system
@@ -124,6 +124,7 @@ Current API routes:
 | `/api/finance/overview` | `functions/api/finance/overview.js` | Returns the five-region coverage and availability contract |
 | `/api/finance/regions/:region` | `functions/api/finance/regions/[region].js` | Returns a source-safe regional snapshot contract for `us`, `hk`, `cn`, `tw`, or `sg` |
 | `/api/finance/fx` | `functions/api/finance/fx.js` | Returns allowlisted daily reference FX rates with Frankfurter primary and official Fawaz mirror fallback |
+| `/api/finance/history` | `functions/api/finance/history.js` | Returns bounded `7D`, `1M`, `3M`, or `1Y` FX reference history with provider attribution |
 
 `functions/api/_middleware.js` counts API requests and appends quota headers.
 
@@ -146,7 +147,7 @@ LIMIT_R2_MONTHLY_CLASS_B=9000000
 
 ## Local Development
 
-Install dependencies and start the Astro development server:
+Install dependencies and start the full Cloudflare Pages development server:
 
 ```powershell
 npm install
@@ -156,10 +157,14 @@ npm run dev
 Open:
 
 ```text
-http://127.0.0.1:4321/
+http://127.0.0.1:8788/
 ```
 
-Do not use `file://`. Production output is generated under `dist/`.
+`npm run dev` builds the Astro static output, then serves both `dist/` and
+`functions/` through Wrangler so the Finance and YouTube API routes work
+locally. Use `npm run dev:astro` on port `4321` only for UI-only iteration;
+Pages Functions are not available in that mode. Do not use `file://`.
+Production output is generated under `dist/`.
 
 ## QA Checklist
 

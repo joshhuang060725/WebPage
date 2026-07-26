@@ -1,11 +1,25 @@
 # Development Log
 
+## 2026-07-27 - Version 1.0 Shell Restoration and Finance History
+
+### Decisions
+
+- Confirmed the checked-in version 1.0 interface—not the written “right-side navigation” assumption—as the visual baseline.
+- Restored the left compact/expanded navigation model, JOSH / Personal Portal identity, yellow/cyan terminal treatment, and AUTO / DAY / NIGHT preferences while retaining the accessible mobile drawer.
+- Kept Finance read-only and source-attributed; a chart must show its provider, covered dates, loading state, and explicit failure state.
+
+### Implemented
+
+- Added a reusable inline SVG icon set for portal navigation and Finance controls.
+- Added a bounded historical FX endpoint for `7D`, `1M`, `3M`, and `1Y`, plus an interactive native SVG chart and regional cross-rate matrix.
+- Added a Wrangler local-development path so the static Astro build and Cloudflare Pages Functions run together.
+
 ## 2026-07-26 - Regional Finance Terminal
 
 ### Decisions
 
 - Replaced the FX-only Finance surface with a source-first regional macro terminal for the United States, Hong Kong, Mainland China, Taiwan, and Singapore.
-- Kept `/finance.html`, the right-side navigation position, Astro static output, Cloudflare Pages Functions, three-language parity, and the public read-only boundary.
+- Kept `/finance.html`, Astro static output, Cloudflare Pages Functions, three-language parity, and the public read-only boundary. The initial right-side navigation change was later identified as inconsistent with the version 1.0 baseline and corrected.
 - Made Sources & Methodology the final Finance view and the canonical registry for every metric and upstream link.
 - Separated official APIs, reviewed official snapshots, institutional reference feeds, and consent-gated external widgets.
 - Kept Chinese official-data gaps visible rather than presenting unverified current values.
@@ -38,7 +52,7 @@ JATSWeb had grown from a static portal into a collection of public tools and sta
 ### Decisions
 
 - Use Astro static output while preserving Cloudflare Pages Functions and the public read-only boundary.
-- Preserve the existing right-side navigation destinations and JATS industrial terminal identity.
+- Preserve the existing navigation destinations and JATS industrial terminal identity. The original side-position assumption was corrected against the checked-in version 1.0 implementation on 2026-07-27.
 - Maintain complete `en`, `zh-TW`, and `zh-CN` UI copy.
 - Use `ready`, `beta`, and `concept` as the public maturity vocabulary.
 - Keep standalone microsites compatible and outside the shared portal shell.

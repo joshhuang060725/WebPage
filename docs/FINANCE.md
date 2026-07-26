@@ -26,7 +26,7 @@ The module remains `beta` while individual official adapters are added and revie
 | `#cn` | Official source-linked snapshots for markets, LPR, prices, industry, and growth |
 | `#tw` | TWSE context, TWD references, central-bank settings, money, prices, and growth |
 | `#sg` | STI context, SGD references, SORA, government yields, prices, jobs, and growth |
-| `#fx` | Daily reference conversion and user-entered cost comparison |
+| `#fx` | Daily conversion, cross-rate matrix, bounded reference history, and user-entered cost comparison |
 | `#sources` | Canonical source and methodology register |
 
 Source rows also support deep links such as `/finance.html#sources/us-treasury`.
@@ -72,12 +72,20 @@ Cloudflare Pages Functions remain read-only:
 GET /api/finance/overview
 GET /api/finance/regions/{us|hk|cn|tw|sg}
 GET /api/finance/fx?base=USD&symbols=HKD,CNY,TWD,SGD
+GET /api/finance/history?base=USD&symbol=TWD&range=1M
 ```
 
 The FX endpoint accepts the same 12-currency allowlist shown by the browser tool:
 `USD`, `HKD`, `CNY`, `TWD`, `SGD`, `EUR`, `JPY`, `GBP`, `KRW`, `AUD`, `CAD`, and `CHF`.
 Each quote retains its own provider and `asOf` date; envelope-level `meta.asOf` is `null`
 when a response combines dates.
+
+The history endpoint accepts `7D`, `1M`, `3M`, and `1Y`. It returns an
+ascending, bounded series of `{ "date": "YYYY-MM-DD", "rate": 0 }` points,
+the actual contributing provider, and the covered window. Frankfurter is the
+primary source where both currencies are supported; the official Fawaz mirror
+is sampled as the fallback, including for TWD. A complete upstream failure is
+an explicit non-cacheable `503`, not an empty successful chart.
 
 All Finance endpoints return a common envelope:
 
@@ -101,7 +109,7 @@ Implementation rules:
 
 - fixed region and currency allowlists;
 - GET, HEAD, and OPTIONS only;
-- five-second upstream timeout;
+- bounded upstream timeouts;
 - no upstream error or internal detail leakage;
 - FX responses cache for six hours;
 - overview and region contracts cache for 24 hours;
@@ -145,12 +153,12 @@ TradingView widgets:
 
 ## Accessibility and responsive behavior
 
-- Desktop uses the existing right-side JATS navigation rail.
+- Desktop keeps the version 1.0 left-side JATS navigation rail, including its compact and expanded states.
 - Finance views use a keyboard-operable tab list with Arrow, Home, and End keys.
 - Mobile replaces the dense tab row with an equivalent view selector.
 - Hash links remain shareable and back/forward compatible.
 - Dynamic status uses `aria-live`.
-- Every chart has an adjacent source-backed indicator table.
+- The FX history chart exposes its pair, range, dates, source, and a visible unavailable state; the adjacent cross-rate matrix is calculated from the same fetched daily reference set.
 - Status uses text plus color; color is never the only signal.
 - Reduced-motion preferences disable nonessential animation.
 - The layout is tested at 360 px without document-level horizontal overflow.

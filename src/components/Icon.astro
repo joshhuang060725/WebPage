@@ -1,0 +1,215 @@
+---
+type IconName =
+  | "home"
+  | "profile"
+  | "wallpaper"
+  | "projects"
+  | "formula"
+  | "links"
+  | "youtube"
+  | "finance"
+  | "tools"
+  | "files"
+  | "overview"
+  | "region"
+  | "market"
+  | "fx"
+  | "rates"
+  | "macro"
+  | "source"
+  | "refresh"
+  | "chart"
+  | "search"
+  | "swap"
+  | "external"
+  | "status"
+  | "menu"
+  | "close"
+  | "auto"
+  | "sun"
+  | "moon";
+
+interface Props {
+  name: IconName | string;
+  size?: number;
+  strokeWidth?: number;
+  title?: string;
+  class?: string;
+}
+
+const {
+  name,
+  size = 18,
+  strokeWidth = 1.8,
+  title,
+  class: className
+} = Astro.props;
+
+const paths: Record<IconName, string[]> = {
+  home: [
+    "M3 11.25 12 4l9 7.25",
+    "M5.5 10.25V20h13v-9.75",
+    "M9.5 20v-6h5v6"
+  ],
+  profile: [
+    "M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z",
+    "M4.75 20c.65-4 3-6 7.25-6s6.6 2 7.25 6"
+  ],
+  wallpaper: [
+    "M3.5 5.5h17v13h-17z",
+    "m5.5 16 4.5-4.5 3.25 3.25 2.25-2.25 3 3.5",
+    "M15.75 9a1.25 1.25 0 1 0 0-2.5 1.25 1.25 0 0 0 0 2.5Z"
+  ],
+  projects: [
+    "M3.5 6.5h6l1.5 2h9.5v10h-17z",
+    "M3.5 6.5v-2h6l1.5 2"
+  ],
+  formula: [
+    "M5 5h5",
+    "M7.5 5 6 19",
+    "M4.5 12h4.75",
+    "m13-2-5 7",
+    "m12.5 10 5 7"
+  ],
+  links: [
+    "M9.25 14.75 7.5 16.5a3.54 3.54 0 0 1-5-5l3-3a3.54 3.54 0 0 1 5 0",
+    "m14.75 9.25 1.75-1.75a3.54 3.54 0 0 1 5 5l-3 3a3.54 3.54 0 0 1-5 0",
+    "m8.5 15.5 7-7"
+  ],
+  youtube: [
+    "M21 12c0 2.75-.3 4.55-.65 5.45-.25.65-.75 1.15-1.4 1.4-1 .4-3.55.65-6.95.65s-5.95-.25-6.95-.65a2.45 2.45 0 0 1-1.4-1.4C3.3 16.55 3 14.75 3 12s.3-4.55.65-5.45c.25-.65.75-1.15 1.4-1.4 1-.4 3.55-.65 6.95-.65s5.95.25 6.95.65c.65.25 1.15.75 1.4 1.4.35.9.65 2.7.65 5.45Z",
+    "m10 9 5 3-5 3Z"
+  ],
+  finance: [
+    "m3 9 9-5 9 5",
+    "M5 10v7",
+    "M9.5 10v7",
+    "M14.5 10v7",
+    "M19 10v7",
+    "M3 20h18",
+    "M4 17h16"
+  ],
+  tools: [
+    "M14.5 6.5a4 4 0 0 0-5 5L3.75 17.25a2.12 2.12 0 0 0 3 3l5.75-5.75a4 4 0 0 0 5-5l-2.25 2.25-3-3Z",
+    "m15.5 4.5 4 4"
+  ],
+  files: [
+    "M7 3.5h7l4 4V20H7z",
+    "M14 3.5V8h4",
+    "M4 7v13h10"
+  ],
+  overview: [
+    "M3.5 3.5h7v7h-7z",
+    "M13.5 3.5h7v4h-7z",
+    "M3.5 13.5h7v7h-7z",
+    "M13.5 10.5h7v10h-7z"
+  ],
+  region: [
+    "M20 10c0 5.25-8 11-8 11S4 15.25 4 10a8 8 0 1 1 16 0Z",
+    "M12 12.5a2.75 2.75 0 1 0 0-5.5 2.75 2.75 0 0 0 0 5.5Z"
+  ],
+  market: [
+    "M5 19V9",
+    "M5 6V4",
+    "M12 20v-6",
+    "M12 11V5",
+    "M19 19v-4",
+    "M19 12V3",
+    "M3 7h4v5H3z",
+    "M10 11h4v5h-4z",
+    "M17 12h4v4h-4z"
+  ],
+  fx: [
+    "M4 7h13",
+    "m14 4 3 3-3 3",
+    "M20 17H7",
+    "m10 14-3 3 3 3"
+  ],
+  rates: [
+    "M19 5 5 19",
+    "M7.25 9.5a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5Z",
+    "M16.75 19.25a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5Z"
+  ],
+  macro: [
+    "M4 20V10h4v10",
+    "M10 20V4h4v16",
+    "M16 20v-7h4v7",
+    "M2.5 20.5h19"
+  ],
+  source: [
+    "M20 6c0 1.38-3.58 2.5-8 2.5S4 7.38 4 6s3.58-2.5 8-2.5S20 4.62 20 6Z",
+    "M4 6v6c0 1.38 3.58 2.5 8 2.5s8-1.12 8-2.5V6",
+    "M4 12v6c0 1.38 3.58 2.5 8 2.5s8-1.12 8-2.5v-6"
+  ],
+  refresh: [
+    "M20 7v5h-5",
+    "M4 17v-5h5",
+    "M6.1 8.25A7 7 0 0 1 18.5 9",
+    "M17.9 15.75A7 7 0 0 1 5.5 15"
+  ],
+  chart: [
+    "M4 3v17h17",
+    "m7 14 3.5-4 3 2 4.5-6",
+    "M7 16.5 11 13"
+  ],
+  search: [
+    "M10.5 18a7.5 7.5 0 1 0 0-15 7.5 7.5 0 0 0 0 15Z",
+    "m16 16 5 5"
+  ],
+  swap: [
+    "M4 7h15",
+    "m16 4 3 3-3 3",
+    "M20 17H5",
+    "m8 14-3 3 3 3"
+  ],
+  external: [
+    "M14 4h6v6",
+    "m20 4-9 9",
+    "M18 14v6H4V6h6"
+  ],
+  status: [
+    "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z",
+    "M12 8v4",
+    "M12 16h.01"
+  ],
+  menu: ["M4 7h16", "M4 12h16", "M4 17h16"],
+  close: ["m5 5 14 14", "M19 5 5 19"],
+  auto: [
+    "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z",
+    "M12 3v18",
+    "M12 3a9 9 0 0 1 0 18Z"
+  ],
+  sun: [
+    "M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z",
+    "M12 2v2",
+    "M12 20v2",
+    "m4.93 4.93 1.42-1.42",
+    "m5.65 18.35 1.42-1.42",
+    "M2 12h2",
+    "M20 12h2",
+    "m4.93 19.07 1.42 1.42",
+    "m16.93 5.65 1.42 1.42"
+  ],
+  moon: ["M20.5 14.25A8.5 8.5 0 0 1 9.75 3.5 8.5 8.5 0 1 0 20.5 14.25Z"]
+};
+const selectedPaths = paths[name as IconName] ?? paths.status;
+---
+
+<svg
+  class:list={["icon", className]}
+  width={size}
+  height={size}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width={strokeWidth}
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden={title ? undefined : "true"}
+  aria-label={title}
+  role={title ? "img" : undefined}
+  focusable="false"
+>
+  {title && <title>{title}</title>}
+  {selectedPaths.map((path) => <path d={path} />)}
+</svg>

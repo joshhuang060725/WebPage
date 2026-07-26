@@ -1,5 +1,6 @@
 ---
 import Localized from "@components/Localized.astro";
+import Icon from "@components/Icon.astro";
 import "../styles/global.css";
 import type { Localized as LocalizedValue } from "@lib/content";
 
@@ -13,16 +14,28 @@ interface Props {
 const { title, description, canonical = Astro.url.pathname, active = "" } = Astro.props;
 const base = "https://joshhuang.ccwu.cc";
 const nav = [
-  ["profile", "/profile.html", { en: "Bio", "zh-TW": "個人資料", "zh-CN": "个人资料" }],
-  ["wallpapers", "/wallpapers.html", { en: "Wallpapers", "zh-TW": "桌布", "zh-CN": "壁纸" }],
-  ["projects", "/projects.html", { en: "Projects", "zh-TW": "專案", "zh-CN": "项目" }],
-  ["formulas", "/formulas.html", { en: "Formula Lab", "zh-TW": "公式實驗室", "zh-CN": "公式实验室" }],
-  ["links", "/links.html", { en: "Quick Links", "zh-TW": "快速連結", "zh-CN": "快速链接" }],
-  ["youtube", "/youtube.html", { en: "YouTube", "zh-TW": "影片搜尋", "zh-CN": "视频搜索" }],
-  ["finance", "/finance.html", { en: "Finance", "zh-TW": "金融終端", "zh-CN": "金融终端" }],
-  ["tools", "/tools.html", { en: "Tools", "zh-TW": "工具", "zh-CN": "工具" }],
-  ["files", "/files.html", { en: "Files", "zh-TW": "檔案", "zh-CN": "文件" }]
+  { id: "portal", href: "/", icon: "home", label: { en: "Portal", "zh-TW": "主頁", "zh-CN": "主页" } },
+  { id: "profile", href: "/profile.html", icon: "profile", label: { en: "Bio", "zh-TW": "個人資料", "zh-CN": "个人资料" } },
+  { id: "wallpapers", href: "/wallpapers.html", icon: "wallpaper", label: { en: "Wallpapers", "zh-TW": "桌布", "zh-CN": "壁纸" } },
+  { id: "projects", href: "/projects.html", icon: "projects", label: { en: "Projects", "zh-TW": "專案", "zh-CN": "项目" } },
+  { id: "formulas", href: "/formulas.html", icon: "formula", label: { en: "Formula Lab", "zh-TW": "公式實驗室", "zh-CN": "公式实验室" } },
+  { id: "links", href: "/links.html", icon: "links", label: { en: "Quick Links", "zh-TW": "快速連結", "zh-CN": "快速链接" } },
+  { id: "youtube", href: "/youtube.html", icon: "youtube", label: { en: "YouTube", "zh-TW": "影片搜尋", "zh-CN": "视频搜索" } },
+  { id: "finance", href: "/finance.html", icon: "finance", label: { en: "Finance", "zh-TW": "金融終端", "zh-CN": "金融终端" } },
+  { id: "tools", href: "/tools.html", icon: "tools", label: { en: "Tools", "zh-TW": "工具", "zh-CN": "工具" } },
+  { id: "files", href: "/files.html", icon: "files", label: { en: "Files", "zh-TW": "檔案", "zh-CN": "文件" } }
 ] as const;
+const portalIsActive = !active || active === "portal";
+const brandSystem = {
+  en: "Personal Portal",
+  "zh-TW": "個人入口",
+  "zh-CN": "个人入口"
+};
+const staticBuild = {
+  en: "Static build",
+  "zh-TW": "靜態版本",
+  "zh-CN": "静态版本"
+};
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "WebSite",
@@ -54,17 +67,42 @@ const jsonLd = {
     <script is:inline>
       (() => {
         const root = document.documentElement;
-        const stored = localStorage.getItem("jats:language");
+        let legacyLanguage = null;
+        let currentLanguage = null;
+        let legacyTheme = null;
+        let currentTheme = null;
+        try {
+          legacyLanguage = localStorage.getItem("portal-lang");
+          currentLanguage = localStorage.getItem("jats:language");
+          legacyTheme = localStorage.getItem("portal-theme");
+          currentTheme = localStorage.getItem("jats:theme");
+        } catch {}
         const detected = navigator.language.toLowerCase();
         const initial =
-          stored ||
-          (detected.startsWith("zh-tw") || detected.startsWith("zh-hk")
+          legacyLanguage ||
+          currentLanguage ||
+          (detected.startsWith("zh-tw") || detected.startsWith("zh-hk") || detected.startsWith("zh-mo")
             ? "zh-TW"
             : detected.startsWith("zh")
               ? "zh-CN"
               : "en");
+        const initialThemeMode = ["auto", "light", "dark"].includes(legacyTheme)
+          ? legacyTheme
+          : ["light", "dark"].includes(currentTheme)
+            ? currentTheme
+            : "auto";
+        const hour = new Date().getHours();
+        const resolvedTheme =
+          initialThemeMode === "auto"
+            ? hour >= 7 && hour < 18
+              ? "light"
+              : "dark"
+            : initialThemeMode;
         root.lang = initial;
         root.dataset.initialLanguage = initial;
+        root.dataset.initialThemeMode = initialThemeMode;
+        root.dataset.themeMode = initialThemeMode;
+        root.dataset.theme = resolvedTheme;
         if (initial !== "en") root.dataset.languagePending = "true";
       })();
     </script>
@@ -77,43 +115,89 @@ const jsonLd = {
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
     <div class="site-shell">
-      <header class="topbar">
-        <a class="brand" href="/" aria-label="JATSWeb home">
-          <span class="brand-mark">JATS</span>
-          <span class="brand-name">Josh Auxiliary Terminal System</span>
+      <aside
+        id="primary-navigation"
+        class="side-nav"
+        aria-label="Primary navigation"
+        data-nav-collapsible
+        tabindex="0"
+      >
+        <a class="brand" href="/" aria-label="Josh Huang portal home">
+          <span class="brand-mark">J</span>
+          <span class="brand-copy">
+            <strong>JOSH</strong>
+            <Localized value={brandSystem} tag="small" />
+          </span>
         </a>
-        <div class="topbar-controls">
-          <div class="language-switch" aria-label="Language">
-            <button type="button" data-lang="en">EN</button>
+        <nav class="nav-links">
+          {
+            nav.map((item, index) => {
+              const current = item.id === "portal" ? portalIsActive : active === item.id;
+              return (
+                <a
+                  class:list={["nav-link", current && "is-active"]}
+                  href={item.href}
+                  aria-current={current ? "page" : undefined}
+                  title={item.label.en}
+                >
+                  <span class="nav-icon"><Icon name={item.icon} size={19} /></span>
+                  <span class="nav-label"><Localized value={item.label} /></span>
+                  <span class="nav-index" aria-hidden="true">{String(index).padStart(2, "0")}</span>
+                </a>
+              );
+            })
+          }
+        </nav>
+        <div class="nav-preferences">
+          <div class="language-panel" aria-label="Language selector">
+            <button type="button" data-lang="en" aria-label="English">EN</button>
             <button type="button" data-lang="zh-TW" aria-label="繁體中文">繁</button>
             <button type="button" data-lang="zh-CN" aria-label="简体中文">简</button>
           </div>
-          <button class="theme-toggle" type="button" aria-label="Toggle color theme">
-            <span aria-hidden="true">◐</span>
-          </button>
-          <button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false">☰</button>
+          <div class="theme-panel" aria-label="Theme selector">
+            <button type="button" data-theme-mode="auto">
+              <Icon name="auto" size={14} />
+              <span>AUTO</span>
+            </button>
+            <button type="button" data-theme-mode="light">
+              <Icon name="sun" size={14} />
+              <span>DAY</span>
+            </button>
+            <button type="button" data-theme-mode="dark">
+              <Icon name="moon" size={14} />
+              <span>NIGHT</span>
+            </button>
+          </div>
         </div>
+        <p class="nav-meta">
+          <Localized value={staticBuild} tag="span" />
+          <strong id="last-modified">--</strong>
+          <small>JATSWeb v2.0</small>
+        </p>
+      </aside>
+
+      <header class="mobile-header">
+        <a class="mobile-brand" href="/" aria-label="Josh Huang portal home">
+          <span class="brand-mark">J</span>
+          <span>JOSH</span>
+        </a>
+        <button
+          class="nav-toggle"
+          type="button"
+          aria-label="Open navigation"
+          aria-controls="primary-navigation"
+          aria-expanded="false"
+        >
+          <Icon name="menu" size={20} class="nav-toggle-menu" />
+          <Icon name="close" size={20} class="nav-toggle-close" />
+        </button>
       </header>
 
       <main id="main" class="main-content">
         <slot />
       </main>
 
-      <aside class="nav-rail" aria-label="Primary navigation">
-        <a class:list={["rail-home", !active && "is-active"]} href="/" aria-label="Home">J</a>
-        <nav>
-          {
-            nav.map(([id, href, label], index) => (
-              <a class:list={["rail-link", active === id && "is-active"]} href={href}>
-                <span class="rail-index">{String(index + 1).padStart(2, "0")}</span>
-                <Localized value={label} />
-              </a>
-            ))
-          }
-        </nav>
-        <div class="rail-status"><span></span> SYSTEM ONLINE</div>
-      </aside>
-      <button class="nav-scrim" type="button" aria-label="Close navigation"></button>
+      <button class="nav-scrim" type="button" aria-label="Close navigation" tabindex="-1"></button>
     </div>
 
     <footer class="site-footer">
@@ -124,11 +208,38 @@ const jsonLd = {
     <script>
       // @ts-nocheck
       const root = document.documentElement;
+      const body = document.body;
+      const navRail = document.querySelector("#primary-navigation");
+      const navToggle = document.querySelector(".nav-toggle");
+      const navScrim = document.querySelector(".nav-scrim");
+      const mobileNavQuery = matchMedia("(max-width: 1020px)");
       let language = root.dataset.initialLanguage || "en";
+      let themeMode = root.dataset.initialThemeMode || "auto";
+      let lastNavFocus = null;
+
+      function storePreference(key, value) {
+        try {
+          localStorage.setItem(key, value);
+        } catch {}
+      }
+
+      function renderLastModified() {
+        const node = document.querySelector("#last-modified");
+        if (!node) return;
+        const parsed = new Date(document.lastModified);
+        node.textContent = Number.isFinite(parsed.getTime())
+          ? new Intl.DateTimeFormat(language, {
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit"
+            }).format(parsed)
+          : "--";
+      }
 
       function applyLanguage(nextLanguage) {
-        language = nextLanguage;
-        localStorage.setItem("jats:language", language);
+        language = ["en", "zh-TW", "zh-CN"].includes(nextLanguage) ? nextLanguage : "en";
+        storePreference("portal-lang", language);
+        storePreference("jats:language", language);
         root.lang = language;
         document.querySelectorAll("[data-localized]").forEach((node) => {
           const key = language === "zh-TW" ? "zhTw" : language === "zh-CN" ? "zhCn" : "en";
@@ -140,6 +251,7 @@ const jsonLd = {
           button.classList.toggle("is-active", button.dataset.lang === language);
           button.setAttribute("aria-pressed", String(button.dataset.lang === language));
         });
+        renderLastModified();
         document.dispatchEvent(new CustomEvent("jats:language", { detail: { language } }));
       }
 
@@ -147,27 +259,157 @@ const jsonLd = {
         button.addEventListener("click", () => applyLanguage(button.dataset.lang));
       });
 
-      const storedTheme = localStorage.getItem("jats:theme");
-      root.dataset.theme =
-        storedTheme || (matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
-      document.querySelector(".theme-toggle")?.addEventListener("click", () => {
-        root.dataset.theme = root.dataset.theme === "light" ? "dark" : "light";
-        localStorage.setItem("jats:theme", root.dataset.theme);
+      function resolveTheme(mode) {
+        if (mode !== "auto") return mode;
+        const hour = new Date().getHours();
+        return hour >= 7 && hour < 18 ? "light" : "dark";
+      }
+
+      function applyTheme(nextMode, persist = true) {
+        themeMode = ["auto", "light", "dark"].includes(nextMode) ? nextMode : "auto";
+        const resolvedTheme = resolveTheme(themeMode);
+        root.dataset.themeMode = themeMode;
+        root.dataset.theme = resolvedTheme;
+        document.querySelectorAll("[data-theme-mode]").forEach((button) => {
+          const selected = button.dataset.themeMode === themeMode;
+          button.classList.toggle("is-active", selected);
+          button.setAttribute("aria-pressed", String(selected));
+        });
+        const themeColor = document.querySelector('meta[name="theme-color"]');
+        if (themeColor) themeColor.content = resolvedTheme === "light" ? "#edf6fb" : "#111312";
+        if (persist) {
+          storePreference("portal-theme", themeMode);
+          storePreference("jats:theme", resolvedTheme);
+        }
+        document.dispatchEvent(
+          new CustomEvent("jats:theme", { detail: { mode: themeMode, theme: resolvedTheme } })
+        );
+      }
+
+      document.querySelectorAll("[data-theme-mode]").forEach((button) => {
+        button.addEventListener("click", () => applyTheme(button.dataset.themeMode));
       });
 
-      const navToggle = document.querySelector(".nav-toggle");
-      const navScrim = document.querySelector(".nav-scrim");
-      const closeNav = () => {
-        document.body.classList.remove("nav-open");
-        navToggle?.setAttribute("aria-expanded", "false");
-      };
+      function navFocusableElements() {
+        return [
+          ...(navRail?.querySelectorAll(
+            'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+          ) || [])
+        ].filter((node) => !node.hidden);
+      }
+
+      function setMobileNav(open, restoreFocus = true) {
+        if (!navRail || !navToggle) return;
+        if (!mobileNavQuery.matches) {
+          body.classList.remove("nav-open");
+          navRail.inert = false;
+          navRail.removeAttribute("aria-hidden");
+          navToggle.setAttribute("aria-expanded", "false");
+          navToggle.setAttribute("aria-label", "Open navigation");
+          if (navScrim) navScrim.tabIndex = -1;
+          return;
+        }
+
+        if (open) {
+          lastNavFocus = document.activeElement;
+          body.classList.add("nav-open");
+          navRail.inert = false;
+          navRail.setAttribute("aria-hidden", "false");
+          navToggle.setAttribute("aria-expanded", "true");
+          navToggle.setAttribute("aria-label", "Close navigation");
+          if (navScrim) navScrim.tabIndex = 0;
+          requestAnimationFrame(() => {
+            const current = navRail.querySelector('[aria-current="page"]');
+            (current || navFocusableElements()[0])?.focus();
+          });
+          return;
+        }
+
+        if (navRail.contains(document.activeElement)) {
+          navToggle.focus();
+        }
+        body.classList.remove("nav-open");
+        navToggle.setAttribute("aria-expanded", "false");
+        navToggle.setAttribute("aria-label", "Open navigation");
+        navRail.setAttribute("aria-hidden", "true");
+        navRail.inert = true;
+        if (navScrim) navScrim.tabIndex = -1;
+        if (restoreFocus && lastNavFocus instanceof HTMLElement && document.contains(lastNavFocus)) {
+          lastNavFocus.focus();
+        }
+      }
+
       navToggle?.addEventListener("click", () => {
-        const open = document.body.classList.toggle("nav-open");
-        navToggle.setAttribute("aria-expanded", String(open));
+        setMobileNav(!body.classList.contains("nav-open"));
       });
-      navScrim?.addEventListener("click", closeNav);
-      addEventListener("keydown", (event) => event.key === "Escape" && closeNav());
+      navScrim?.addEventListener("click", () => setMobileNav(false));
+      navRail?.querySelectorAll("a").forEach((link) => {
+        link.addEventListener("click", () => {
+          if (mobileNavQuery.matches) setMobileNav(false, false);
+        });
+      });
+
+      let pointerInsideNav = false;
+      navRail?.addEventListener("pointerenter", () => {
+        pointerInsideNav = true;
+      });
+      navRail?.addEventListener("click", (event) => {
+        if (mobileNavQuery.matches || event.target.closest("a, button")) return;
+        navRail.classList.toggle("is-expanded");
+      });
+      navRail?.addEventListener("keydown", (event) => {
+        if (mobileNavQuery.matches || !["Enter", " "].includes(event.key)) return;
+        if (event.target !== navRail) return;
+        event.preventDefault();
+        navRail.classList.toggle("is-expanded");
+      });
+      navRail?.addEventListener("mouseleave", () => {
+        pointerInsideNav = false;
+        navRail.classList.remove("is-expanded");
+      });
+      navRail?.addEventListener("focusout", () => {
+        setTimeout(() => {
+          if (!pointerInsideNav && !navRail.contains(document.activeElement)) {
+            navRail.classList.remove("is-expanded");
+          }
+        }, 0);
+      });
+
+      addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && body.classList.contains("nav-open")) {
+          event.preventDefault();
+          setMobileNav(false);
+          return;
+        }
+        if (
+          event.key !== "Tab" ||
+          !mobileNavQuery.matches ||
+          !body.classList.contains("nav-open")
+        ) {
+          return;
+        }
+        const focusable = navFocusableElements();
+        if (!focusable.length) return;
+        const first = focusable[0];
+        const last = focusable.at(-1);
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      });
+
+      const syncNavMode = () => setMobileNav(false, false);
+      mobileNavQuery.addEventListener?.("change", syncNavMode);
+
       applyLanguage(language);
+      applyTheme(themeMode);
+      syncNavMode();
+      setInterval(() => {
+        if (themeMode === "auto") applyTheme("auto", false);
+      }, 60000);
       delete root.dataset.languagePending;
     </script>
     <slot name="scripts" />

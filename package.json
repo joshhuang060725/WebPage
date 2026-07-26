@@ -4,7 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "astro dev --host 127.0.0.1",
+    "dev": "npm run dev:pages",
+    "dev:astro": "astro dev --host 127.0.0.1",
+    "dev:pages": "npm run build && wrangler pages dev dist --compatibility-date=2026-07-26 --ip 127.0.0.1 --port 8788 --live-reload",
     "build": "astro build && node scripts/validate-build.mjs",
     "preview": "astro preview --host 127.0.0.1",
     "check": "astro check",
@@ -23,6 +25,7 @@
     "@playwright/test": "^1.54.1",
     "@types/node": "^26.1.1",
     "lighthouse": "^12.8.2",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.4",
+    "wrangler": "^4.114.0"
   }
 }
