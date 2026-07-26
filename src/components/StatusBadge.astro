@@ -1,0 +1,12 @@
+---
+import Localized from "./Localized.astro";
+import { maturity, normalizeMaturity } from "@lib/content";
+
+const { status = "concept" } = Astro.props;
+const normalized = normalizeMaturity(status);
+---
+
+<span class:list={["status-badge", `is-${normalized}`]}>
+  <span class="status-dot" aria-hidden="true"></span>
+  <Localized value={maturity[normalized]} />
+</span>

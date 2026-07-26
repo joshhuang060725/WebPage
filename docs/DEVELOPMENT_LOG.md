@@ -1,5 +1,78 @@
 # Development Log
 
+## 2026-07-27 - Version 1.0 Shell Restoration and Finance History
+
+### Decisions
+
+- Confirmed the checked-in version 1.0 interface—not the written “right-side navigation” assumption—as the visual baseline.
+- Restored the left compact/expanded navigation model, JOSH / Personal Portal identity, yellow/cyan terminal treatment, and AUTO / DAY / NIGHT preferences while retaining the accessible mobile drawer.
+- Kept Finance read-only and source-attributed; a chart must show its provider, covered dates, loading state, and explicit failure state.
+
+### Implemented
+
+- Added a reusable inline SVG icon set for portal navigation and Finance controls.
+- Added a bounded historical FX endpoint for `7D`, `1M`, `3M`, and `1Y`, plus an interactive native SVG chart and regional cross-rate matrix.
+- Added a Wrangler local-development path so the static Astro build and Cloudflare Pages Functions run together.
+
+## 2026-07-26 - Regional Finance Terminal
+
+### Decisions
+
+- Replaced the FX-only Finance surface with a source-first regional macro terminal for the United States, Hong Kong, Mainland China, Taiwan, and Singapore.
+- Kept `/finance.html`, Astro static output, Cloudflare Pages Functions, three-language parity, and the public read-only boundary. The initial right-side navigation change was later identified as inconsistent with the version 1.0 baseline and corrected.
+- Made Sources & Methodology the final Finance view and the canonical registry for every metric and upstream link.
+- Separated official APIs, reviewed official snapshots, institutional reference feeds, and consent-gated external widgets.
+- Kept Chinese official-data gaps visible rather than presenting unverified current values.
+
+### Implemented
+
+- Added eight hash-addressable Finance views with desktop tabs, a mobile selector, keyboard navigation, and source deep links.
+- Added 38 regional indicator definitions, 18 sources, content-schema validation, and explicit cadence and availability metadata.
+- Added read-only overview, region, and FX Functions with allowlists, timeouts, shared response envelopes, safe errors, and edge-cache headers.
+- Added reviewed official adapters for U.S. Treasury and BLS, HKMA, TWSE, and Singapore SingStat; Mainland China remains an explicit source-linked snapshot surface.
+- Added a daily FX converter, local last-success fallback, and user-entered fee/quote cost comparison.
+- Wired the browser converter, cost calculation, freshness, and versioned cache to the tested shared Finance logic.
+- Added explicit TradingView consent, eight-second failure fallback, revocation, and browser-local preference storage.
+- Added Finance unit and Playwright coverage, including 360 px layout and full upstream-failure states.
+
+### Verification
+
+- Astro check: zero diagnostics.
+- Vitest: 24 tests passed.
+- Playwright: 7 tests passed.
+- Production build and content/link validation passed.
+- Lighthouse production preview: mobile 97/100/100/100 and desktop 100/100/100/100 for Performance, Accessibility, Best Practices, and SEO.
+
+## 2026-07-26 - Astro Professionalization Baseline
+
+### Context
+
+JATSWeb had grown from a static portal into a collection of public tools and standalone experiments. Shared content and Cloudflare Functions were stable, but page structure, maturity labels, multilingual maintenance, routes, and automated QA needed one consistent baseline.
+
+### Decisions
+
+- Use Astro static output while preserving Cloudflare Pages Functions and the public read-only boundary.
+- Preserve the existing navigation destinations and JATS industrial terminal identity. The original side-position assumption was corrected against the checked-in version 1.0 implementation on 2026-07-27.
+- Maintain complete `en`, `zh-TW`, and `zh-CN` UI copy.
+- Use `ready`, `beta`, and `concept` as the public maturity vocabulary.
+- Keep standalone microsites compatible and outside the shared portal shell.
+
+### Implemented
+
+- Added shared Astro layout, localized UI primitives, responsive navigation, theme persistence, metadata, and design tokens.
+- Added static project and formula detail routes with compatibility redirects.
+- Completed the browser-only Compute Lab and consolidated Exchange into Finance.
+- Added an honest UX Lab concept record and standardized tool maturity descriptions.
+- Added content validation, build link checks, Vitest utilities, and Playwright critical-path coverage.
+
+### Verification
+
+- `npm run validate:data`
+- `npm run check`
+- `npm test`
+- `npm run build`
+- `npm run test:e2e`
+
 ## 2026-05-02 - Asset and Data Decoupling Path
 
 ### Context

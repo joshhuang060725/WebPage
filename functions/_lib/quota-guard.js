@@ -82,25 +82,30 @@ export function quotaJson(body, status = 200) {
     headers: {
       "Content-Type": "application/json; charset=utf-8",
       "Cache-Control": "no-store",
-      "X-Content-Type-Options": "nosniff"
+      "X-Content-Type-Options": "nosniff",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, HEAD, OPTIONS",
+      "Access-Control-Allow-Headers": "Accept"
     }
   });
 }
 
 export function quotaFailure(result) {
+  const exhausted = result.code === "quota_exceeded";
   return quotaJson(
     {
+      ok: false,
+      data: null,
       error: {
-        code: result.code,
-        message: result.message
+        code: exhausted ? "public_api_quota_exhausted" : "public_api_unavailable",
+        message: exhausted
+          ? "The public API quota is temporarily exhausted."
+          : "The public API is temporarily unavailable."
       },
-      quota: {
-        key: result.key,
-        current: result.current,
-        requested: result.requested,
-        limit: result.limit,
-        reset: result.reset,
-        label: result.label
+      meta: {
+        schemaVersion: "1.0",
+        sourceMode: "unavailable",
+        generatedAt: new Date().toISOString()
       }
     },
     result.status || 429

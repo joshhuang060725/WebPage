@@ -1,0 +1,31 @@
+{
+  "name": "jatsweb",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "npm run dev:pages",
+    "dev:astro": "astro dev --host 127.0.0.1",
+    "dev:pages": "npm run build && wrangler pages dev dist --compatibility-date=2026-07-26 --ip 127.0.0.1 --port 8788 --live-reload",
+    "build": "astro build && node scripts/validate-build.mjs",
+    "preview": "astro preview --host 127.0.0.1",
+    "check": "astro check",
+    "validate:data": "node scripts/validate-content.mjs",
+    "test": "vitest run",
+    "test:e2e": "node scripts/run-e2e.mjs"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.4",
+    "astro": "^5.12.8",
+    "mathjs": "^14.6.0",
+    "typescript": "^5.8.3",
+    "vite-plugin-static-copy": "^3.1.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.54.1",
+    "@types/node": "^26.1.1",
+    "lighthouse": "^12.8.2",
+    "vitest": "^3.2.4",
+    "wrangler": "^4.114.0"
+  }
+}

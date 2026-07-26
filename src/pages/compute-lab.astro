@@ -1,0 +1,253 @@
+---
+import PortalLayout from "@layouts/PortalLayout.astro";
+import PageHeader from "@components/PageHeader.astro";
+import Localized from "@components/Localized.astro";
+import StatusBadge from "@components/StatusBadge.astro";
+
+const title = { en: "Compute Lab", "zh-TW": "計算實驗室", "zh-CN": "计算实验室" };
+const description = {
+  en: "A browser-only workspace for expressions, matrix operations, and quick data visualization.",
+  "zh-TW": "完全在瀏覽器執行的表達式、矩陣運算與快速資料視覺化工作區。",
+  "zh-CN": "完全在浏览器运行的表达式、矩阵运算与快速数据可视化工作区。"
+};
+---
+
+<PortalLayout title={title} description={description} active="tools">
+  <PageHeader
+    eyebrow={{ en: "UTILITY / LOCAL COMPUTE", "zh-TW": "工具／本機運算", "zh-CN": "工具／本地运算" }}
+    title={title}
+    description={description}
+  />
+  <div class="meta-row">
+    <StatusBadge status="beta" />
+    <span class="tag">math.js</span>
+    <span class="tag"><Localized value={{ en: "No upload", "zh-TW": "不上傳", "zh-CN": "不上传" }} /></span>
+  </div>
+
+  <section class="section lab-tabs" aria-label="Compute modes">
+    <div class="tab-list" role="tablist">
+      <button role="tab" aria-selected="true" aria-controls="expression-panel" id="expression-tab" data-tab="expression">
+        <Localized value={{ en: "Expression", "zh-TW": "表達式", "zh-CN": "表达式" }} />
+      </button>
+      <button role="tab" aria-selected="false" aria-controls="matrix-panel" id="matrix-tab" data-tab="matrix">
+        <Localized value={{ en: "Matrix", "zh-TW": "矩陣", "zh-CN": "矩阵" }} />
+      </button>
+      <button role="tab" aria-selected="false" aria-controls="chart-panel" id="chart-tab" data-tab="chart">
+        <Localized value={{ en: "Quick chart", "zh-TW": "快速圖表", "zh-CN": "快速图表" }} />
+      </button>
+    </div>
+
+    <article class="panel lab-panel" id="expression-panel" role="tabpanel" aria-labelledby="expression-tab">
+      <div class="field">
+        <label for="expression-input"><Localized value={{ en: "Expression", "zh-TW": "運算表達式", "zh-CN": "运算表达式" }} /></label>
+        <textarea id="expression-input" spellcheck="false">sqrt(144) + sin(pi / 4)</textarea>
+      </div>
+      <div class="example-row" aria-label="Expression examples">
+        <button type="button" data-expression="2 * (3 + 4)^2">2 × (3 + 4)²</button>
+        <button type="button" data-expression="sqrt(144) + sin(pi / 4)">sqrt + sin</button>
+        <button type="button" data-expression="derivative('x^3 + 2x', 'x')">derivative</button>
+        <button type="button" data-expression="unit('5 cm').to('inch')">unit conversion</button>
+      </div>
+      <div class="button-row">
+        <button class="button primary" id="evaluate-expression" type="button"><Localized value={{ en: "Evaluate", "zh-TW": "計算", "zh-CN": "计算" }} /></button>
+        <button class="button" id="copy-expression-result" type="button"><Localized value={{ en: "Copy result", "zh-TW": "複製結果", "zh-CN": "复制结果" }} /></button>
+        <button class="button" id="clear-history" type="button"><Localized value={{ en: "Clear history", "zh-TW": "清除紀錄", "zh-CN": "清除记录" }} /></button>
+      </div>
+      <output class="compute-output" id="expression-result" aria-live="polite">—</output>
+      <div class="history-block">
+        <h3><Localized value={{ en: "Local history", "zh-TW": "本機紀錄", "zh-CN": "本地记录" }} /></h3>
+        <ol id="expression-history"></ol>
+      </div>
+    </article>
+
+    <article class="panel lab-panel" id="matrix-panel" role="tabpanel" aria-labelledby="matrix-tab" hidden>
+      <div class="grid two">
+        <div class="field">
+          <label for="matrix-a">Matrix A</label>
+          <textarea id="matrix-a" spellcheck="false">[[1, 2], [3, 4]]</textarea>
+        </div>
+        <div class="field">
+          <label for="matrix-b">Matrix B</label>
+          <textarea id="matrix-b" spellcheck="false">[[5, 6], [7, 8]]</textarea>
+        </div>
+      </div>
+      <div class="button-row matrix-actions">
+        <button class="button primary" type="button" data-matrix-op="add">A + B</button>
+        <button class="button" type="button" data-matrix-op="multiply">A × B</button>
+        <button class="button" type="button" data-matrix-op="det">det(A)</button>
+        <button class="button" type="button" data-matrix-op="inverse">inv(A)</button>
+        <button class="button" type="button" data-matrix-op="transpose">Aᵀ</button>
+      </div>
+      <output class="compute-output matrix-output" id="matrix-result" aria-live="polite">—</output>
+      <p class="muted"><Localized value={{ en: "Use JSON-style arrays. Matrix dimensions must be compatible with the selected operation.", "zh-TW": "請使用 JSON 陣列格式；矩陣維度必須符合所選運算。", "zh-CN": "请使用 JSON 数组格式；矩阵维度必须符合所选运算。" }} /></p>
+    </article>
+
+    <article class="panel lab-panel" id="chart-panel" role="tabpanel" aria-labelledby="chart-tab" hidden>
+      <div class="field">
+        <label for="chart-data"><Localized value={{ en: "Comma-separated x,y values", "zh-TW": "以逗號分隔的 x,y 數值", "zh-CN": "以逗号分隔的 x,y 数值" }} /></label>
+        <textarea id="chart-data" spellcheck="false">1,4
+2,7
+3,6
+4,10
+5,14</textarea>
+      </div>
+      <div class="button-row">
+        <button class="button primary" id="draw-chart" type="button"><Localized value={{ en: "Draw chart", "zh-TW": "繪製圖表", "zh-CN": "绘制图表" }} /></button>
+        <button class="button" id="download-chart" type="button"><Localized value={{ en: "Download PNG", "zh-TW": "下載 PNG", "zh-CN": "下载 PNG" }} /></button>
+      </div>
+      <div class="chart-wrap"><canvas id="quick-chart" width="960" height="420" aria-label="Quick line chart"></canvas></div>
+      <p id="chart-status" class="muted" aria-live="polite"></p>
+    </article>
+  </section>
+
+  <section class="section notice">
+    <Localized value={{ en: "All calculations run in this browser. Results should be independently verified before use in safety-critical, financial, or academic work.", "zh-TW": "所有計算均在此瀏覽器執行。用於安全關鍵、財務或學術工作前，請另行驗證結果。", "zh-CN": "所有计算均在此浏览器运行。用于安全关键、财务或学术工作前，请另行验证结果。" }} />
+  </section>
+
+  <script>
+    // @ts-nocheck
+    import { evaluateExpression, parseChartRows, runMatrixOperation } from "../lib/compute";
+
+    const $ = (selector) => document.querySelector(selector);
+    const tabs = [...document.querySelectorAll("[data-tab]")];
+    const panels = [...document.querySelectorAll(".lab-panel")];
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        tabs.forEach((item) => item.setAttribute("aria-selected", String(item === tab)));
+        panels.forEach((panel) => (panel.hidden = panel.id !== `${tab.dataset.tab}-panel`));
+      });
+    });
+
+    const expressionInput = $("#expression-input");
+    const expressionResult = $("#expression-result");
+    const historyList = $("#expression-history");
+    let history = JSON.parse(localStorage.getItem("jats:compute-history") || "[]");
+    const renderHistory = () => {
+      historyList.innerHTML = "";
+      history.slice(0, 8).forEach((item) => {
+        const entry = document.createElement("li");
+        const code = document.createElement("code");
+        code.textContent = `${item.expression} = ${item.result}`;
+        entry.append(code);
+        historyList.append(entry);
+      });
+    };
+    const setOutput = (node, value, isError = false) => {
+      node.textContent = value;
+      node.classList.toggle("is-error", isError);
+    };
+    $("#evaluate-expression").addEventListener("click", () => {
+      try {
+        const result = evaluateExpression(expressionInput.value);
+        setOutput(expressionResult, result);
+        history = [{ expression: expressionInput.value, result }, ...history.filter((item) => item.expression !== expressionInput.value)].slice(0, 8);
+        localStorage.setItem("jats:compute-history", JSON.stringify(history));
+        renderHistory();
+      } catch (error) {
+        setOutput(expressionResult, `Error: ${error.message}`, true);
+      }
+    });
+    document.querySelectorAll("[data-expression]").forEach((button) => {
+      button.addEventListener("click", () => {
+        expressionInput.value = button.dataset.expression;
+        expressionInput.focus();
+      });
+    });
+    $("#copy-expression-result").addEventListener("click", async () => {
+      if (expressionResult.textContent !== "—") await navigator.clipboard.writeText(expressionResult.textContent);
+    });
+    $("#clear-history").addEventListener("click", () => {
+      history = [];
+      localStorage.removeItem("jats:compute-history");
+      renderHistory();
+    });
+    renderHistory();
+
+    document.querySelectorAll("[data-matrix-op]").forEach((button) => {
+      button.addEventListener("click", () => {
+        try {
+          setOutput(
+            $("#matrix-result"),
+            runMatrixOperation(button.dataset.matrixOp, $("#matrix-a").value, $("#matrix-b").value)
+          );
+        } catch (error) {
+          setOutput($("#matrix-result"), `Error: ${error.message}`, true);
+        }
+      });
+    });
+
+    const canvas = $("#quick-chart");
+    const chartStatus = $("#chart-status");
+    const drawChart = () => {
+      try {
+        const rows = parseChartRows($("#chart-data").value);
+        const ctx = canvas.getContext("2d");
+        const width = canvas.width;
+        const height = canvas.height;
+        const pad = 54;
+        const xs = rows.map(([x]) => x);
+        const ys = rows.map(([, y]) => y);
+        const minX = Math.min(...xs);
+        const maxX = Math.max(...xs);
+        const minY = Math.min(...ys);
+        const maxY = Math.max(...ys);
+        if (minX === maxX || minY === maxY) throw new Error("X and Y ranges must contain variation.");
+        const px = (x) => pad + ((x - minX) / (maxX - minX)) * (width - pad * 2);
+        const py = (y) => height - pad - ((y - minY) / (maxY - minY)) * (height - pad * 2);
+        const styles = getComputedStyle(document.documentElement);
+        ctx.clearRect(0, 0, width, height);
+        ctx.fillStyle = styles.getPropertyValue("--surface-strong");
+        ctx.fillRect(0, 0, width, height);
+        ctx.strokeStyle = styles.getPropertyValue("--line-strong");
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(pad, pad);
+        ctx.lineTo(pad, height - pad);
+        ctx.lineTo(width - pad, height - pad);
+        ctx.stroke();
+        ctx.strokeStyle = styles.getPropertyValue("--cyan");
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        rows.forEach(([x, y], index) => index ? ctx.lineTo(px(x), py(y)) : ctx.moveTo(px(x), py(y)));
+        ctx.stroke();
+        ctx.fillStyle = styles.getPropertyValue("--yellow");
+        rows.forEach(([x, y]) => {
+          ctx.beginPath();
+          ctx.arc(px(x), py(y), 6, 0, Math.PI * 2);
+          ctx.fill();
+        });
+        ctx.fillStyle = styles.getPropertyValue("--muted");
+        ctx.font = "18px ui-monospace";
+        ctx.fillText(`x: ${minX} → ${maxX}`, pad, height - 16);
+        ctx.fillText(`y: ${minY} → ${maxY}`, width - 240, 28);
+        chartStatus.textContent = `${rows.length} points rendered locally.`;
+      } catch (error) {
+        chartStatus.textContent = `Error: ${error.message}`;
+      }
+    };
+    $("#draw-chart").addEventListener("click", drawChart);
+    $("#download-chart").addEventListener("click", () => {
+      const link = document.createElement("a");
+      link.download = "jats-compute-chart.png";
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    });
+    drawChart();
+  </script>
+</PortalLayout>
+
+<style>
+  .lab-tabs { margin-top: 1.5rem; }
+  .tab-list { display: flex; gap: .5rem; margin-bottom: .75rem; overflow-x: auto; }
+  .tab-list button { min-width: 140px; padding: .7rem 1rem; }
+  .tab-list button[aria-selected="true"] { border-color: var(--yellow); color: var(--yellow); }
+  .lab-panel { min-height: 430px; }
+  .example-row { display: flex; gap: .5rem; flex-wrap: wrap; margin: .75rem 0; }
+  .example-row button { padding: .4rem .65rem; color: var(--muted); }
+  .compute-output { min-height: 90px; margin: 1rem 0; padding: 1rem; display: block; overflow-x: auto; border: 1px solid var(--line); background: var(--bg); color: var(--yellow); white-space: pre-wrap; font: 700 1rem/1.6 ui-monospace, monospace; }
+  .compute-output.is-error { color: var(--orange); }
+  .history-block ol { padding-left: 1.4rem; color: var(--muted); }
+  .history-block code { white-space: pre-wrap; }
+  .chart-wrap { margin-top: 1rem; overflow: hidden; border: 1px solid var(--line); border-radius: 8px; }
+  canvas { display: block; width: 100%; height: auto; }
+</style>

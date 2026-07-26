@@ -2,6 +2,13 @@
 Thumbs.db
 node_modules/
 dist/
+.astro/
+.wrangler/
+coverage/
+playwright-report/
+test-results/
+server.log
+server.err.log
 .env
 .env.*
 YoutubeKey.txt

@@ -1,0 +1,85 @@
+---
+import PortalLayout from "@layouts/PortalLayout.astro";
+import PageHeader from "@components/PageHeader.astro";
+import Localized from "@components/Localized.astro";
+import StatusBadge from "@components/StatusBadge.astro";
+
+const title = { en: "UX Lab", "zh-TW": "UX 實驗室", "zh-CN": "UX 实验室" };
+const description = {
+  en: "A concept record for the design principles, tokens, interaction rules, and experiments behind JATSWeb.",
+  "zh-TW": "記錄 JATSWeb 設計原則、令牌、互動規則與實驗方向的概念頁。",
+  "zh-CN": "记录 JATSWeb 设计原则、令牌、交互规则与实验方向的概念页。"
+};
+const principles = [
+  {
+    code: "01",
+    title: { en: "State before decoration", "zh-TW": "狀態先於裝飾", "zh-CN": "状态先于装饰" },
+    body: { en: "Loading, empty, failure, offline, and maturity states must remain understandable without animation or color alone.", "zh-TW": "載入、空白、失敗、離線與成熟度狀態，不依賴動畫或單一顏色也必須可理解。", "zh-CN": "加载、空白、失败、离线与成熟度状态，不依赖动画或单一颜色也必须可理解。" }
+  },
+  {
+    code: "02",
+    title: { en: "Industrial, not hostile", "zh-TW": "工業感而不冰冷", "zh-CN": "工业感而不冰冷" },
+    body: { en: "Dense terminal cues are balanced by readable type, generous spacing, visible focus, and calm motion.", "zh-TW": "密集的終端線索透過可讀字體、充足間距、清楚焦點與克制動效取得平衡。", "zh-CN": "密集的终端线索通过可读字体、充足间距、清楚焦点与克制动效取得平衡。" }
+  },
+  {
+    code: "03",
+    title: { en: "Public by omission", "zh-TW": "以不公開建立邊界", "zh-CN": "以不公开建立边界" },
+    body: { en: "Private routes, credentials, write controls, and local services never appear in public markup or datasets.", "zh-TW": "私人路由、憑證、寫入控制與本機服務不進入公開標記或資料集。", "zh-CN": "私人路由、凭证、写入控制与本地服务不进入公开标记或数据集。" }
+  }
+];
+---
+
+<PortalLayout title={title} description={description} active="tools">
+  <PageHeader eyebrow={{ en: "DESIGN SYSTEM / CONCEPT", "zh-TW": "設計系統／概念", "zh-CN": "设计系统／概念" }} title={title} description={description} />
+  <div class="meta-row"><StatusBadge status="concept" /><span class="tag">JATS Design Language</span></div>
+  <section class="section grid three">
+    {principles.map((item) => (
+      <article class="card principle">
+        <span>{item.code}</span>
+        <h2><Localized value={item.title} /></h2>
+        <Localized value={item.body} tag="p" />
+      </article>
+    ))}
+  </section>
+
+  <section class="section">
+    <div class="section-heading"><div><p class="eyebrow">TOKEN FIELD</p><h2><Localized value={{ en: "System palette", "zh-TW": "系統色彩", "zh-CN": "系统色彩" }} /></h2></div></div>
+    <div class="token-grid">
+      <div style="--token:#FFD900"><span></span><strong>Signal Yellow</strong><code>#FFD900</code></div>
+      <div style="--token:#2AAACE"><span></span><strong>Data Cyan</strong><code>#2AAACE</code></div>
+      <div style="--token:#E5622B"><span></span><strong>Warning Orange</strong><code>#E5622B</code></div>
+      <div style="--token:#74C69D"><span></span><strong>Ready Green</strong><code>#74C69D</code></div>
+    </div>
+  </section>
+
+  <section class="section grid two">
+    <article class="panel">
+      <p class="eyebrow">INTERACTION RULES</p>
+      <h2><Localized value={{ en: "Baseline behavior", "zh-TW": "基礎互動規則", "zh-CN": "基础交互规则" }} /></h2>
+      <ul>
+        <li><Localized value={{ en: "Every action has a visible keyboard focus state.", "zh-TW": "所有操作都有可見的鍵盤焦點。", "zh-CN": "所有操作都有可见的键盘焦点。" }} /></li>
+        <li><Localized value={{ en: "Reduced-motion preferences disable nonessential transitions.", "zh-TW": "減少動態偏好會停用非必要轉場。", "zh-CN": "减少动态偏好会停用非必要转场。" }} /></li>
+        <li><Localized value={{ en: "Mobile navigation provides the same destinations as the desktop rail.", "zh-TW": "行動導航提供與桌面右側欄完全相同的目的地。", "zh-CN": "移动导航提供与桌面右侧栏完全相同的目的地。" }} /></li>
+      </ul>
+    </article>
+    <article class="panel">
+      <p class="eyebrow">NEXT EXPERIMENTS</p>
+      <h2><Localized value={{ en: "Documented, not promised", "zh-TW": "記錄方向，不假裝完成", "zh-CN": "记录方向，不假装完成" }} /></h2>
+      <ul>
+        <li><Localized value={{ en: "Component contrast and density audits.", "zh-TW": "元件對比度與密度審計。", "zh-CN": "组件对比度与密度审计。" }} /></li>
+        <li><Localized value={{ en: "Shared motion timing and transition vocabulary.", "zh-TW": "共用動效時間與轉場詞彙。", "zh-CN": "共用动效时间与转场词汇。" }} /></li>
+        <li><Localized value={{ en: "Visual regression coverage for day and night themes.", "zh-TW": "日夜主題的視覺回歸覆蓋。", "zh-CN": "日夜主题的视觉回归覆盖。" }} /></li>
+      </ul>
+    </article>
+  </section>
+</PortalLayout>
+
+<style>
+  .principle > span { color: var(--cyan); font: 900 1.4rem ui-monospace, monospace; }
+  .token-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+  .token-grid > div { padding: 1rem; display: grid; gap: .5rem; border: 1px solid var(--line); background: var(--surface); }
+  .token-grid span { height: 80px; background: var(--token); }
+  .token-grid code { color: var(--muted); }
+  li { margin-bottom: .65rem; color: var(--muted); }
+  @media (max-width: 760px) { .token-grid { grid-template-columns: repeat(2, 1fr); } }
+</style>

@@ -1,0 +1,49 @@
+---
+import PortalLayout from "@layouts/PortalLayout.astro";
+import PageHeader from "@components/PageHeader.astro";
+import Localized from "@components/Localized.astro";
+import StatusBadge from "@components/StatusBadge.astro";
+import { readData } from "@lib/content";
+
+const tools = readData<any[]>("tools.json");
+const title = { en: "Tool Directory", "zh-TW": "工具目錄", "zh-CN": "工具目录" };
+const description = {
+  en: "Browser tools and standalone experiments with explicit maturity and data boundaries.",
+  "zh-TW": "清楚標示成熟度與資料邊界的瀏覽器工具及獨立實驗。",
+  "zh-CN": "清楚标示成熟度与数据边界的浏览器工具及独立实验。"
+};
+---
+
+<PortalLayout title={title} description={description} active="tools">
+  <PageHeader eyebrow={{ en: "UTILITY / EXPERIMENTS", "zh-TW": "工具／實驗", "zh-CN": "工具／实验" }} title={title} description={description} />
+  <div class="notice">
+    <Localized value={{ en: "Ready tools are usable now. Beta tools are functional but may have source or browser limits. Concept pages document direction without pretending to be complete.", "zh-TW": "Ready 可直接使用；Beta 已具功能但仍有資料源或瀏覽器限制；Concept 僅誠實記錄方向。", "zh-CN": "Ready 可直接使用；Beta 已具功能但仍有数据源或浏览器限制；Concept 仅诚实记录方向。" }} />
+  </div>
+  <section class="section grid two">
+    {
+      tools.map((tool) => (
+        <article class="card tool-card" id={tool.id}>
+          <div class="meta-row">
+            <span class="tool-code">{tool.id.toUpperCase()}</span>
+            <StatusBadge status={tool.status} />
+          </div>
+          <h2>{tool.name}</h2>
+          <Localized value={tool.description} tag="p" />
+          <a href={tool.url}><Localized value={{ en: "Open surface", "zh-TW": "開啟介面", "zh-CN": "打开界面" }} /> →</a>
+        </article>
+      ))
+    }
+  </section>
+  <section class="section panel">
+    <p class="eyebrow">DATA BOUNDARY</p>
+    <h2><Localized value={{ en: "Local state, public sources", "zh-TW": "本機狀態、公開資料", "zh-CN": "本地状态、公开数据" }} /></h2>
+    <Localized value={{ en: "These tools do not create accounts or upload private work. Preferences and drafts stay in browser storage; network features use documented public endpoints or controlled read-only Functions.", "zh-TW": "這些工具不建立帳號，也不會上傳私人內容。偏好與草稿保存在瀏覽器；網路功能僅使用已說明的公開端點或受控唯讀 Functions。", "zh-CN": "这些工具不创建账号，也不会上传私人内容。偏好与草稿保存在浏览器；网络功能仅使用已说明的公开端点或受控只读 Functions。" }} tag="p" />
+  </section>
+</PortalLayout>
+
+<style>
+  .tool-card { min-height: 240px; display: flex; flex-direction: column; }
+  .tool-card .meta-row { justify-content: space-between; }
+  .tool-code { color: var(--cyan); font: 800 .7rem ui-monospace, monospace; }
+  .tool-card a { margin-top: auto; color: var(--yellow); font-weight: 800; text-decoration: none; }
+</style>

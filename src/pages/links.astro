@@ -1,0 +1,74 @@
+---
+import PortalLayout from "@layouts/PortalLayout.astro";
+import PageHeader from "@components/PageHeader.astro";
+import Localized from "@components/Localized.astro";
+import { readData } from "@lib/content";
+
+const links = readData<any[]>("shortcuts.json").filter((item) => item.category !== "locked" && item.url !== "#");
+const title = { en: "Quick Links", "zh-TW": "快速連結", "zh-CN": "快速链接" };
+const description = {
+  en: "A curated, public-safe directory of development, communication, and reference links.",
+  "zh-TW": "經整理且適合公開的開發、聯絡與參考連結目錄。",
+  "zh-CN": "经整理且适合公开的开发、联系与参考链接目录。"
+};
+const classify = (item: any) => {
+  if (item.url.startsWith("mailto:")) return "contact";
+  if (/github|cloudflare|git-scm/.test(item.url)) return "development";
+  if (/youtube|google/.test(item.url)) return "reference";
+  return "personal";
+};
+const categoryCopy: Record<string, any> = {
+  contact: { en: "Contact", "zh-TW": "聯絡", "zh-CN": "联系" },
+  development: { en: "Development", "zh-TW": "開發", "zh-CN": "开发" },
+  reference: { en: "Reference", "zh-TW": "參考", "zh-CN": "参考" },
+  personal: { en: "Personal", "zh-TW": "個人", "zh-CN": "个人" }
+};
+---
+
+<PortalLayout title={title} description={description} active="links">
+  <PageHeader eyebrow={{ en: "DIRECTORY / PUBLIC LINKS", "zh-TW": "目錄／公開連結", "zh-CN": "目录／公开链接" }} title={title} description={description} />
+  <div class="search-field">
+    <label class="visually-hidden" for="link-search">Search links</label>
+    <input id="link-search" type="search" placeholder="Search public links…" autocomplete="off" />
+  </div>
+  <section class="section grid two" id="link-grid">
+    {
+      links.map((item) => {
+        const category = classify(item);
+        return (
+          <article class="card link-card" data-search={`${item.name} ${category} ${item.description.en} ${item.description["zh-TW"]}`}>
+            <div class="meta-row"><Localized value={categoryCopy[category]} class="eyebrow" /><span class="external-mark">↗</span></div>
+            <h2>{item.name}</h2>
+            <Localized value={item.description} tag="p" />
+            <a class="stretched-link" href={item.url} target={item.url.startsWith("http") ? "_blank" : undefined} rel="noreferrer">
+              <Localized value={{ en: "Open link", "zh-TW": "開啟連結", "zh-CN": "打开链接" }} /> →
+            </a>
+          </article>
+        );
+      })
+    }
+  </section>
+  <p id="link-empty" class="empty-state" hidden><Localized value={{ en: "No matching public link.", "zh-TW": "找不到符合的公開連結。", "zh-CN": "找不到匹配的公开链接。" }} /></p>
+  <script is:inline slot="scripts">
+    const input = document.querySelector("#link-search");
+    const cards = [...document.querySelectorAll(".link-card")];
+    const empty = document.querySelector("#link-empty");
+    input?.addEventListener("input", () => {
+      const q = input.value.trim().toLowerCase();
+      let count = 0;
+      cards.forEach((card) => {
+        const show = !q || card.dataset.search.toLowerCase().includes(q);
+        card.hidden = !show;
+        count += Number(show);
+      });
+      empty.hidden = count > 0;
+    });
+  </script>
+</PortalLayout>
+
+<style>
+  .external-mark { color: var(--yellow); }
+  .link-card .meta-row { justify-content: space-between; }
+  .link-card .eyebrow { margin: 0; }
+  .stretched-link { color: var(--yellow); font-weight: 800; text-decoration: none; }
+</style>

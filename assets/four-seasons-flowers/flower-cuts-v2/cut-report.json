@@ -1,0 +1,458 @@
+[
+  {
+    "file": "tulip-seedling.webp",
+    "size": [
+      362,
+      362
+    ],
+    "bbox": [
+      139,
+      173,
+      273,
+      305
+    ],
+    "margins": {
+      "left": 139,
+      "top": 173,
+      "right": 89,
+      "bottom": 57
+    }
+  },
+  {
+    "file": "hydrangea-seedling.webp",
+    "size": [
+      362,
+      362
+    ],
+    "bbox": [
+      89,
+      140,
+      273,
+      305
+    ],
+    "margins": {
+      "left": 89,
+      "top": 140,
+      "right": 89,
+      "bottom": 57
+    }
+  },
+  {
+    "file": "chrysanthemum-seedling.webp",
+    "size": [
+      362,
+      362
+    ],
+    "bbox": [
+      91,
+      150,
+      269,
+      305
+    ],
+    "margins": {
+      "left": 91,
+      "top": 150,
+      "right": 93,
+      "bottom": 57
+    }
+  },
+  {
+    "file": "camellia-seedling.webp",
+    "size": [
+      362,
+      362
+    ],
+    "bbox": [
+      40,
+      152,
+      241,
+      305
+    ],
+    "margins": {
+      "left": 40,
+      "top": 152,
+      "right": 121,
+      "bottom": 57
+    }
+  },
+  {
+    "file": "tulip-growing.webp",
+    "size": [
+      362,
+      362
+    ],
+    "bbox": [
+      126,
+      30,
+      283,
+      362
+    ],
+    "margins": {
+      "left": 126,
+      "top": 30,
+      "right": 79,
+      "bottom": 0
+    }
+  },
+  {
+    "file": "hydrangea-growing.webp",
+    "size": [
+      362,
+      362
+    ],
+    "bbox": [
+      76,
+      36,
+      298,
+      362
+    ],
+    "margins": {
+      "left": 76,
+      "top": 36,
+      "right": 64,
+      "bottom": 0
+    }
+  },
+  {
+    "file": "chrysanthemum-growing.webp",
+    "size": [
+      362,
+      362
+    ],
+    "bbox": [
+      71,
+      30,
+      277,
+      362
+    ],
+    "margins": {
+      "left": 71,
+      "top": 30,
+      "right": 85,
+      "bottom": 0
+    }
+  },
+  {
+    "file": "camellia-growing.webp",
+    "size": [
+      362,
+      362
+    ],
+    "bbox": [
+      29,
+      33,
+      248,
+      362
+    ],
+    "margins": {
+      "left": 29,
+      "top": 33,
+      "right": 114,
+      "bottom": 0
+    }
+  },
+  {
+    "file": "tulip-bloom.webp",
+    "size": [
+      362,
+      362
+    ],
+    "bbox": [
+      103,
+      0,
+      310,
+      248
+    ],
+    "margins": {
+      "left": 103,
+      "top": 0,
+      "right": 52,
+      "bottom": 114
+    }
+  },
+  {
+    "file": "hydrangea-bloom.webp",
+    "size": [
+      362,
+      362
+    ],
+    "bbox": [
+      64,
+      0,
+      309,
+      241
+    ],
+    "margins": {
+      "left": 64,
+      "top": 0,
+      "right": 53,
+      "bottom": 121
+    }
+  },
+  {
+    "file": "chrysanthemum-bloom.webp",
+    "size": [
+      362,
+      362
+    ],
+    "bbox": [
+      48,
+      0,
+      271,
+      248
+    ],
+    "margins": {
+      "left": 48,
+      "top": 0,
+      "right": 91,
+      "bottom": 114
+    }
+  },
+  {
+    "file": "camellia-bloom.webp",
+    "size": [
+      362,
+      362
+    ],
+    "bbox": [
+      5,
+      0,
+      272,
+      244
+    ],
+    "margins": {
+      "left": 5,
+      "top": 0,
+      "right": 90,
+      "bottom": 118
+    }
+  },
+  {
+    "file": "sunflower-seedling.webp",
+    "size": [
+      362,
+      362
+    ],
+    "bbox": [
+      146,
+      174,
+      266,
+      266
+    ],
+    "margins": {
+      "left": 146,
+      "top": 174,
+      "right": 96,
+      "bottom": 96
+    }
+  },
+  {
+    "file": "lavender-seedling.webp",
+    "size": [
+      362,
+      362
+    ],
+    "bbox": [
+      123,
+      111,
+      238,
+      362
+    ],
+    "margins": {
+      "left": 123,
+      "top": 111,
+      "right": 124,
+      "bottom": 0
+    }
+  },
+  {
+    "file": "daisy-seedling.webp",
+    "size": [
+      362,
+      362
+    ],
+    "bbox": [
+      84,
+      150,
+      233,
+      266
+    ],
+    "margins": {
+      "left": 84,
+      "top": 150,
+      "right": 129,
+      "bottom": 96
+    }
+  },
+  {
+    "file": "lily-seedling.webp",
+    "size": [
+      362,
+      362
+    ],
+    "bbox": [
+      68,
+      119,
+      214,
+      362
+    ],
+    "margins": {
+      "left": 68,
+      "top": 119,
+      "right": 148,
+      "bottom": 0
+    }
+  },
+  {
+    "file": "sunflower-growing.webp",
+    "size": [
+      362,
+      362
+    ],
+    "bbox": [
+      88,
+      0,
+      310,
+      362
+    ],
+    "margins": {
+      "left": 88,
+      "top": 0,
+      "right": 52,
+      "bottom": 0
+    }
+  },
+  {
+    "file": "lavender-growing.webp",
+    "size": [
+      362,
+      362
+    ],
+    "bbox": [
+      89,
+      0,
+      266,
+      362
+    ],
+    "margins": {
+      "left": 89,
+      "top": 0,
+      "right": 96,
+      "bottom": 0
+    }
+  },
+  {
+    "file": "daisy-growing.webp",
+    "size": [
+      362,
+      362
+    ],
+    "bbox": [
+      59,
+      7,
+      257,
+      362
+    ],
+    "margins": {
+      "left": 59,
+      "top": 7,
+      "right": 105,
+      "bottom": 0
+    }
+  },
+  {
+    "file": "lily-growing.webp",
+    "size": [
+      362,
+      362
+    ],
+    "bbox": [
+      41,
+      0,
+      235,
+      362
+    ],
+    "margins": {
+      "left": 41,
+      "top": 0,
+      "right": 127,
+      "bottom": 0
+    }
+  },
+  {
+    "file": "sunflower-bloom.webp",
+    "size": [
+      362,
+      362
+    ],
+    "bbox": [
+      87,
+      0,
+      314,
+      259
+    ],
+    "margins": {
+      "left": 87,
+      "top": 0,
+      "right": 48,
+      "bottom": 103
+    }
+  },
+  {
+    "file": "lavender-bloom.webp",
+    "size": [
+      362,
+      362
+    ],
+    "bbox": [
+      74,
+      0,
+      277,
+      258
+    ],
+    "margins": {
+      "left": 74,
+      "top": 0,
+      "right": 85,
+      "bottom": 104
+    }
+  },
+  {
+    "file": "daisy-bloom.webp",
+    "size": [
+      362,
+      362
+    ],
+    "bbox": [
+      55,
+      0,
+      267,
+      258
+    ],
+    "margins": {
+      "left": 55,
+      "top": 0,
+      "right": 95,
+      "bottom": 104
+    }
+  },
+  {
+    "file": "lily-bloom.webp",
+    "size": [
+      362,
+      362
+    ],
+    "bbox": [
+      29,
+      0,
+      259,
+      257
+    ],
+    "margins": {
+      "left": 29,
+      "top": 0,
+      "right": 103,
+      "bottom": 105
+    }
+  }
+]

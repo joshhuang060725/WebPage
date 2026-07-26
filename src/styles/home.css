@@ -1,0 +1,343 @@
+.home-terminal {
+  display: grid;
+  grid-template-columns: minmax(300px, 0.78fr) minmax(0, 1.22fr);
+  gap: clamp(22px, 4vw, 64px);
+  min-height: calc(100svh - 88px);
+  padding: clamp(22px, 4vw, 54px);
+  border-color: rgba(214, 216, 217, 0.22);
+  background:
+    linear-gradient(90deg, rgba(255, 217, 0, 0.035) 1px, transparent 1px),
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    #020303;
+  background-size: 36px 36px, 36px 36px, auto;
+}
+
+.home-status-rail {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-content: start;
+  gap: 14px;
+  min-width: 0;
+}
+
+.home-status-card {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  min-height: 92px;
+  padding: 18px;
+  border: 1px solid rgba(214, 216, 217, 0.16);
+  border-radius: 8px;
+  color: inherit;
+  background:
+    linear-gradient(135deg, rgba(255, 217, 0, 0.055), transparent 44%),
+    rgba(255, 255, 255, 0.035);
+  text-decoration: none;
+  transition:
+    border-color 160ms ease,
+    background 160ms ease,
+    transform 160ms ease;
+}
+
+.home-time-card {
+  min-height: 122px;
+}
+
+.home-status-card:hover,
+.home-status-card:focus-visible {
+  border-color: color-mix(in srgb, var(--yellow) 48%, transparent);
+}
+
+a.home-status-card:hover,
+a.home-status-card:focus-visible {
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.home-card-label,
+.home-search label {
+  color: var(--yellow);
+  font: 950 0.72rem/1.3 ui-monospace, SFMono-Regular, Consolas, monospace;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.home-status-card strong {
+  color: var(--text);
+  overflow-wrap: anywhere;
+  font-size: clamp(1.08rem, 1.65vw, 1.78rem);
+  line-height: 1.05;
+}
+
+.home-status-card small {
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.home-time-card strong {
+  color: var(--cyan);
+  white-space: nowrap;
+  font: 950 clamp(2.45rem, 3.7vw, 3.45rem)/1 ui-monospace, SFMono-Regular, Consolas, monospace;
+  letter-spacing: 0.035em;
+}
+
+a.home-status-card:hover strong,
+a.home-status-card:focus-visible strong {
+  color: var(--yellow);
+}
+
+.home-jats-console {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 100%;
+  padding: clamp(28px, 4vw, 48px);
+  border: 1px solid rgba(214, 216, 217, 0.16);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(42, 170, 206, 0.08), transparent 40%),
+    rgba(255, 255, 255, 0.035);
+}
+
+.home-jats-lockup {
+  margin-bottom: clamp(28px, 4vw, 46px);
+}
+
+.home-jats-lockup h1 {
+  max-width: none;
+  margin: 0;
+  color: var(--text);
+  font-size: clamp(5.4rem, 11vw, 12rem);
+  font-weight: 950;
+  line-height: 0.78;
+  letter-spacing: -0.045em;
+  overflow-wrap: normal;
+}
+
+.home-jats-lockup p {
+  width: min(100%, 760px);
+  margin: 22px 0 0;
+  color: var(--text);
+  font-size: clamp(1rem, 1.75vw, 1.55rem);
+  font-weight: 850;
+  line-height: 1.25;
+}
+
+.home-owner-line {
+  margin: 0 0 14px;
+  color: var(--yellow);
+  font-size: clamp(1.9rem, 3.4vw, 3.55rem);
+  font-weight: 950;
+  line-height: 1;
+}
+
+.home-motto {
+  max-width: 720px;
+  margin: 0 0 18px;
+  color: var(--text);
+  font-size: clamp(1.3rem, 2.25vw, 2.45rem);
+  font-weight: 900;
+  line-height: 1.22;
+}
+
+.home-summary {
+  max-width: 700px;
+  margin: 0 0 28px;
+  color: var(--muted);
+  font-size: 0.94rem;
+  line-height: 1.72;
+}
+
+.home-search {
+  display: grid;
+  gap: 10px;
+  width: min(100%, 620px);
+  margin-bottom: 20px;
+}
+
+.home-search-control {
+  display: flex;
+  align-items: center;
+  min-height: 54px;
+  border: 2px solid rgba(214, 216, 217, 0.82);
+  background: rgba(255, 255, 255, 0.02);
+  transition:
+    border-color 150ms ease,
+    background 150ms ease;
+}
+
+.home-search-control:focus-within {
+  border-color: var(--yellow);
+  background: rgba(255, 217, 0, 0.035);
+}
+
+.home-search-control span {
+  flex: 0 0 auto;
+  padding: 0 14px;
+  color: var(--yellow);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-weight: 950;
+}
+
+.home-search-control input {
+  min-width: 0;
+  width: 100%;
+  padding: 0 16px 0 0;
+  border: 0;
+  color: var(--text);
+  background: transparent;
+  font-size: 0.94rem;
+  outline: none;
+}
+
+.home-search-control input::placeholder {
+  color: var(--dim);
+}
+
+.home-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.home-actions .button {
+  min-height: 44px;
+}
+
+.home-console-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: auto 0 0;
+  padding-top: 14px;
+  border-top: 1px solid rgba(214, 216, 217, 0.22);
+  color: var(--text);
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.home-console-footer strong {
+  color: var(--yellow);
+}
+
+:root[data-theme="light"] .home-terminal {
+  border-color: rgba(86, 126, 158, 0.2);
+  background:
+    linear-gradient(90deg, rgba(63, 125, 246, 0.055) 1px, transparent 1px),
+    linear-gradient(rgba(39, 87, 130, 0.035) 1px, transparent 1px),
+    rgba(247, 252, 255, 0.72);
+  background-size: 36px 36px, 36px 36px, auto;
+}
+
+:root[data-theme="light"] .home-status-card,
+:root[data-theme="light"] .home-jats-console {
+  border-color: rgba(86, 126, 158, 0.18);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.72), transparent 46%),
+    rgba(247, 252, 255, 0.6);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72);
+}
+
+:root[data-theme="light"] .home-search-control {
+  border-color: rgba(86, 126, 158, 0.42);
+  background: rgba(255, 255, 255, 0.56);
+}
+
+@media (max-width: 1180px) {
+  .home-terminal {
+    gap: 24px;
+    padding: 24px;
+  }
+
+  .home-jats-console {
+    padding: 30px;
+  }
+}
+
+@media (max-width: 1020px) {
+  .home-terminal {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .home-status-rail {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .home-time-card {
+    grid-column: 1 / -1;
+  }
+
+  .home-jats-console {
+    min-height: 680px;
+  }
+
+  .home-jats-lockup h1 {
+    font-size: clamp(5.4rem, 21vw, 10rem);
+  }
+}
+
+@media (max-width: 640px) {
+  .home-terminal {
+    gap: 16px;
+    padding: 14px;
+  }
+
+  .home-status-rail {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .home-time-card {
+    grid-column: auto;
+  }
+
+  .home-status-card {
+    min-height: 104px;
+    padding: 15px;
+  }
+
+  .home-time-card {
+    min-height: 122px;
+  }
+
+  .home-jats-console {
+    min-height: 620px;
+    padding: 24px 18px;
+  }
+
+  .home-jats-lockup {
+    margin-bottom: 30px;
+  }
+
+  .home-jats-lockup h1 {
+    font-size: clamp(4.6rem, 25vw, 7rem);
+  }
+
+  .home-jats-lockup p {
+    margin-top: 14px;
+    font-size: 0.92rem;
+  }
+
+  .home-owner-line {
+    font-size: clamp(1.9rem, 10vw, 2.75rem);
+  }
+
+  .home-motto {
+    font-size: clamp(1.3rem, 7vw, 2rem);
+  }
+
+  .home-summary {
+    font-size: 0.88rem;
+  }
+
+  .home-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .home-actions .button {
+    width: 100%;
+  }
+}

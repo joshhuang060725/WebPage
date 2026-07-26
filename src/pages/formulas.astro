@@ -1,0 +1,75 @@
+---
+import PortalLayout from "@layouts/PortalLayout.astro";
+import PageHeader from "@components/PageHeader.astro";
+import Localized from "@components/Localized.astro";
+import StatusBadge from "@components/StatusBadge.astro";
+import { readData } from "@lib/content";
+
+const data = readData<any>("formulas.json");
+const title = { en: "Formula Lab", "zh-TW": "公式推導", "zh-CN": "公式推导" };
+const description = {
+  en: "Twenty structured derivations covering mathematics, electronics, signal processing, imaging, and estimation.",
+  "zh-TW": "涵蓋數學、電子、訊號處理、影像與估測的 20 個結構化公式推導。",
+  "zh-CN": "涵盖数学、电子、信号处理、图像与估测的 20 个结构化公式推导。"
+};
+---
+
+<PortalLayout title={title} description={description} active="formulas">
+  <PageHeader eyebrow={{ en: "KNOWLEDGE / DERIVATIONS", "zh-TW": "知識／推導", "zh-CN": "知识／推导" }} title={title} description={description} />
+  <section class="formula-controls panel">
+    <div class="search-field"><label class="visually-hidden" for="formula-search">Search formulas</label><input id="formula-search" type="search" placeholder="Search formulas, tags, and categories…" /></div>
+    <div class="category-list" role="group" aria-label="Formula categories">
+      {data.categories.map((category: any) => (
+        <button type="button" data-category={category.id} class:list={[category.id === "all" && "is-active"]}><Localized value={category.label} /></button>
+      ))}
+    </div>
+  </section>
+  <section class="section grid two" id="formula-grid">
+    {data.items.map((item: any) => (
+      <article class="card formula-card" data-category={item.category} data-search={`${item.title.en} ${item.title["zh-TW"]} ${item.description.en} ${item.tags.join(" ")}`}>
+        <div class="meta-row"><span class="formula-number">F/{item.number}</span><StatusBadge status={item.status} /></div>
+        <h2><Localized value={item.title} /></h2>
+        <code class="formula-expression">{item.formula}</code>
+        <Localized value={item.description} tag="p" />
+        <div class="tag-list">{item.tags.map((tag: string) => <span class="tag">{tag}</span>)}</div>
+        <a href={`/formulas/${item.id}.html`}><Localized value={{ en: "Open derivation", "zh-TW": "開啟推導", "zh-CN": "打开推导" }} /> →</a>
+      </article>
+    ))}
+  </section>
+  <p id="formula-empty" class="empty-state" hidden><Localized value={{ en: "No formula matches the current filters.", "zh-TW": "目前篩選條件下沒有符合的公式。", "zh-CN": "当前筛选条件下没有匹配的公式。" }} /></p>
+  <script is:inline slot="scripts">
+    const input = document.querySelector("#formula-search");
+    const buttons = [...document.querySelectorAll("[data-category]")];
+    const cards = [...document.querySelectorAll(".formula-card")];
+    const empty = document.querySelector("#formula-empty");
+    let category = "all";
+    const filter = () => {
+      const q = input.value.trim().toLowerCase();
+      let count = 0;
+      cards.forEach((card) => {
+        const show = (category === "all" || card.dataset.category === category) && (!q || card.dataset.search.toLowerCase().includes(q));
+        card.hidden = !show;
+        count += Number(show);
+      });
+      empty.hidden = count > 0;
+    };
+    buttons.forEach((button) => button.addEventListener("click", () => {
+      category = button.dataset.category;
+      buttons.forEach((item) => item.classList.toggle("is-active", item === button));
+      filter();
+    }));
+    input.addEventListener("input", filter);
+  </script>
+</PortalLayout>
+
+<style>
+  .formula-controls { display: grid; gap: 1rem; }
+  .category-list { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .category-list button { padding: .5rem .7rem; }
+  .category-list button.is-active { border-color: var(--yellow); color: var(--yellow); }
+  .formula-card { display: flex; flex-direction: column; min-height: 330px; }
+  .formula-card .meta-row { justify-content: space-between; }
+  .formula-number { color: var(--cyan); font: 800 .75rem ui-monospace, monospace; }
+  .formula-expression { margin-bottom: 1rem; padding: .8rem; overflow-x: auto; border: 1px solid var(--line); background: var(--bg); color: var(--yellow); }
+  .formula-card a { margin-top: auto; padding-top: 1rem; color: var(--yellow); font-weight: 800; text-decoration: none; }
+</style>
