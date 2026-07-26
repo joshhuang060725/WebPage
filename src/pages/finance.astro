@@ -1,0 +1,1662 @@
+---
+import PortalLayout from "@layouts/PortalLayout.astro";
+import PageHeader from "@components/PageHeader.astro";
+import Localized from "@components/Localized.astro";
+import StatusBadge from "@components/StatusBadge.astro";
+import FinanceRuntime from "@components/FinanceRuntime.astro";
+import { readData, type Localized as LocalizedValue } from "@lib/content";
+import "../styles/finance.css";
+
+const finance = readData<any>("finance.json");
+const regionIds = ["us", "hk", "cn", "tw", "sg"] as const;
+const regions = regionIds.map((id) => finance[id]);
+const sourceMap = new Map(finance.sources.map((source: any) => [source.id, source]));
+const l = (en: string, zhTW: string, zhCN: string): LocalizedValue => ({
+  en,
+  "zh-TW": zhTW,
+  "zh-CN": zhCN
+});
+
+const title = l("Regional Finance Terminal", "區域金融終端", "区域金融终端");
+const description = l(
+  "A source-first macro and market reference for the United States, Hong Kong, Mainland China, Taiwan, and Singapore.",
+  "以來源透明為核心，聚焦美國、香港、中國大陸、臺灣與新加坡的總體經濟與市場參考終端。",
+  "以来源透明为核心，聚焦美国、香港、中国大陆、台湾与新加坡的宏观经济与市场参考终端。"
+);
+
+const ui = {
+  eyebrow: l("FINANCE / REGIONAL MACRO", "金融／區域總體經濟", "金融／区域宏观经济"),
+  reviewed: l("Source registry reviewed", "來源清單已檢視", "来源清单已检查"),
+  dataStatus: l("Data health: source-first", "資料健康：來源優先", "数据健康：来源优先"),
+  delayedOnly: l("Delayed reference only", "僅供延遲參考", "仅供延迟参考"),
+  tabs: {
+    overview: l("Overview", "總覽", "总览"),
+    us: finance.us.name,
+    hk: finance.hk.name,
+    cn: finance.cn.name,
+    tw: finance.tw.name,
+    sg: finance.sg.name,
+    fx: l("FX Lab", "匯率實驗室", "汇率实验室"),
+    sources: l("Sources", "資料來源", "数据来源")
+  },
+  overviewLead: l(
+    "Five regions, one consistent reading model.",
+    "五個地區，一套一致的閱讀模型。",
+    "五个地区，一套一致的阅读模型。"
+  ),
+  overviewBody: finance.overview.description,
+  openRegion: l("Open a region", "開啟地區", "打开地区"),
+  openFx: l("Open FX Lab", "開啟匯率實驗室", "打开汇率实验室"),
+  coverage: l("Regional coverage", "地區覆蓋", "地区覆盖"),
+  regionsCount: l("5 focused regions", "5 個重點地區", "5 个重点地区"),
+  sourceRegister: l("Source registry", "來源清單", "来源清单"),
+  sourcesCount: l(`${finance.sources.length} traceable sources`, `${finance.sources.length} 個可追溯來源`, `${finance.sources.length} 个可追溯来源`),
+  accountBoundary: l("Account boundary", "帳號邊界", "账号边界"),
+  localOnly: l("No account · local preferences", "無帳號 · 偏好留在本機", "无账号 · 偏好留在本机"),
+  marketBoundary: l("Market-data boundary", "行情資料邊界", "行情数据边界"),
+  consentOnly: l("External widgets by consent", "外部元件需先同意", "外部组件需先同意"),
+  regionFocus: l("Regional focus", "地區焦點", "地区焦点"),
+  localTime: l("Local time", "當地時間", "当地时间"),
+  readingModel: l("Reading model", "閱讀模型", "阅读模型"),
+  sourceFirst: l("Source before headline", "先看來源，再看數字", "先看来源，再看数字"),
+  sourceFirstBody: l(
+    "Every metric points to a named source and a visible data date. Missing data stays missing.",
+    "每個指標都連到具名來源並顯示資料日期；缺少資料時保持缺值，不以推測補齊。",
+    "每个指标都链接到具名来源并显示数据日期；缺少数据时保持缺值，不用推测补齐。"
+  ),
+  cadenceAware: l("Cadence-aware status", "依發布頻率判讀狀態", "按发布频率判断状态"),
+  cadenceAwareBody: l(
+    "Daily, monthly, quarterly, and event-driven series do not share one freshness rule.",
+    "每日、每月、每季與事件驅動資料，不會共用同一個新鮮度判準。",
+    "每日、每月、每季与事件驱动数据，不会共用同一个新鲜度标准。"
+  ),
+  noSignals: l("Reference, not a signal", "參考資訊，不是訊號", "参考信息，不是信号"),
+  noSignalsBody: finance.overview.riskDisclosure,
+  keyFx: l("Regional FX reference", "區域匯率參考", "区域汇率参考"),
+  keyFxBody: l(
+    "Daily cross-currency references from a transparent public aggregator. Values are not executable quotes.",
+    "由透明的公開聚合來源提供每日交叉匯率；數值不是可成交報價。",
+    "由透明的公开聚合来源提供每日交叉汇率；数值不是可成交报价。"
+  ),
+  loading: l("Loading reviewed source…", "正在載入已檢視來源…", "正在加载已检查来源…"),
+  refresh: l("Refresh", "重新整理", "刷新"),
+  sourceLinked: l("Source-linked", "已連結來源", "已链接来源"),
+  externalChart: l("External chart", "外部圖表", "外部图表"),
+  awaiting: l("Awaiting source", "等待來源", "等待来源"),
+  source: l("Source", "來源", "来源"),
+  asOf: l("As of", "資料日期", "数据日期"),
+  cadence: l("Cadence", "更新頻率", "更新频率"),
+  metric: l("Metric", "指標", "指标"),
+  value: l("Value", "數值", "数值"),
+  status: l("Status", "狀態", "状态"),
+  currentView: l("Current view", "目前視圖", "当前视图"),
+  moduleStatus: l("Finance module status", "金融模組狀態", "金融模块状态"),
+  financeViews: l("Finance views", "金融視圖", "金融视图"),
+  coverageBoundaries: l("Coverage and data boundaries", "涵蓋範圍與資料邊界", "覆盖范围与数据边界"),
+  swapCurrencies: l("Swap currencies", "交換幣別", "交换币种"),
+  marketChart: l("Market context chart", "市場脈絡圖", "市场脉络图"),
+  marketChartBody: l(
+    "Optional attributed market context. It is isolated from the official macro data cards.",
+    "可選的具來源行情脈絡，與官方總體資料卡分開呈現。",
+    "可选的带来源行情脉络，与官方宏观数据卡分开展示。"
+  ),
+  indicatorTable: l("Indicator register", "指標清單", "指标清单"),
+  indicatorTableBody: l(
+    "Definitions, cadence, status, and source in one comparison table.",
+    "在同一張表比較定義、更新頻率、狀態與來源。",
+    "在同一张表比较定义、更新频率、状态与来源。"
+  ),
+  widgetTitle: l("Load external market context?", "載入外部市場行情？", "加载外部市场行情？"),
+  widgetBody: l(
+    "TradingView loads only after consent and may receive basic connection data such as your IP address.",
+    "TradingView 只會在同意後載入，並可能取得 IP 位址等基本連線資料。",
+    "TradingView 只会在同意后加载，并可能取得 IP 地址等基本连接数据。"
+  ),
+  widgetLoad: l("Load market chart", "載入市場圖表", "加载市场图表"),
+  widgetFailed: l(
+    "The external chart did not load. Official source links and indicator definitions remain available.",
+    "外部圖表未能載入；官方來源連結與指標定義仍可使用。",
+    "外部图表未能加载；官方来源链接与指标定义仍可使用。"
+  ),
+  fxTitle: finance.fx.title,
+  fxDescription: finance.fx.description,
+  amount: l("Amount", "金額", "金额"),
+  decimals: l("Decimal places", "小數位數", "小数位数"),
+  from: l("From", "來源貨幣", "源货币"),
+  to: l("To", "目標貨幣", "目标货币"),
+  result: l("Converted reference", "參考換算結果", "参考换算结果"),
+  fxRefresh: l("Refresh rates", "更新匯率", "更新汇率"),
+  costTitle: l("Cost comparison", "換匯成本比較", "换汇成本比较"),
+  costBody: l(
+    "Enter the actual fee and quote you received. The tool never invents a bank spread.",
+    "輸入實際費用與取得的報價；工具不會虛構銀行點差。",
+    "输入实际费用与收到的报价；工具不会虚构银行点差。"
+  ),
+  percentFee: l("Percentage fee", "百分比手續費", "百分比手续费"),
+  fixedFee: l("Fixed fee (source currency)", "固定費用（來源貨幣）", "固定费用（源货币）"),
+  actualQuote: l("Actual quoted rate (optional)", "實際報價（選填）", "实际报价（选填）"),
+  received: l("Estimated received", "預估實收", "预计实收"),
+  totalCost: l("Difference from reference", "與參考值差額", "与参考值差额"),
+  effectiveRate: l("Effective rate", "有效匯率", "有效汇率"),
+  costPercent: l("Cost ratio", "成本比例", "成本比例"),
+  methodTitle: l("Data modes", "資料接入模式", "数据接入模式"),
+  methodBody: l(
+    "The interface labels how each number reaches the page. These modes are not interchangeable.",
+    "介面會標示每個數值如何抵達頁面；不同接入模式不可混為一談。",
+    "界面会标示每个数值如何到达页面；不同接入模式不可混为一谈。"
+  ),
+  sourcesTitle: l("Sources & methodology", "資料來源與方法", "数据来源与方法"),
+  sourcesDescription: l(
+    "The final page is the canonical registry for metric definitions, access methods, update cadence, and official links.",
+    "最後一頁是指標定義、接入方式、更新頻率與官方連結的正式清單。",
+    "最后一页是指标定义、接入方式、更新频率与官方链接的正式清单。"
+  ),
+  filterRegion: l("Filter by region", "依地區篩選", "按地区筛选"),
+  allRegions: l("All regions", "所有地區", "所有地区"),
+  publisher: l("Publisher", "發布機構", "发布机构"),
+  region: l("Region", "地區", "地区"),
+  access: l("Access", "接入方式", "接入方式"),
+  formats: l("Formats", "格式", "格式"),
+  update: l("Update cadence", "更新頻率", "更新频率"),
+  officialLink: l("Official link", "官方連結", "官方链接"),
+  openSource: l("Open source", "開啟來源", "打开来源"),
+  externalConsent: l("External-data preference", "外部資料偏好", "外部数据偏好"),
+  externalConsentBody: l(
+    "Consent is stored only in this browser. Revoking it removes the preference and unloads embedded charts.",
+    "同意狀態只保存在這個瀏覽器；撤回後會移除偏好並卸載嵌入圖表。",
+    "同意状态只保存在这个浏览器；撤回后会移除偏好并卸载嵌入图表。"
+  ),
+  revoke: l("Revoke widget consent", "撤回元件同意", "撤回组件同意"),
+  disclosure: finance.overview.riskDisclosure
+};
+
+const regionSummaries: Record<string, LocalizedValue> = {
+  us: l(
+    "Treasury curve, policy rates, inflation, and labor-market releases.",
+    "觀察公債殖利率曲線、政策利率、物價與勞動市場發布。",
+    "观察国债收益率曲线、政策利率、物价与劳动力市场发布。"
+  ),
+  hk: l(
+    "Linked-exchange-rate conditions, HIBOR, prices, labor, and growth.",
+    "觀察聯繫匯率制度、HIBOR、物價、勞動市場與經濟成長。",
+    "观察联系汇率制度、HIBOR、物价、劳动力市场与经济增长。"
+  ),
+  cn: l(
+    "Official source-linked snapshots for equities, LPR, prices, industry, and growth.",
+    "以官方來源快照觀察股市、LPR、物價、工業與經濟成長。",
+    "以官方来源快照观察股市、LPR、物价、工业与经济增长。"
+  ),
+  tw: l(
+    "TWSE indices, TWD references, central-bank settings, money, prices, and growth.",
+    "觀察臺股指數、臺幣參考匯率、央行設定、貨幣、物價與成長。",
+    "观察台股指数、台币参考汇率、央行设置、货币、物价与增长。"
+  ),
+  sg: l(
+    "STI context, SGD references, SORA, sovereign yields, prices, jobs, and growth.",
+    "觀察 STI、坡元參考匯率、SORA、政府債券、物價、就業與成長。",
+    "观察 STI、新元参考汇率、SORA、政府债券、物价、就业与增长。"
+  )
+};
+
+const categoryLabels: Record<string, LocalizedValue> = {
+  market: l("Market context", "市場脈絡", "市场脉络"),
+  fx: l("FX & currency", "匯率與貨幣", "汇率与货币"),
+  rates: l("Rates & monetary conditions", "利率與貨幣環境", "利率与货币环境"),
+  macro: l("Macro releases", "總體經濟發布", "宏观经济发布")
+};
+
+const categoryDescriptions: Record<string, LocalizedValue> = {
+  market: l("Attributed market reference; never presented as a trading feed.", "具來源的市場參考，不作為交易行情。", "带来源的市场参考，不作为交易行情。"),
+  fx: l("Reference rates and currency-policy context.", "參考匯率與貨幣政策脈絡。", "参考汇率与货币政策脉络。"),
+  rates: l("Policy, money-market, yield, and monetary-condition indicators.", "政策、貨幣市場、殖利率與貨幣環境指標。", "政策、货币市场、收益率与货币环境指标。"),
+  macro: l("Release-calendar indicators; publication cadence defines freshness.", "依發布日程更新，並按資料頻率判讀新鮮度。", "按发布日程更新，并按数据频率判断新鲜度。")
+};
+
+const frequencyLabels: Record<string, LocalizedValue> = {
+  "market-delayed": l("Market-delayed", "市場延遲", "市场延迟"),
+  "business-daily": l("Business daily", "營業日每日", "工作日每日"),
+  daily: l("Daily", "每日", "每日"),
+  monthly: l("Monthly", "每月", "每月"),
+  quarterly: l("Quarterly", "每季", "每季度"),
+  annual: l("Annual", "每年", "每年"),
+  "event-driven": l("Event-driven", "事件驅動", "事件驱动"),
+  "release-calendar": l("Release calendar", "發布日程", "发布日程"),
+  "dataset-specific": l("Dataset-specific", "依資料集", "按数据集"),
+  "monthly-quarterly-annual": l("Monthly / quarterly / annual", "每月／每季／每年", "每月／每季度／每年"),
+  "business-daily-and-monthly": l("Daily / monthly", "每日／每月", "每日／每月"),
+  "market-dependent": l("Market-dependent", "依市場而定", "按市场而定")
+};
+
+const regionWidgetSymbols: Record<string, { symbol: string; label: string }[]> = {
+  us: [
+    { symbol: "SP:SPX", label: "S&P 500" },
+    { symbol: "NASDAQ:NDX", label: "Nasdaq 100" },
+    { symbol: "DJ:DJI", label: "Dow Jones" },
+    { symbol: "RUSSELL:RUT", label: "Russell 2000" }
+  ],
+  hk: [
+    { symbol: "TVC:HSI", label: "Hang Seng" },
+    { symbol: "HKEX:HSTECH", label: "Hang Seng TECH" },
+    { symbol: "TVC:HSCEI", label: "HSCEI" }
+  ],
+  cn: [
+    { symbol: "SSE:000001", label: "SSE Composite" },
+    { symbol: "SSE:000300", label: "CSI 300" },
+    { symbol: "SZSE:399001", label: "SZSE Component" },
+    { symbol: "SZSE:399006", label: "ChiNext" }
+  ],
+  tw: [
+    { symbol: "TWSE:TAIEX", label: "TAIEX" },
+    { symbol: "TWSE:TW50", label: "Taiwan 50" }
+  ],
+  sg: [{ symbol: "SGX:STI", label: "Straits Times Index" }]
+};
+
+const tabItems = [
+  { id: "overview", label: ui.tabs.overview },
+  ...regionIds.map((id) => ({ id, label: ui.tabs[id] })),
+  { id: "fx", label: ui.tabs.fx },
+  { id: "sources", label: ui.tabs.sources }
+];
+
+const clientCopy = {
+  loading: ui.loading,
+  awaiting: ui.awaiting,
+  sourceLinked: ui.sourceLinked,
+  externalChart: ui.externalChart,
+  widgetTitle: ui.widgetTitle,
+  widgetBody: ui.widgetBody,
+  widgetLoad: ui.widgetLoad,
+  widgetFailed: ui.widgetFailed,
+  source: ui.source,
+  asOf: ui.asOf,
+  refreshed: l("Data refreshed.", "資料已更新。", "数据已更新。"),
+  refreshFailed: l("Refresh failed. The previous verified state is unchanged.", "更新失敗，先前已驗證的狀態維持不變。", "更新失败，先前已验证的状态保持不变。"),
+  unavailable: l("Verified data is currently unavailable.", "目前無法取得已核驗資料。", "目前无法取得已核验数据。"),
+  cached: l("Using the last successful browser cache.", "正在使用瀏覽器上次成功快取。", "正在使用浏览器上次成功缓存。"),
+  stale: l("Using an older cached reference. Check the data date.", "正在使用較舊的快取參考，請核對資料日期。", "正在使用较旧的缓存参考，请核对数据日期。"),
+  invalidAmount: l("Enter a valid non-negative amount.", "請輸入有效的非負金額。", "请输入有效的非负金额。"),
+  invalidCostInputs: l("Check the fee and quoted-rate inputs.", "請檢查手續費與實際報價欄位。", "请检查手续费与实际报价字段。"),
+  ratesUnavailable: l("FX references are unavailable. Check the network and try again.", "目前無法取得匯率參考，請檢查網路後重試。", "目前无法取得汇率参考，请检查网络后重试。"),
+  consentGranted: l("External market charts are enabled for this browser.", "已在這個瀏覽器啟用外部市場圖表。", "已在这个浏览器启用外部市场图表。"),
+  consentRevoked: l("External widget consent was removed.", "已撤回外部元件同意。", "已撤回外部组件同意。"),
+  statuses: {
+    fresh: l("Fresh", "最新", "最新"),
+    delayed: l("Delayed", "延遲", "延迟"),
+    stale: l("Stale", "過期", "过期"),
+    cached: l("Cached", "快取", "缓存"),
+    partial: l("Partial", "部分可用", "部分可用"),
+    unavailable: l("Unavailable", "無法取得", "无法获取")
+  },
+  currencyNames: {
+    USD: l("U.S. Dollar", "美元", "美元"),
+    HKD: l("Hong Kong Dollar", "港元", "港元"),
+    CNY: l("Chinese Yuan", "人民幣", "人民币"),
+    TWD: l("New Taiwan Dollar", "新臺幣", "新台币"),
+    SGD: l("Singapore Dollar", "新加坡元", "新加坡元"),
+    EUR: l("Euro", "歐元", "欧元"),
+    JPY: l("Japanese Yen", "日圓", "日元"),
+    GBP: l("Pound Sterling", "英鎊", "英镑"),
+    KRW: l("South Korean Won", "韓元", "韩元"),
+    AUD: l("Australian Dollar", "澳幣", "澳元"),
+    CAD: l("Canadian Dollar", "加拿大元", "加拿大元"),
+    CHF: l("Swiss Franc", "瑞士法郎", "瑞士法郎")
+  }
+};
+
+const clientConfig = {
+  regions: Object.fromEntries(
+    regions.map((region: any) => [
+      region.id,
+      {
+        id: region.id,
+        name: region.name,
+        currency: region.currency,
+        timezone: region.timezone,
+        widgetSymbols: regionWidgetSymbols[region.id]
+      }
+    ])
+  ),
+  sources: Object.fromEntries(
+    finance.sources.map((source: any) => [
+      source.id,
+      { id: source.id, name: source.name, url: source.url }
+    ])
+  ),
+  currencies: finance.fx.supportedCurrencies.map((currency: any) => currency.code),
+  copy: clientCopy
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: title.en,
+  description: description.en,
+  url: "https://joshhuang.ccwu.cc/finance.html",
+  about: regions.map((region: any) => ({
+    "@type": "Place",
+    name: region.name.en
+  })),
+  isPartOf: {
+    "@type": "WebSite",
+    name: "JATSWeb",
+    url: "https://joshhuang.ccwu.cc"
+  }
+};
+---
+
+<PortalLayout title={title} description={description} active="finance" canonical="/finance.html">
+  <script is:inline slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  <link slot="head" rel="preconnect" href="https://api.frankfurter.dev" crossorigin />
+  <link slot="head" rel="dns-prefetch" href="https://api.frankfurter.dev" />
+
+  <div class="finance-terminal">
+    <PageHeader eyebrow={ui.eyebrow} title={title} description={description} />
+
+    <div class="finance-topline" role="region" aria-labelledby="finance-module-status-label">
+      <span id="finance-module-status-label" class="visually-hidden"><Localized value={ui.moduleStatus} /></span>
+      <StatusBadge status="beta" />
+      <span class="tag"><span class="finance-health-dot" aria-hidden="true"></span><Localized value={ui.dataStatus} /></span>
+      <span class="tag"><Localized value={ui.reviewed} /> · {finance.lastReviewedAt}</span>
+      <span class="tag"><Localized value={ui.delayedOnly} /></span>
+    </div>
+
+    <nav class="finance-tabs-shell" aria-labelledby="finance-views-label">
+      <span id="finance-views-label" class="visually-hidden"><Localized value={ui.financeViews} /></span>
+      <div class="finance-tablist" role="tablist" aria-labelledby="finance-views-label">
+        {
+          tabItems.map((item, index) => (
+            <button
+              class="finance-tab"
+              id={`finance-tab-${item.id}`}
+              type="button"
+              role="tab"
+              aria-selected={index === 0 ? "true" : "false"}
+              aria-controls={`finance-pane-${item.id}`}
+              tabindex={index === 0 ? "0" : "-1"}
+              data-finance-tab={item.id}
+            >
+              <Localized value={item.label} />
+            </button>
+          ))
+        }
+      </div>
+      <div class="finance-mobile-nav field">
+        <label for="finance-view-select"><Localized value={ui.currentView} /></label>
+        <select id="finance-view-select">
+          {tabItems.map((item) => <option value={item.id}><Localized value={item.label} /></option>)}
+        </select>
+      </div>
+    </nav>
+
+    <section
+      class="finance-pane section"
+      id="finance-pane-overview"
+      role="tabpanel"
+      aria-labelledby="finance-tab-overview"
+      data-finance-pane="overview"
+      tabindex="-1"
+    >
+      <div class="finance-overview-hero">
+        <article class="panel finance-command-panel">
+          <div>
+            <p class="eyebrow">REGIONAL MACRO TERMINAL / 01</p>
+            <h2><Localized value={ui.overviewLead} /></h2>
+            <Localized value={ui.overviewBody} tag="p" class="lead" />
+          </div>
+          <div class="finance-command-line">
+            <a class="button primary" href="#us" data-open-finance-tab="us"><Localized value={ui.openRegion} /> →</a>
+            <a class="button" href="#fx" data-open-finance-tab="fx"><Localized value={ui.openFx} /> ↗</a>
+          </div>
+        </article>
+        <aside class="panel finance-health-panel" aria-labelledby="coverage-boundaries-label">
+          <span id="coverage-boundaries-label" class="visually-hidden"><Localized value={ui.coverageBoundaries} /></span>
+          <div class="health-row"><span><Localized value={ui.coverage} /></span><strong><Localized value={ui.regionsCount} /></strong></div>
+          <div class="health-row"><span><Localized value={ui.sourceRegister} /></span><strong><Localized value={ui.sourcesCount} /></strong></div>
+          <div class="health-row"><span><Localized value={ui.accountBoundary} /></span><strong><Localized value={ui.localOnly} /></strong></div>
+          <div class="health-row"><span><Localized value={ui.marketBoundary} /></span><strong><Localized value={ui.consentOnly} /></strong></div>
+        </aside>
+      </div>
+
+      <section class="section" aria-labelledby="region-focus-heading">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">FOCUS / 5 REGIONS</p>
+            <h2 id="region-focus-heading"><Localized value={ui.regionFocus} /></h2>
+          </div>
+          <p><Localized value={finance.overview.sourcePolicy} /></p>
+        </div>
+        <div class="region-launcher">
+          {
+            regions.map((region: any, index: number) => (
+              <a class="region-launch-card" href={`#${region.id}`} data-open-finance-tab={region.id}>
+                <span class="region-launch-code">{String(index + 1).padStart(2, "0")} / {region.id.toUpperCase()}</span>
+                <Localized value={region.name} tag="h3" />
+                <Localized value={regionSummaries[region.id]} tag="p" class="muted" />
+                <time class="region-launch-time" data-region-time={region.id}>--:--</time>
+                <span class="region-launch-meta"><Localized value={ui.localTime} /> · {region.timezone}</span>
+              </a>
+            ))
+          }
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="reading-model-heading">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">TRUST MODEL</p>
+            <h2 id="reading-model-heading"><Localized value={ui.readingModel} /></h2>
+          </div>
+        </div>
+        <div class="finance-scope-grid">
+          <article class="panel scope-card">
+            <span class="scope-index">01</span>
+            <h3><Localized value={ui.sourceFirst} /></h3>
+            <Localized value={ui.sourceFirstBody} tag="p" class="muted" />
+          </article>
+          <article class="panel scope-card">
+            <span class="scope-index">02</span>
+            <h3><Localized value={ui.cadenceAware} /></h3>
+            <Localized value={ui.cadenceAwareBody} tag="p" class="muted" />
+          </article>
+          <article class="panel scope-card">
+            <span class="scope-index">03</span>
+            <h3><Localized value={ui.noSignals} /></h3>
+            <Localized value={ui.noSignalsBody} tag="p" class="muted" />
+          </article>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="overview-fx-heading">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">DAILY REFERENCE / USD BASE</p>
+            <h2 id="overview-fx-heading"><Localized value={ui.keyFx} /></h2>
+          </div>
+          <p><Localized value={ui.keyFxBody} /></p>
+        </div>
+        <div class="metric-grid" id="overview-fx-grid">
+          {
+            finance.fx.pairs.slice(0, 4).map((pair: any) => {
+              const pairCode = `${pair.base}/${pair.quote}`;
+              return (
+              <article class="metric-card" data-state="unavailable" data-overview-fx-card={pairCode}>
+                <div class="metric-card-top">
+                  <span class="metric-card-code">FX / DAILY</span>
+                  <span class="data-status" data-state="unavailable" data-overview-fx-status={pairCode}><Localized value={ui.awaiting} /></span>
+                </div>
+                <h3>{pairCode.replace("/", " / ")}</h3>
+                <div class="metric-value" data-overview-fx-value={pairCode}>—</div>
+                <p class="metric-delta" data-overview-fx-meta={pairCode}>—</p>
+                <div class="metric-card-bottom">
+                  <span class="metric-asof" data-overview-fx-asof={pairCode}><Localized value={ui.asOf} />: —</span>
+                  <a class="metric-source-link" href={`#sources/${pair.sourceId}`} data-overview-fx-source={pairCode} data-open-finance-tab="sources"><Localized value={ui.source} /> ↗</a>
+                </div>
+              </article>
+              );
+            })
+          }
+        </div>
+      </section>
+    </section>
+
+    {
+      regions.map((region: any, regionIndex: number) => (
+        <section
+          class="finance-pane section"
+          id={`finance-pane-${region.id}`}
+          role="tabpanel"
+          aria-labelledby={`finance-tab-${region.id}`}
+          data-finance-pane={region.id}
+          tabindex="-1"
+          hidden
+        >
+          <div class="region-header">
+            <article class="panel region-title-block">
+              <div class="region-kicker">
+                <span class="region-code-chip">{region.id.toUpperCase()} / {region.currency}</span>
+                <span class="data-mode-chip">{region.timezone}</span>
+              </div>
+              <Localized value={region.name} tag="h2" />
+              <Localized value={regionSummaries[region.id]} tag="p" class="lead" />
+              {region.dataPolicy && <div class="notice warning"><Localized value={region.dataPolicy} /></div>}
+            </article>
+            <aside class="panel region-clock-panel">
+              <div>
+                <p class="eyebrow"><Localized value={ui.localTime} /></p>
+                <time class="region-clock" data-region-clock={region.id}>--:--:--</time>
+                <span class="region-date" data-region-date={region.id}>—</span>
+              </div>
+              <div class="region-refresh-row">
+                <span class="data-status" data-state="partial" data-region-status={region.id}><Localized value={ui.awaiting} /></span>
+                <button class="button" type="button" data-region-refresh={region.id}><Localized value={ui.refresh} /></button>
+              </div>
+            </aside>
+          </div>
+
+          <section class="section" aria-labelledby={`${region.id}-metrics-heading`}>
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">REGION {String(regionIndex + 1).padStart(2, "0")} / INDICATORS</p>
+                <h2 id={`${region.id}-metrics-heading`}><Localized value={l("Core indicator map", "核心指標圖譜", "核心指标图谱")} /></h2>
+              </div>
+              <p><Localized value={l("A missing value is a visible state, not a blank product surface.", "缺值是一種明確狀態，不是空白產品介面。", "缺值是一种明确状态，不是空白产品界面。")} /></p>
+            </div>
+            {["market", "fx", "rates", "macro"].map((category) => {
+              const indicators = region.indicators.filter((indicator: any) => indicator.category === category);
+              if (!indicators.length) return null;
+              return (
+                <div class="metric-group">
+                  <div class="metric-group-header">
+                    <h3><Localized value={categoryLabels[category]} /></h3>
+                    <Localized value={categoryDescriptions[category]} tag="p" />
+                  </div>
+                  <div class="metric-grid">
+                    {indicators.map((indicator: any) => {
+                      const initialState =
+                        indicator.availability === "external-widget"
+                          ? "partial"
+                          : indicator.availability === "official-snapshot"
+                            ? "partial"
+                            : "unavailable";
+                      const initialLabel =
+                        indicator.availability === "external-widget"
+                          ? ui.externalChart
+                          : indicator.availability === "official-snapshot"
+                            ? ui.sourceLinked
+                            : ui.awaiting;
+                      return (
+                        <article
+                          class="metric-card"
+                          data-indicator-card={indicator.id}
+                          data-region={region.id}
+                          data-category={indicator.category}
+                          data-source-id={indicator.sourceId}
+                          data-frequency={indicator.frequency}
+                          data-unit={indicator.unit}
+                          data-state={initialState}
+                        >
+                          <div class="metric-card-top">
+                            <span class="metric-card-code">{indicator.category.toUpperCase()} / {indicator.availability.replaceAll("-", " ")}</span>
+                            <span class="data-status" data-role="status" data-state={initialState}><Localized value={initialLabel} /></span>
+                          </div>
+                          <Localized value={indicator.name} tag="h4" />
+                          <div class="metric-value" data-role="value">
+                            {indicator.availability === "external-widget" ? "↗" : "—"}
+                          </div>
+                          <Localized value={indicator.description} tag="p" class="metric-delta" />
+                          <div class="metric-card-bottom">
+                            <span class="metric-asof" data-role="asof"><Localized value={ui.asOf} />: —</span>
+                            <a class="metric-source-link" href={`#sources/${indicator.sourceId}`} data-open-finance-tab="sources">
+                              <Localized value={ui.source} /> ↗
+                            </a>
+                          </div>
+                        </article>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
+          </section>
+
+          <section class="section market-data-layout">
+            <article class="panel market-panel">
+              <header class="market-panel-header">
+                <div>
+                  <h3><Localized value={ui.marketChart} /></h3>
+                  <Localized value={ui.marketChartBody} tag="p" />
+                </div>
+                <span class="data-mode-chip">TRADINGVIEW / OPT-IN</span>
+              </header>
+              <div
+                class="external-widget-slot"
+                data-widget-region={region.id}
+                data-widget-symbols={JSON.stringify(regionWidgetSymbols[region.id])}
+              >
+                <div class="widget-gate">
+                  <span class="widget-gate-icon" aria-hidden="true">EXT</span>
+                  <h4><Localized value={ui.widgetTitle} /></h4>
+                  <Localized value={ui.widgetBody} tag="p" />
+                  <button class="button primary" type="button" data-load-widget={region.id}><Localized value={ui.widgetLoad} /></button>
+                </div>
+              </div>
+            </article>
+
+            <article class="panel indicator-table-panel">
+              <header class="table-panel-header">
+                <div>
+                  <h3><Localized value={ui.indicatorTable} /></h3>
+                  <Localized value={ui.indicatorTableBody} tag="p" />
+                </div>
+              </header>
+              <div class="table-wrap">
+                <table class="finance-data-table">
+                  <thead>
+                    <tr>
+                      <th><Localized value={ui.metric} /></th>
+                      <th><Localized value={ui.value} /></th>
+                      <th><Localized value={ui.cadence} /></th>
+                      <th><Localized value={ui.source} /></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {region.indicators.map((indicator: any) => {
+                      const source: any = sourceMap.get(indicator.sourceId);
+                      return (
+                        <tr data-indicator-row={indicator.id}>
+                          <td><Localized value={indicator.name} /></td>
+                          <td class="table-value" data-role="table-value">—</td>
+                          <td><Localized value={frequencyLabels[indicator.frequency] || l(indicator.frequency, indicator.frequency, indicator.frequency)} /></td>
+                          <td><a href={`#sources/${indicator.sourceId}`} data-open-finance-tab="sources"><Localized value={source.name} /></a></td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </article>
+          </section>
+        </section>
+      ))
+    }
+
+    <section
+      class="finance-pane section"
+      id="finance-pane-fx"
+      role="tabpanel"
+      aria-labelledby="finance-tab-fx"
+      data-finance-pane="fx"
+      tabindex="-1"
+      hidden
+    >
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">FX REFERENCE / COST LAB</p>
+          <h2><Localized value={ui.fxTitle} /></h2>
+        </div>
+        <p><Localized value={ui.fxDescription} /></p>
+      </div>
+
+      <div class="fx-hero">
+        <article class="panel fx-converter">
+          <div class="fx-form-grid">
+            <div class="field">
+              <label for="fx-amount"><Localized value={ui.amount} /></label>
+              <input id="fx-amount" type="number" min="0" step="any" value="1000" inputmode="decimal" />
+            </div>
+            <div class="field">
+              <label for="fx-precision"><Localized value={ui.decimals} /></label>
+              <select id="fx-precision">
+                <option value="2">2</option>
+                <option value="4" selected>4</option>
+                <option value="6">6</option>
+              </select>
+            </div>
+          </div>
+          <div class="fx-pair-row">
+            <div class="field">
+              <label for="fx-from"><Localized value={ui.from} /></label>
+              <select id="fx-from"></select>
+            </div>
+            <button id="fx-swap" class="fx-swap" type="button">
+              <span aria-hidden="true">⇄</span>
+              <span class="visually-hidden"><Localized value={ui.swapCurrencies} /></span>
+            </button>
+            <div class="field">
+              <label for="fx-to"><Localized value={ui.to} /></label>
+              <select id="fx-to"></select>
+            </div>
+          </div>
+          <output id="fx-result" class="fx-output" aria-live="polite">—</output>
+          <p id="fx-rate" class="fx-rate-line">—</p>
+          <p id="fx-source" class="fx-source-line"><Localized value={ui.loading} /></p>
+          <div class="button-row">
+            <button id="fx-refresh" class="button primary" type="button"><Localized value={ui.fxRefresh} /></button>
+            <a id="fx-source-link" class="button" href="#sources/frankfurter" data-open-finance-tab="sources"><Localized value={ui.source} /> ↗</a>
+          </div>
+        </article>
+
+        <article class="panel fx-cost-panel">
+          <p class="eyebrow">USER-ENTERED SCENARIO</p>
+          <h3><Localized value={ui.costTitle} /></h3>
+          <Localized value={ui.costBody} tag="p" class="muted" />
+          <div class="fx-form-grid">
+            <div class="field">
+              <label for="fx-fee-percent"><Localized value={ui.percentFee} /> (%)</label>
+              <input id="fx-fee-percent" type="number" min="0" max="100" step="0.01" value="0" inputmode="decimal" />
+            </div>
+            <div class="field">
+              <label for="fx-fixed-fee"><Localized value={ui.fixedFee} /></label>
+              <input id="fx-fixed-fee" type="number" min="0" step="0.01" value="0" inputmode="decimal" />
+            </div>
+          </div>
+          <div class="field">
+            <label for="fx-quoted-rate"><Localized value={ui.actualQuote} /></label>
+            <input id="fx-quoted-rate" type="number" min="0" step="any" inputmode="decimal" placeholder="—" />
+          </div>
+          <p id="fx-cost-error" class="fx-form-error" role="alert" hidden></p>
+          <div class="fx-cost-results" role="status" aria-live="polite" aria-atomic="true">
+            <div class="fx-cost-result"><span><Localized value={ui.received} /></span><strong id="fx-cost-received">—</strong></div>
+            <div class="fx-cost-result"><span><Localized value={ui.totalCost} /></span><strong id="fx-cost-difference">—</strong></div>
+            <div class="fx-cost-result"><span><Localized value={ui.effectiveRate} /></span><strong id="fx-effective-rate">—</strong></div>
+            <div class="fx-cost-result"><span><Localized value={ui.costPercent} /></span><strong id="fx-cost-percent">—</strong></div>
+          </div>
+        </article>
+      </div>
+
+      <div class="notice section">
+        <Localized value={finance.fx.sourcePolicy} tag="p" />
+        <Localized value={finance.fx.historyPolicy} tag="p" />
+      </div>
+      <div class="notice warning section">
+        <Localized value={finance.fx.disclaimer} />
+      </div>
+    </section>
+
+    <section
+      class="finance-pane section"
+      id="finance-pane-sources"
+      role="tabpanel"
+      aria-labelledby="finance-tab-sources"
+      data-finance-pane="sources"
+      tabindex="-1"
+      hidden
+    >
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">CANONICAL REGISTER / FINAL VIEW</p>
+          <h2><Localized value={ui.sourcesTitle} /></h2>
+        </div>
+        <p><Localized value={ui.sourcesDescription} /></p>
+      </div>
+
+      <section class="section" aria-labelledby="data-modes-heading">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">METHODOLOGY</p>
+            <h2 id="data-modes-heading"><Localized value={ui.methodTitle} /></h2>
+          </div>
+          <p><Localized value={ui.methodBody} /></p>
+        </div>
+        <div class="method-grid">
+          <article class="panel method-card">
+            <code>official-api</code>
+            <h3><Localized value={l("Direct official API", "官方 API 直接接入", "官方 API 直接接入")} /></h3>
+            <Localized value={l("Machine-readable, documented, and fetched through an allowlisted read-only path.", "具文件且可機器讀取，透過白名單唯讀路徑取得。", "有文档且可机器读取，通过白名单只读路径获取。")} tag="p" class="muted" />
+          </article>
+          <article class="panel method-card">
+            <code>official-snapshot</code>
+            <h3><Localized value={l("Reviewed official snapshot", "已檢視官方快照", "已检查官方快照")} /></h3>
+            <Localized value={l("Used when an authoritative release exists but no stable public API is assumed.", "有權威發布但不假設存在穩定公開 API 時使用。", "有权威发布但不假设存在稳定公开 API 时使用。")} tag="p" class="muted" />
+          </article>
+          <article class="panel method-card">
+            <code>institutional-feed</code>
+            <h3><Localized value={l("Attributed institutional feed", "具來源機構資料流", "带来源机构数据流")} /></h3>
+            <Localized value={l("A public aggregator must expose its contributing provider and reference date.", "公開聚合來源必須顯示實際貢獻機構與資料日期。", "公开聚合来源必须显示实际贡献机构与数据日期。")} tag="p" class="muted" />
+          </article>
+          <article class="panel method-card">
+            <code>external-widget</code>
+            <h3><Localized value={l("Consent-gated widget", "同意後載入的外部元件", "同意后加载的外部组件")} /></h3>
+            <Localized value={l("Market context stays inside the attributed widget and is never re-published as JATSWeb data.", "行情保留在具來源的外部元件內，不會重新發布為 JATSWeb 資料。", "行情保留在带来源的外部组件内，不会重新发布为 JATSWeb 数据。")} tag="p" class="muted" />
+          </article>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="source-register-heading">
+        <div class="source-controls">
+          <div>
+            <p class="eyebrow">SOURCE REGISTER / {finance.sources.length}</p>
+            <h2 id="source-register-heading"><Localized value={ui.sourceRegister} /></h2>
+          </div>
+          <div class="field">
+            <label for="source-region-filter"><Localized value={ui.filterRegion} /></label>
+            <select id="source-region-filter">
+              <option value="all"><Localized value={ui.allRegions} /></option>
+              <option value="global">GLOBAL</option>
+              {regions.map((region: any) => <option value={region.id}><Localized value={region.name} /></option>)}
+            </select>
+          </div>
+        </div>
+        <div class="panel table-wrap">
+          <table class="source-table">
+            <thead>
+              <tr>
+                <th><Localized value={ui.region} /></th>
+                <th><Localized value={ui.publisher} /></th>
+                <th><Localized value={ui.access} /></th>
+                <th><Localized value={ui.formats} /></th>
+                <th><Localized value={ui.update} /></th>
+                <th><Localized value={ui.officialLink} /></th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                finance.sources.map((source: any) => (
+                  <tr class="source-row" id={`sources/${source.id}`} data-source-region={source.region}>
+                    <td><span class="region-code-chip">{source.region.toUpperCase()}</span></td>
+                    <td>
+                      <Localized value={source.name} tag="span" class="source-name" />
+                      <Localized value={source.notes} tag="p" class="muted" />
+                    </td>
+                    <td class="source-mode">
+                      <span class="data-mode-chip">{source.accessMode}</span>
+                      <div>{source.recommendedUse}</div>
+                    </td>
+                    <td>{source.formats.join(" · ")}</td>
+                    <td><Localized value={frequencyLabels[source.updateFrequency] || l(source.updateFrequency, source.updateFrequency, source.updateFrequency)} /></td>
+                    <td><a href={source.url} target="_blank" rel="noopener noreferrer"><Localized value={ui.openSource} /> ↗</a></td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="section panel consent-control">
+        <div>
+          <h3><Localized value={ui.externalConsent} /></h3>
+          <Localized value={ui.externalConsentBody} tag="p" class="muted" />
+        </div>
+        <button id="revoke-widget-consent" class="button" type="button"><Localized value={ui.revoke} /></button>
+      </section>
+
+      <div class="notice warning section">
+        <Localized value={ui.disclosure} />
+      </div>
+    </section>
+
+    <div id="finance-announcer" class="finance-announcer" role="status" aria-live="polite" hidden></div>
+    <script is:inline id="finance-config" type="application/json" set:html={JSON.stringify(clientConfig).replaceAll("<", "\\u003c")} />
+    <FinanceRuntime />
+  </div>
+
+  <script is:inline slot="scripts">
+    (() => {
+      const initializeFinance = () => {
+      const config = JSON.parse(document.querySelector("#finance-config")?.textContent || "{}");
+      const financeLogic = window.JATSFinance;
+      const root = document.documentElement;
+      const validTabs = ["overview", "us", "hk", "cn", "tw", "sg", "fx", "sources"];
+      const regionalCurrencies = ["USD", "HKD", "CNY", "TWD", "SGD"];
+      const widgetConsentKey = "jats:finance:external-v1";
+      const fxCacheKey = "jats:finance:fx-cache-v1";
+      const fxPrefsKey = "jats:finance:fx-prefs-v1";
+      const localeMap = { en: "en-US", "zh-TW": "zh-TW", "zh-CN": "zh-CN" };
+      const announcer = document.querySelector("#finance-announcer");
+      const tabButtons = [...document.querySelectorAll("[data-finance-tab]")];
+      const panes = [...document.querySelectorAll("[data-finance-pane]")];
+      const mobileSelect = document.querySelector("#finance-view-select");
+      let announceTimer = 0;
+      let fxRequestId = 0;
+      let fxRates = null;
+      let fxMeta = null;
+
+      function language() {
+        return ["en", "zh-TW", "zh-CN"].includes(root.lang) ? root.lang : "en";
+      }
+
+      function text(value) {
+        if (typeof value === "string") return value;
+        return value?.[language()] || value?.en || "";
+      }
+
+      function announce(value) {
+        if (!announcer) return;
+        clearTimeout(announceTimer);
+        announcer.textContent = text(value);
+        announcer.hidden = false;
+        announceTimer = window.setTimeout(() => {
+          announcer.hidden = true;
+        }, 4200);
+      }
+
+      function tabFromHash() {
+        const raw = decodeURIComponent(location.hash.slice(1));
+        const id = raw.startsWith("sources/") ? "sources" : raw;
+        return validTabs.includes(id) ? id : "overview";
+      }
+
+      function activateTab(id, options = {}) {
+        const next = validTabs.includes(id) ? id : "overview";
+        tabButtons.forEach((button) => {
+          const selected = button.dataset.financeTab === next;
+          button.setAttribute("aria-selected", String(selected));
+          button.tabIndex = selected ? 0 : -1;
+        });
+        panes.forEach((pane) => {
+          pane.hidden = pane.dataset.financePane !== next;
+        });
+        if (mobileSelect) mobileSelect.value = next;
+
+        if (options.updateHash !== false) {
+          const hash = options.preserveSourceHash && location.hash.startsWith("#sources/")
+            ? location.hash
+            : `#${next}`;
+          history.pushState(null, "", hash);
+        }
+        if (options.focus) {
+          document.querySelector(`#finance-tab-${next}`)?.focus();
+        }
+        if (options.scroll) {
+          document.querySelector(`#finance-pane-${next}`)?.scrollIntoView({ block: "start" });
+        }
+        if (config.regions?.[next] && localStorage.getItem(widgetConsentKey) === "granted") {
+          loadWidget(next);
+        }
+        if (config.regions?.[next]) loadRegion(next);
+        if (next === "fx" && !fxRates) loadFxRates();
+
+        const sourceTarget = decodeURIComponent(location.hash.slice(1));
+        if (next === "sources" && sourceTarget.startsWith("sources/")) {
+          requestAnimationFrame(() => {
+            document.getElementById(sourceTarget)?.scrollIntoView({ block: "center" });
+          });
+        }
+      }
+
+      tabButtons.forEach((button) => {
+        button.addEventListener("click", () => activateTab(button.dataset.financeTab, { updateHash: true, scroll: true }));
+        button.addEventListener("keydown", (event) => {
+          const index = tabButtons.indexOf(button);
+          let nextIndex = null;
+          if (event.key === "ArrowRight") nextIndex = (index + 1) % tabButtons.length;
+          if (event.key === "ArrowLeft") nextIndex = (index - 1 + tabButtons.length) % tabButtons.length;
+          if (event.key === "Home") nextIndex = 0;
+          if (event.key === "End") nextIndex = tabButtons.length - 1;
+          if (nextIndex === null) return;
+          event.preventDefault();
+          activateTab(tabButtons[nextIndex].dataset.financeTab, { updateHash: true, focus: true });
+        });
+      });
+
+      document.querySelectorAll("[data-open-finance-tab]").forEach((link) => {
+        link.addEventListener("click", (event) => {
+          const id = link.dataset.openFinanceTab;
+          if (!validTabs.includes(id)) return;
+          event.preventDefault();
+          const sourceHash = link.getAttribute("href")?.startsWith("#sources/") ? link.getAttribute("href") : null;
+          if (sourceHash) history.pushState(null, "", sourceHash);
+          activateTab(id, {
+            updateHash: !sourceHash,
+            preserveSourceHash: Boolean(sourceHash),
+            scroll: true
+          });
+        });
+      });
+
+      mobileSelect?.addEventListener("change", () => activateTab(mobileSelect.value, { updateHash: true, scroll: true }));
+      addEventListener("hashchange", () => activateTab(tabFromHash(), { updateHash: false, preserveSourceHash: true }));
+
+      function updateClocks() {
+        const now = new Date();
+        Object.values(config.regions || {}).forEach((region) => {
+          const locale = localeMap[language()];
+          const time = new Intl.DateTimeFormat(locale, {
+            timeZone: region.timezone,
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: false
+          }).format(now);
+          const shortTime = new Intl.DateTimeFormat(locale, {
+            timeZone: region.timezone,
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false
+          }).format(now);
+          const date = new Intl.DateTimeFormat(locale, {
+            timeZone: region.timezone,
+            year: "numeric",
+            month: "short",
+            day: "2-digit",
+            weekday: "short"
+          }).format(now);
+          document.querySelectorAll(`[data-region-time="${region.id}"]`).forEach((node) => (node.textContent = shortTime));
+          document.querySelectorAll(`[data-region-clock="${region.id}"]`).forEach((node) => (node.textContent = time));
+          document.querySelectorAll(`[data-region-date="${region.id}"]`).forEach((node) => (node.textContent = date));
+        });
+      }
+
+      function renderWidgetGate(slot) {
+        slot.classList.remove("is-loaded");
+        slot.dataset.widgetState = "gated";
+        slot.innerHTML = "";
+        const gate = document.createElement("div");
+        gate.className = "widget-gate";
+        const icon = document.createElement("span");
+        icon.className = "widget-gate-icon";
+        icon.setAttribute("aria-hidden", "true");
+        icon.textContent = "EXT";
+        const heading = document.createElement("h4");
+        heading.textContent = text(config.copy.widgetTitle);
+        const body = document.createElement("p");
+        body.textContent = text(config.copy.widgetBody);
+        const button = document.createElement("button");
+        button.className = "button primary";
+        button.type = "button";
+        button.textContent = text(config.copy.widgetLoad);
+        button.addEventListener("click", () => grantWidgetConsent(slot.dataset.widgetRegion));
+        gate.append(icon, heading, body, button);
+        slot.append(gate);
+      }
+
+      function widgetFallback(slot) {
+        slot.classList.remove("is-loaded");
+        slot.dataset.widgetState = "failed";
+        slot.innerHTML = "";
+        const fallback = document.createElement("div");
+        fallback.className = "widget-fallback";
+        fallback.textContent = text(config.copy.widgetFailed);
+        slot.append(fallback);
+      }
+
+      function grantWidgetConsent(region) {
+        localStorage.setItem(widgetConsentKey, "granted");
+        announce(config.copy.consentGranted);
+        loadWidget(region);
+      }
+
+      function loadWidget(region) {
+        const slot = document.querySelector(`[data-widget-region="${region}"]`);
+        if (!slot || slot.dataset.widgetState === "loading" || slot.dataset.widgetState === "loaded") return;
+        if (localStorage.getItem(widgetConsentKey) !== "granted") {
+          renderWidgetGate(slot);
+          return;
+        }
+
+        slot.dataset.widgetState = "loading";
+        slot.classList.add("is-loaded");
+        slot.innerHTML = "";
+        const container = document.createElement("div");
+        container.className = "tradingview-widget-container";
+        const widgetRoot = document.createElement("div");
+        widgetRoot.className = "tradingview-widget-container__widget";
+        container.append(widgetRoot);
+        slot.append(container);
+
+        const symbols = config.regions?.[region]?.widgetSymbols || [];
+        const script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = "https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js";
+        script.async = true;
+        script.textContent = JSON.stringify({
+          colorTheme: root.dataset.theme === "light" ? "light" : "dark",
+          dateRange: "12M",
+          showChart: true,
+          locale: language() === "zh-TW" ? "zh_TW" : language() === "zh-CN" ? "zh_CN" : "en",
+          isTransparent: true,
+          showSymbolLogo: true,
+          showFloatingTooltip: false,
+          width: "100%",
+          height: "348",
+          tabs: [
+            {
+              title: text(config.regions[region].name),
+              symbols: symbols.map((item) => ({ s: item.symbol, d: item.label }))
+            }
+          ]
+        });
+        container.append(script);
+
+        const startedAt = Date.now();
+        const check = window.setInterval(() => {
+          if (slot.querySelector("iframe")) {
+            clearInterval(check);
+            slot.dataset.widgetState = "loaded";
+          } else if (Date.now() - startedAt > 8000) {
+            clearInterval(check);
+            widgetFallback(slot);
+          }
+        }, 250);
+      }
+
+      document.querySelectorAll("[data-load-widget]").forEach((button) => {
+        button.addEventListener("click", () => grantWidgetConsent(button.dataset.loadWidget));
+      });
+
+      document.querySelector("#revoke-widget-consent")?.addEventListener("click", () => {
+        localStorage.removeItem(widgetConsentKey);
+        document.querySelectorAll("[data-widget-region]").forEach(renderWidgetGate);
+        announce(config.copy.consentRevoked);
+      });
+
+      function statusLabel(status) {
+        return text(config.copy.statuses?.[status] || config.copy.statuses.unavailable);
+      }
+
+      function formatMetricValue(value, unit) {
+        const number = Number(value);
+        if (!Number.isFinite(number)) return "—";
+        const digits = Math.abs(number) >= 1000 ? 0 : Math.abs(number) >= 10 ? 2 : 3;
+        const formatted = new Intl.NumberFormat(localeMap[language()], {
+          maximumFractionDigits: digits,
+          minimumFractionDigits: unit === "percent" ? 2 : 0
+        }).format(number);
+        if (unit === "percent" || unit === "percent-year-on-year") return `${formatted}%`;
+        return formatted;
+      }
+
+      function renderRegionItem(item) {
+        if (!item?.id) return;
+        const card = document.querySelector(`[data-indicator-card="${CSS.escape(item.id)}"]`);
+        const row = document.querySelector(`[data-indicator-row="${CSS.escape(item.id)}"]`);
+        const unit = item.unit || card?.dataset.unit || "";
+        const formatted = formatMetricValue(item.value, unit);
+        const status = item.status || "partial";
+        if (card) {
+          card.dataset.state = status;
+          const value = card.querySelector('[data-role="value"]');
+          const statusNode = card.querySelector('[data-role="status"]');
+          const asOf = card.querySelector('[data-role="asof"]');
+          if (value) value.textContent = formatted;
+          if (statusNode) {
+            statusNode.dataset.state = status;
+            statusNode.textContent = statusLabel(status);
+          }
+          if (asOf) asOf.textContent = `${text(config.copy.asOf)}: ${item.asOf || "—"}`;
+        }
+        if (row) {
+          const value = row.querySelector('[data-role="table-value"]');
+          if (value) value.textContent = formatted;
+        }
+      }
+
+      const regionLoads = new Map();
+      async function loadRegion(region, force = false) {
+        if (!config.regions?.[region]) return;
+        if (!force && regionLoads.has(region)) return regionLoads.get(region);
+        const statusNode = document.querySelector(`[data-region-status="${region}"]`);
+        if (statusNode) {
+          statusNode.dataset.state = "partial";
+          statusNode.textContent = text(config.copy.loading);
+        }
+        const task = (async () => {
+          try {
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), 8000);
+            const response = await fetch(`/api/finance/regions/${region}`, {
+              headers: { Accept: "application/json" },
+              signal: controller.signal
+            });
+            clearTimeout(timer);
+            if (!response.ok) throw new Error("region_unavailable");
+            const payload = await response.json();
+            const items = payload?.data?.items || payload?.data?.snapshot?.items || [];
+            items.forEach(renderRegionItem);
+            const state = items.length ? (payload?.data?.status || "partial") : "unavailable";
+            if (statusNode) {
+              statusNode.dataset.state = state;
+              statusNode.textContent = statusLabel(state);
+            }
+            return true;
+          } catch {
+            if (statusNode) {
+              statusNode.dataset.state = "unavailable";
+              statusNode.textContent = statusLabel("unavailable");
+            }
+            return false;
+          }
+        })();
+        regionLoads.set(region, task);
+        return task;
+      }
+
+      document.querySelectorAll("[data-region-refresh]").forEach((button) => {
+        button.addEventListener("click", async () => {
+          regionLoads.delete(button.dataset.regionRefresh);
+          const refreshed = await loadRegion(button.dataset.regionRefresh, true);
+          announce(refreshed ? config.copy.refreshed : config.copy.refreshFailed);
+        });
+      });
+
+      function validRate(value) {
+        return Number.isFinite(Number(value)) && Number(value) > 0;
+      }
+
+      function normalizeApiQuotes(payload) {
+        const rates = { USD: 1 };
+        const quoteMeta = {};
+        const quoteRows = payload?.data?.quotes || [];
+        quoteRows.forEach((row) => {
+          if (config.currencies.includes(row.currency) && validRate(row.rate)) {
+            rates[row.currency] = Number(row.rate);
+            quoteMeta[row.currency] = {
+              provider: row.provider || null,
+              asOf: row.asOf || null
+            };
+          }
+        });
+        return {
+          rates,
+          quoteMeta,
+          asOf: payload?.meta?.asOf || quoteRows.find((row) => row.asOf)?.asOf || null,
+          sources: payload?.meta?.sources || []
+        };
+      }
+
+      function normalizeFrankfurterRows(payload) {
+        const rows = Array.isArray(payload) ? payload : [];
+        const rates = { USD: 1 };
+        const quoteMeta = {};
+        let asOf = null;
+        rows.forEach((row) => {
+          if (row?.base === "USD" && config.currencies.includes(row.quote) && validRate(row.rate)) {
+            rates[row.quote] = Number(row.rate);
+            quoteMeta[row.quote] = {
+              provider: "frankfurter",
+              asOf: row.date || null
+            };
+            asOf ||= row.date || null;
+          }
+        });
+        return {
+          rates,
+          quoteMeta,
+          asOf,
+          sources: [{ id: "frankfurter", name: "Frankfurter", url: "https://frankfurter.dev/" }]
+        };
+      }
+
+      function normalizeFawaz(payload) {
+        const rates = { USD: 1 };
+        const quoteMeta = {};
+        Object.entries(payload?.usd || {}).forEach(([code, value]) => {
+          const normalized = code.toUpperCase();
+          if (config.currencies.includes(normalized) && validRate(value)) {
+            rates[normalized] = Number(value);
+            quoteMeta[normalized] = {
+              provider: "fawaz-currency-api",
+              asOf: payload?.date || null
+            };
+          }
+        });
+        return {
+          rates,
+          quoteMeta,
+          asOf: payload?.date || null,
+          sources: [{ id: "fawaz-currency-api", name: "Fawaz Currency API", url: "https://github.com/fawazahmed0/exchange-api" }]
+        };
+      }
+
+      async function fetchJson(url, timeoutMs = 8000) {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), timeoutMs);
+        try {
+          const response = await fetch(url, { headers: { Accept: "application/json" }, signal: controller.signal });
+          if (!response.ok) throw new Error("request_failed");
+          return await response.json();
+        } finally {
+          clearTimeout(timer);
+        }
+      }
+
+      function readFxCache() {
+        try {
+          const cached = financeLogic.readFinanceCache(
+            localStorage.getItem(fxCacheKey),
+            fxCacheKey
+          );
+          if (!cached.envelope?.data?.rates) return null;
+          return {
+            ...cached.envelope.data,
+            cacheState: cached.state === "stale" ? "stale" : "cached"
+          };
+        } catch {
+          return null;
+        }
+      }
+
+      function storeFxCache(data) {
+        try {
+          const cached = financeLogic.createFinanceCache(fxCacheKey, data, {
+            freshForMs: 86400000,
+            staleForMs: 7 * 86400000
+          });
+          localStorage.setItem(fxCacheKey, JSON.stringify(cached));
+        } catch {}
+      }
+
+      async function loadFxRates(force = false) {
+        const requestId = ++fxRequestId;
+        const sourceNode = document.querySelector("#fx-source");
+        if (sourceNode) sourceNode.textContent = text(config.copy.loading);
+        if (!force) {
+          const cached = readFxCache();
+          if (cached) {
+            fxRates = cached.rates;
+            fxMeta = cached;
+            renderFx();
+            if (sourceNode) sourceNode.textContent = text(cached.cacheState === "stale" ? config.copy.stale : config.copy.cached);
+          }
+        }
+
+        const quotes = config.currencies.filter((code) => code !== "USD");
+        let collected = { rates: { USD: 1 }, quoteMeta: {}, asOf: null, sources: [] };
+        const localHost = location.hostname === "127.0.0.1" || location.hostname === "localhost";
+        if (!localHost || window.__JATS_TEST_FINANCE_API__ === true) {
+          try {
+            const apiPayload = await fetchJson(`/api/finance/fx?base=USD&symbols=${regionalCurrencies.filter((code) => code !== "USD").join(",")}`);
+            collected = normalizeApiQuotes(apiPayload);
+          } catch {}
+        }
+
+        const missing = quotes.filter((code) => !validRate(collected.rates[code]));
+        if (missing.length) {
+          try {
+            const payload = await fetchJson(`https://api.frankfurter.dev/v2/rates?base=USD&quotes=${encodeURIComponent(missing.join(","))}`);
+            const normalized = normalizeFrankfurterRows(payload);
+            collected.rates = { ...collected.rates, ...normalized.rates };
+            collected.quoteMeta = { ...collected.quoteMeta, ...normalized.quoteMeta };
+            collected.asOf ||= normalized.asOf;
+            collected.sources = [...collected.sources, ...normalized.sources];
+          } catch {}
+        }
+
+        const stillMissing = quotes.filter((code) => !validRate(collected.rates[code]));
+        if (stillMissing.length) {
+          try {
+            const payload = await fetchJson("https://latest.currency-api.pages.dev/v1/currencies/usd.json");
+            const normalized = normalizeFawaz(payload);
+            stillMissing.forEach((code) => {
+              if (validRate(normalized.rates[code])) {
+                collected.rates[code] = normalized.rates[code];
+                collected.quoteMeta[code] = normalized.quoteMeta[code];
+              }
+            });
+            collected.asOf ||= normalized.asOf;
+            collected.sources = [...collected.sources, ...normalized.sources];
+          } catch {}
+        }
+
+        if (requestId !== fxRequestId) return false;
+        if (Object.keys(collected.rates).length < 2) {
+          if (fxRates) {
+            renderFx();
+            renderOverviewFx();
+          } else {
+            if (sourceNode) sourceNode.textContent = text(config.copy.ratesUnavailable);
+            document.querySelector("#fx-result").textContent = text(config.copy.ratesUnavailable);
+          }
+          return false;
+        }
+
+        const uniqueSources = [...new Map(collected.sources.map((source) => [source.id, source])).values()];
+        fxRates = collected.rates;
+        fxMeta = {
+          asOf: collected.asOf,
+          sources: uniqueSources,
+          quoteMeta: collected.quoteMeta,
+          fetchedAt: new Date().toISOString()
+        };
+        storeFxCache({ rates: fxRates, ...fxMeta });
+        renderFx();
+        renderOverviewFx();
+        return true;
+      }
+
+      const fx = {
+        amount: document.querySelector("#fx-amount"),
+        precision: document.querySelector("#fx-precision"),
+        from: document.querySelector("#fx-from"),
+        to: document.querySelector("#fx-to"),
+        result: document.querySelector("#fx-result"),
+        rate: document.querySelector("#fx-rate"),
+        source: document.querySelector("#fx-source"),
+        sourceLink: document.querySelector("#fx-source-link"),
+        feePercent: document.querySelector("#fx-fee-percent"),
+        fixedFee: document.querySelector("#fx-fixed-fee"),
+        quotedRate: document.querySelector("#fx-quoted-rate"),
+        costError: document.querySelector("#fx-cost-error"),
+        received: document.querySelector("#fx-cost-received"),
+        difference: document.querySelector("#fx-cost-difference"),
+        effective: document.querySelector("#fx-effective-rate"),
+        costPercent: document.querySelector("#fx-cost-percent")
+      };
+
+      function readFxPrefs() {
+        try {
+          const prefs = JSON.parse(localStorage.getItem(fxPrefsKey) || "null");
+          if (prefs?.version !== 1) return { from: "USD", to: "TWD", precision: "4" };
+          return {
+            from: config.currencies.includes(prefs.from) ? prefs.from : "USD",
+            to: config.currencies.includes(prefs.to) ? prefs.to : "TWD",
+            precision: ["2", "4", "6"].includes(prefs.precision) ? prefs.precision : "4"
+          };
+        } catch {
+          return { from: "USD", to: "TWD", precision: "4" };
+        }
+      }
+
+      function saveFxPrefs() {
+        try {
+          localStorage.setItem(fxPrefsKey, JSON.stringify({
+            version: 1,
+            from: fx.from.value,
+            to: fx.to.value,
+            precision: fx.precision.value
+          }));
+        } catch {}
+      }
+
+      function populateCurrencies() {
+        const currentFrom = fx.from.value;
+        const currentTo = fx.to.value;
+        [fx.from, fx.to].forEach((select) => {
+          select.innerHTML = "";
+          config.currencies.forEach((code) => {
+            const option = document.createElement("option");
+            option.value = code;
+            option.textContent = `${code} — ${text(config.copy.currencyNames[code])}`;
+            select.append(option);
+          });
+        });
+        const prefs = readFxPrefs();
+        fx.from.value = config.currencies.includes(currentFrom) ? currentFrom : prefs.from;
+        fx.to.value = config.currencies.includes(currentTo) ? currentTo : prefs.to;
+        fx.precision.value = prefs.precision;
+      }
+
+      function rateBetween(base, quote) {
+        try {
+          return financeLogic.crossRate(fxRates || {}, base, quote);
+        } catch {
+          return null;
+        }
+      }
+
+      function numberFormat(value, digits = 4) {
+        return new Intl.NumberFormat(localeMap[language()], {
+          minimumFractionDigits: Math.min(2, digits),
+          maximumFractionDigits: digits
+        }).format(value);
+      }
+
+      function pairReferenceMeta(base, quote) {
+        const sourceById = new Map((fxMeta?.sources || []).map((source) => [source.id, source]));
+        const details = [...new Set([base, quote])]
+          .filter((currency) => currency !== "USD")
+          .map((currency) => fxMeta?.quoteMeta?.[currency])
+          .filter(Boolean);
+        const providerIds = [...new Set(details.map((detail) => detail.provider).filter(Boolean))];
+        const sources = providerIds.map((id) => sourceById.get(id)).filter(Boolean);
+        const dates = [...new Set(details.map((detail) => detail.asOf).filter(Boolean))].sort();
+        return {
+          sources: sources.length ? sources : fxMeta?.sources || [],
+          dates: dates.length ? dates : [fxMeta?.asOf].filter(Boolean)
+        };
+      }
+
+      function sourceDisplayName(source) {
+        return text(config.sources?.[source?.id]?.name) || source?.name || source?.id || "";
+      }
+
+      function fxFreshness(dates) {
+        if (fxMeta?.cacheState === "stale") return "stale";
+        if (fxMeta?.cacheState === "cached") return "cached";
+        const oldest = [...dates].sort().at(0) || null;
+        return financeLogic.freshnessStatus(oldest, "business-daily");
+      }
+
+      function setInvalid(node, invalid) {
+        if (!node) return;
+        if (invalid) node.setAttribute("aria-invalid", "true");
+        else node.removeAttribute("aria-invalid");
+      }
+
+      function clearCostResults() {
+        [fx.received, fx.difference, fx.effective, fx.costPercent].forEach(
+          (node) => (node.textContent = "—")
+        );
+      }
+
+      function renderFx() {
+        if (!fxRates) return;
+        const amount = Number(fx.amount.value);
+        const digits = Number(fx.precision.value);
+        const rate = rateBetween(fx.from.value, fx.to.value);
+        const invalidAmount = !Number.isFinite(amount) || amount < 0 || !rate;
+        setInvalid(fx.amount, invalidAmount);
+        if (invalidAmount) {
+          fx.result.textContent = text(config.copy.invalidAmount);
+          fx.rate.textContent = "—";
+          clearCostResults();
+          fx.costError.hidden = true;
+          fx.costError.textContent = "";
+          return;
+        }
+
+        const converted = amount * rate;
+        fx.result.textContent = `${numberFormat(converted, digits)} ${fx.to.value}`;
+        fx.rate.textContent = `1 ${fx.from.value} = ${numberFormat(rate, Math.max(4, digits))} ${fx.to.value}`;
+        const pairMeta = pairReferenceMeta(fx.from.value, fx.to.value);
+        const sourceNames =
+          pairMeta.sources.map(sourceDisplayName).filter(Boolean).join(" + ") ||
+          text(config.copy.source);
+        const dateLabel = pairMeta.dates.join(" / ") || "—";
+        fx.source.textContent = `${sourceNames} · ${text(config.copy.asOf)}: ${dateLabel}`;
+        if (fx.sourceLink) {
+          fx.sourceLink.href =
+            pairMeta.sources.length === 1
+              ? `#sources/${pairMeta.sources[0].id}`
+              : "#sources";
+        }
+
+        const percentFee = Number(fx.feePercent.value || 0);
+        const fixedFee = Number(fx.fixedFee.value || 0);
+        const quotedRate = Number(fx.quotedRate.value || rate);
+        const invalidPercent =
+          !Number.isFinite(percentFee) || percentFee < 0 || percentFee > 100;
+        const invalidFixed = !Number.isFinite(fixedFee) || fixedFee < 0;
+        const invalidQuote = !validRate(quotedRate);
+        setInvalid(fx.feePercent, invalidPercent);
+        setInvalid(fx.fixedFee, invalidFixed);
+        setInvalid(fx.quotedRate, invalidQuote);
+        if (invalidPercent || invalidFixed || invalidQuote) {
+          clearCostResults();
+          fx.costError.textContent = text(config.copy.invalidCostInputs);
+          fx.costError.hidden = false;
+          return;
+        }
+        fx.costError.hidden = true;
+        fx.costError.textContent = "";
+        const cost = financeLogic.calculateFxCost({
+          amount,
+          referenceRate: rate,
+          feePercent: percentFee,
+          fixedFee,
+          quotedRate
+        });
+        fx.received.textContent = `${numberFormat(cost.received, digits)} ${fx.to.value}`;
+        fx.difference.textContent = `${numberFormat(cost.totalCostInQuoteCurrency, digits)} ${fx.to.value}`;
+        fx.effective.textContent = numberFormat(cost.effectiveRate, Math.max(4, digits));
+        fx.costPercent.textContent = `${numberFormat(cost.costPercent, 2)}%`;
+        saveFxPrefs();
+      }
+
+      function renderOverviewFx() {
+        if (!fxRates) return;
+        document.querySelectorAll("[data-overview-fx-value]").forEach((valueNode) => {
+          const pair = valueNode.dataset.overviewFxValue;
+          const [base, quote] = pair.split("/");
+          const rate = rateBetween(base, quote);
+          if (!rate) return;
+          valueNode.textContent = numberFormat(rate, 4);
+          const pairMeta = pairReferenceMeta(base, quote);
+          const state = fxFreshness(pairMeta.dates);
+          const card = valueNode.closest(".metric-card");
+          if (card) card.dataset.state = state;
+          const status = document.querySelector(`[data-overview-fx-status="${pair}"]`);
+          const meta = document.querySelector(`[data-overview-fx-meta="${pair}"]`);
+          const asOf = document.querySelector(`[data-overview-fx-asof="${pair}"]`);
+          const sourceLink = document.querySelector(`[data-overview-fx-source="${pair}"]`);
+          if (status) {
+            status.dataset.state = state;
+            status.textContent = statusLabel(state);
+          }
+          if (meta) {
+            meta.textContent =
+              pairMeta.sources.map(sourceDisplayName).filter(Boolean).join(" + ") ||
+              text(config.copy.source);
+          }
+          if (asOf) {
+            asOf.textContent = `${text(config.copy.asOf)}: ${pairMeta.dates.join(" / ") || "—"}`;
+          }
+          if (sourceLink) {
+            sourceLink.href =
+              pairMeta.sources.length === 1
+                ? `#sources/${pairMeta.sources[0].id}`
+                : "#sources";
+          }
+        });
+      }
+
+      [fx.amount, fx.feePercent, fx.fixedFee, fx.quotedRate].forEach((node) => node?.addEventListener("input", renderFx));
+      [fx.precision, fx.from, fx.to].forEach((node) => node?.addEventListener("change", renderFx));
+      document.querySelector("#fx-swap")?.addEventListener("click", () => {
+        [fx.from.value, fx.to.value] = [fx.to.value, fx.from.value];
+        renderFx();
+      });
+      document.querySelector("#fx-refresh")?.addEventListener("click", async () => {
+        const refreshed = await loadFxRates(true);
+        announce(refreshed ? config.copy.refreshed : config.copy.refreshFailed);
+      });
+
+      document.querySelector("#source-region-filter")?.addEventListener("change", (event) => {
+        const selected = event.currentTarget.value;
+        document.querySelectorAll("[data-source-region]").forEach((row) => {
+          row.hidden = selected !== "all" && row.dataset.sourceRegion !== selected;
+        });
+      });
+
+      document.addEventListener("jats:language", () => {
+        populateCurrencies();
+        updateClocks();
+        renderFx();
+        renderOverviewFx();
+        document.querySelectorAll('[data-widget-state="gated"]').forEach(renderWidgetGate);
+      });
+
+      const themeObserver = new MutationObserver(() => {
+        if (localStorage.getItem(widgetConsentKey) !== "granted") return;
+        document.querySelectorAll("[data-widget-region]").forEach((slot) => {
+          if (slot.dataset.widgetState === "loaded" || slot.dataset.widgetState === "failed") {
+            slot.dataset.widgetState = "";
+            loadWidget(slot.dataset.widgetRegion);
+          }
+        });
+      });
+      themeObserver.observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+
+      populateCurrencies();
+      updateClocks();
+      setInterval(updateClocks, 30000);
+      activateTab(tabFromHash(), { updateHash: false, preserveSourceHash: true });
+      loadFxRates();
+      };
+      if (window.JATSFinance) initializeFinance();
+      else window.addEventListener("jats:finance-runtime-ready", initializeFinance, { once: true });
+    })();
+  </script>
+</PortalLayout>

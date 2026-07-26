@@ -1,404 +1,415 @@
-# Josh Huang Personal Portal
+# JATSWeb / Josh Huang Personal Portal
 
-這是一個部署在 GitHub + Cloudflare Pages 的純靜態個人網站。第一版目標不是完整內容網站，而是建立一個可公開搜尋、可持續擴充、風格明確的個人門戶。
+JATSWeb is Josh Huang's public personal portal and browser-based auxiliary terminal experiment.
 
-Production domain:
+Production:
 
 ```text
 https://joshhuang.ccwu.cc/
 ```
 
-## Architecture Direction
+The site is built with Astro as a static Cloudflare Pages project. Public content remains data-driven through `data/*.json`; Cloudflare Pages Functions provide controlled read-only APIs, and larger public assets may live in Cloudflare R2 behind the guarded asset proxy.
 
-JATSWeb now follows an asset/data decoupling path:
+## Current Scope
 
-- Cloudflare Pages keeps the static presentation layer: HTML, CSS, JS, SEO, and small assets.
-- `data/*.json` is the content layer for profile, projects, links, tools, formulas, wallpapers, and file metadata.
-- Cloudflare R2 is the asset layer for larger public files such as PDF, ZIP, DOCX, wallpapers, and future media.
-- The local Admin Tool remains the only write surface for editing, previewing, uploading, checking, committing, and pushing.
-- Public pages are read-only and must not expose upload/delete APIs, R2 credentials, API keys, or private service URLs.
+The project currently includes:
 
-Recommended R2 public asset domain:
+- Personal profile and public identity page.
+- Project listing and project detail renderer.
+- Quick links and public tool directory.
+- Wallpaper-style start surface with selectable backgrounds and shortcut tiles.
+- Public file download metadata layer.
+- YouTube browser page using a Cloudflare Pages Function proxy.
+- Source-first regional Finance terminal for the U.S., Hong Kong, Mainland China, Taiwan, and Singapore, including a browser-side FX cost lab.
+- Compute Lab for browser-side expressions, matrices, and quick charts.
+- UX Lab concept record for the JATS design system.
+- Formula Lab with searchable formula cards, detailed derivation pages, KaTeX math, and Plotly/math.js interactive plots.
+- Standalone flower language personality test.
+- Standalone Four Seasons Flowers instant-growing experience.
+- Standalone Christmas Tree economic visualization and Zhu Bloom market surfaces.
+- Cloudflare Pages Functions for YouTube search, guarded R2 asset reads, and quota status.
+
+## Architecture
 
 ```text
-files.joshhuang.ccwu.cc
+WebPage/
+|-- src/
+|   |-- components/       # shared localized UI and formula renderers
+|   |-- layouts/          # shared JATS portal shell and right navigation rail
+|   |-- lib/              # content and compute utilities
+|   |-- pages/            # Astro static routes and generated detail pages
+|   `-- styles/           # design tokens and shared responsive system
+|-- data/                 # public JSON source of truth
+|-- assets/               # public images and downloads
+|-- functions/            # Cloudflare Pages Functions
+|-- tests/                # Vitest and Playwright coverage
+|-- scripts/              # content and production-build validation
+|-- docs/                 # architecture and maintenance references
+|-- *.html / *.css        # preserved standalone microsite sources
+|-- astro.config.mjs
+|-- package.json
+`-- dist/                 # generated production output (ignored)
 ```
 
-For quota protection, this domain should route through the guarded Pages Function proxy, not directly to a public R2 bucket:
+## Data Model
+
+The public pages should treat `data/*.json` as the source of truth.
+
+Current data inventory:
+
+| File | Purpose |
+| --- | --- |
+| `data/profile.json` | Profile summary, tags, public contacts |
+| `data/projects.json` | Project cards and project detail content |
+| `data/shortcuts.json` | Quick links page data |
+| `data/tools.json` | Tool directory entries |
+| `data/wallpapers.json` | Wallpaper backgrounds and shortcut tiles |
+| `data/files.json` | Public file metadata and storage provider info |
+| `data/i18n.json` | Shared UI copy for `en`, `zh-TW`, and `zh-CN` |
+| `data/formulas.json` | Formula Lab categories, cards, derivations, plots |
+| `data/flower-language-test.json` | Flower test questions and 64 result profiles |
+
+Astro reads shared JSON during the static build and copies the public datasets into the production output for compatible standalone pages. `scripts/validate-content.mjs` checks JSON validity, multilingual field parity, IDs, and referenced local assets.
+
+## Public / Private Boundary
+
+Public pages may expose:
+
+- Public profile information.
+- Public project descriptions.
+- Public links and tool entries.
+- Public downloadable asset URLs.
+- Browser-side API calls to approved public endpoints.
+- Cloudflare Pages Function routes that return sanitized public JSON.
+
+Public pages must not expose:
+
+- API keys, tokens, secrets, or `.env` values.
+- Cloudflare Tunnel private URLs.
+- R2 credentials or direct private bucket access.
+- Local admin routes or local network services.
+- Upload, delete, or write APIs.
+
+`YoutubeKey.txt` and `.env*` are ignored and must stay out of Git.
+
+## Asset Strategy
+
+Small public assets may be committed under `assets/`.
+
+Large public files should use Cloudflare R2 and be represented by metadata in `data/files.json`.
+
+Recommended guarded R2 public route:
 
 ```text
 https://files.joshhuang.ccwu.cc/api/assets/<r2-object-key>
 ```
 
-Quota guard bindings and environment variables:
+The guarded asset proxy is implemented at:
+
+```text
+functions/api/assets/[[path]].js
+```
+
+It reads from the `ASSETS_BUCKET` binding and applies quota accounting through `functions/_lib/quota-guard.js`.
+
+## Cloudflare Pages Functions
+
+Current API routes:
+
+| Route | File | Purpose |
+| --- | --- | --- |
+| `/api/youtube/search` | `functions/api/youtube/search.js` | Validates search query, applies quota, calls YouTube Data API, returns sanitized video data |
+| `/api/assets/*` | `functions/api/assets/[[path]].js` | Reads R2 public assets through the quota guard |
+| `/api/quota/status` | `functions/api/quota/status.js` | Returns current quota guard status |
+| `/api/finance/overview` | `functions/api/finance/overview.js` | Returns the five-region coverage and availability contract |
+| `/api/finance/regions/:region` | `functions/api/finance/regions/[region].js` | Returns a source-safe regional snapshot contract for `us`, `hk`, `cn`, `tw`, or `sg` |
+| `/api/finance/fx` | `functions/api/finance/fx.js` | Returns allowlisted daily reference FX rates with Frankfurter primary and official Fawaz mirror fallback |
+
+`functions/api/_middleware.js` counts API requests and appends quota headers.
+
+Required Cloudflare bindings:
 
 ```text
 USAGE_KV=<Workers KV namespace binding>
 ASSETS_BUCKET=<R2 bucket binding>
+```
+
+Required / optional environment variables:
+
+```text
+YOUTUBE_API_KEY=<set in Cloudflare Pages>
 ENFORCE_QUOTA_GUARD=true
 LIMIT_API_DAILY_REQUESTS=90000
 LIMIT_YOUTUBE_DAILY_UNITS=9000
 LIMIT_R2_MONTHLY_CLASS_B=9000000
 ```
 
-Detailed architecture and schema rules are documented in:
-
-```text
-docs/CONTENT_ASSET_ARCHITECTURE.md
-```
-
-Formula derivation content and Admin maintenance rules are documented in:
-
-```text
-docs/FORMULA_LAB_MAINTENANCE.md
-```
-
-## Current Direction
-
-首頁是個人宣傳與 JATS 入口。`JATS` 是固定品牌標題，不跟語言切換：
-
-```text
-JATS
-Josh Auxiliary Terminal System
-```
-
-目前網站提供：
-
-- 公開個人形象首頁
-- Profile / Projects / Quick Links / Tools 的獨立頁面
-- 深色簡約工業風 UI
-- 本地 JSON 內容資料
-- IP 估算位置與即時天氣模組
-- `zh-TW` / `zh-CN` / `en` 本地多語系
-- 未來 API、工具模組與 Cloudflare Pages Functions 的預留結構
-
-## Architecture
-
-此專案不使用 Node build 流程。Cloudflare Pages 直接部署 repository root。
-
-```text
-WebPage/
-|-- index.html                  # 首頁：JATS 終端式個人宣傳入口
-|-- profile.html                # 個人介紹與公開聯絡方式
-|-- wallpapers.html             # 動態桌布預覽與切換頁
-|-- projects.html               # 專案展示頁
-|-- project.html                # 共用專案詳情頁，讀取 data/projects.json
-|-- links.html                  # 公開安全快速連結
-|-- youtube.html                # YouTube 搜尋、嵌入播放器與側邊標題 ticker
-|-- tools.html                  # Exchange / Compute Lab / UX Lab 入口
-|-- files.html                  # 公開下載頁，讀取 data/files.json
-|-- styles.css                  # 全站 UI token、layout、components
-|-- js/
-|   |-- data-loader.js          # JSON-first data source，未來可切 API
-|   |-- main.js                 # i18n、clock、資料渲染、fallback
-|   `-- youtube.js              # YouTube 搜尋 UI、播放器、ticker、本機快取
-|-- functions/
-|   `-- api/youtube/search.js   # Cloudflare Pages Function proxy，不暴露 API key
-|-- data/
-|   |-- profile.json            # 個人資料與公開聯絡資訊
-|   |-- projects.json           # 專案卡片資料
-|   |-- shortcuts.json          # 公開快速連結
-|   |-- tools.json              # 工具入口狀態
-|   |-- wallpapers.json         # 動態桌布清單與素材路徑
-|   |-- files.json              # 本地後台上傳檔案的公開 metadata
-|   `-- i18n.json               # zh-TW / zh-CN / en 字典
-|-- assets/
-|   `-- files/                  # 本地後台上傳的公開檔案
-|-- favicon.svg
-|-- og-image.svg
-|-- robots.txt
-|-- sitemap.xml
-`-- docs/
-    |-- DEVELOPMENT_GUIDELINES.md
-    `-- DEVELOPMENT_LOG.md
-```
-
-## Runtime Flow
-
-1. Browser 載入 `index.html` 或其他頁面。
-2. `styles.css` 提供同一套設計語言與 responsive layout。
-3. `js/data-loader.js` 讀取 `data/*.json`。
-4. `js/main.js` 偵測語言、更新時間、套用翻譯並渲染資料卡片。
-5. 如果 JSON 載入失敗，`main.js` 使用內建 fallback，頁面仍可顯示基本內容。
-
-未來若要接 API，只需優先修改 `js/data-loader.js` 的資料來源，UI 層不應大改。
-
-## UI Design
-
-設計方向：JATS 的主視覺仍以深色、簡約、工業終端、模組化為核心；日間模式則作為 Apple Liquid Glass 參考下的透明玻璃變體。
-
-核心色票：
-
-| Token | Hex | Usage |
-| --- | --- | --- |
-| Core Yellow | `#FFD900` | 品牌重點、狀態標籤、主要 CTA |
-| Info Blue | `#2AAACE` | 時間、資訊狀態、技術感提示 |
-| Base Black | `#202020` | 深色基底 |
-| Surface Gray | `#333333` | 次級介面表面 |
-| UI Gray | `#D6D8D9` | 邊框、弱提示文字 |
-| Notice Orange | `#E5622B` | planned / coming soon |
-| White | `#FFFFFF` | 高對比主文字 |
-
-模式規則：
-
-- Night mode: 保持 JATS 深色工業終端感，黑灰基底、黃藍狀態色與高對比文字是主規則。除非有明確需求，不調整夜間模式 token、背景與卡片材質。
-- Day mode: 採用淺色冰藍玻璃，不使用大面積深藍底。背景以霧白、淡冰藍與低飽和藍色 mesh 為主，卡片使用半透明白藍玻璃，Active Blue 只用於活動導航、開關狀態與核心控制。
-- Day mode 文字：正文使用深藍灰系，標題與首頁 `JATS` 允許使用藍色漸層文字；避免純白大面積文字，降低長時間觀看壓力。
-- 可讀性與效能優先：玻璃效果不能犧牲文字對比或互動流暢度。避免在大量卡片上使用 SVG displacement / heavy backdrop filter；日間模式以輕量 blur、tint、specular、inset shadow 和 outer shadow 表現玻璃質感。
-- Liquid Glass 只用在導航、控制、卡片等功能層；內容本身仍保持明確分區，避免整頁變成單一模糊背景。
-
-首頁 UX：
-
-- 左側固定導航：保留「控制台」感，讓使用者知道還有其他頁面可跳轉。
-- 首頁主畫面：使用單一大型終端面板，不做傳統 landing page。
-- 左側 dashboard rail：放時間、位置、天氣預留、GitHub、Ping、Tool，對應使用者草圖中的資訊模組。
-- 位置與天氣：位置用使用者 public IP 做城市級估算；天氣用估算座標查詢當前天氣。
-- 右側 JATS lockup：固定顯示 `JATS / Josh Auxiliary Terminal System`，作為第一視覺焦點。
-- 介紹文字縮小：首頁概要文字比標題與 motto 小，避免壓過品牌區。
-- 搜尋框：第一版作為入口介面與未來功能預留，不暴露私密搜尋或後台能力。
-
-## Page Strategy
-
-網站採用跳轉不同頁面的方式，而不是把所有內容塞在首頁：
-
-- `index.html`: 個人宣傳首頁與 JATS portal。
-- `profile.html`: 公開個人介紹、技能標籤、公開聯絡方式。
-- `wallpapers.html`: 動態桌布預覽與切換，真實素材後續放入 JSON。
-- `projects.html`: 專案展示，點擊卡片進入 `project.html?id={projectId}` 詳情。
-- `project.html`: 共用專案詳情頁，頂部顯示 links / PDF 文件，下方渲染受控 Markdown 長文與圖片。
-- `links.html`: 只放公開安全連結。
-- `youtube.html`: YouTube 搜尋、嵌入播放與側邊標題 ticker，介於 Quick Links 與 Tools 之間。
-- `tools.html`: 工具模組入口，未完成前只顯示狀態。
-- `files.html`: 公開下載頁，只展示本地後台上傳並標記為公開的檔案。
-
-這樣可以維持首頁清楚，也讓後續每個功能區塊能獨立演化。
-
-## Public / Private Boundary
-
-公開網站可以放：
-
-- 個人介紹
-- 公開專案
-- 公開聯絡方式
-- GitHub profile
-- 未來工具的公開入口與狀態
-- 使用者 public IP 推算出的城市級位置與天氣顯示
-
-公開網站不放：
-
-- API key / token / secret
-- 私人後台 URL
-- Cloudflare Tunnel 私有服務入口
-- 管理頁、資料上傳頁、網站編輯入口
-- 本地 IP、內網位置、敏感檔案路徑
-
-私人功能若未來需要瀏覽器入口，應另外使用 Cloudflare Access 或獨立受保護路由。
-
-## External Public APIs
-
-首頁使用兩個前端公開 API：
-
-- IP location: `https://ipapi.co/json/`
-- Weather: `https://api.open-meteo.com/v1/forecast`
-- YouTube Data API: only through Cloudflare Pages Function `/api/youtube/search`
-
-注意：
-
-- IP 位置是城市級估算，不代表精準地址。
-- 這些請求由使用者瀏覽器直接發出，網站本身不儲存 IP 或天氣資料。
-- API 失敗時頁面會顯示 unavailable，不影響其他模組。
-- YouTube API key 只能設定在 Cloudflare Pages 環境變數 `YOUTUBE_API_KEY`，不可寫入前端或 GitHub repo。
-
 ## Local Development
 
-此專案可直接用靜態 server 檢查：
+Install dependencies and start the Astro development server:
 
 ```powershell
-python -m http.server 4173 --bind 127.0.0.1
+npm install
+npm run dev
 ```
 
 Open:
 
 ```text
-http://127.0.0.1:4173/
+http://127.0.0.1:4321/
 ```
 
-不建議只用 `file://` 測試，因為瀏覽器可能阻擋 JSON `fetch()`。
+Do not use `file://`. Production output is generated under `dist/`.
 
 ## QA Checklist
 
-提交前檢查：
+Run the automated validation suite:
 
 ```powershell
-python -m json.tool data\profile.json > $null
-python -m json.tool data\projects.json > $null
-python -m json.tool data\shortcuts.json > $null
-python -m json.tool data\tools.json > $null
-python -m json.tool data\wallpapers.json > $null
-python -m json.tool data\files.json > $null
-python -m json.tool data\i18n.json > $null
-node --check js\data-loader.js
-node --check js\main.js
-node --check js\youtube.js
-node --check functions\api\youtube\search.js
+npm run validate:data
+npm run check
+npm test
+npm run build
+npm run test:e2e
 ```
 
-瀏覽器檢查：
-
-- `/`
-- `/profile.html`
-- `/wallpapers.html`
-- `/projects.html`
-- `/project.html?id=personal-portal`
-- `/links.html`
-- `/youtube.html`
-- `/tools.html`
-- `/files.html`
-- Desktop / tablet / mobile 不重疊
-- 語言切換可用
-- JATS lockup 不隨語言切換
-- JSON 載入失敗時仍有 fallback
-
-## Cloudflare Pages Settings
-
-建議設定：
+Manual page checks:
 
 ```text
-Framework preset: None
-Build command: leave empty
-Build output directory: /
-Production branch: main
+/
+/profile.html
+/projects.html
+/project.html?id=personal-portal
+/links.html
+/tools.html
+/files.html
+/wallpapers.html
+/youtube.html
+/finance.html
+/compute-lab.html
+/ux-lab.html
+/formulas.html
+/formula.html?id=euler-phasors
+/formulas/euler-phasors.html
+/flower-language-test.html
+/four-seasons-flowers.html
 ```
 
-YouTube Function environment variable:
+Check desktop, tablet, and mobile layouts. Confirm language switching, theme switching, JSON loading, fallback states, and external API failure states.
+
+## Formula Lab
+
+`formulas.html` renders the formula index from `data/formulas.json`.
+
+`formulas/<formulaId>.html` renders the static, indexable derivation. The old `formula.html?id=<formulaId>` route redirects for compatibility, while `formula-interactive.html?id=<formulaId>` preserves the Plotly/math.js interactive renderer.
+
+- Localized title, summary, tags, and category.
+- Structured derivation sections.
+- KaTeX math rendering.
+- Plotly-based browser-side plots.
+- Plot handlers in `js/formula-detail.js`.
+
+Current formula dataset:
 
 ```text
-YOUTUBE_API_KEY=<set in Cloudflare Pages, never commit this value>
+categories: 6
+items: 20
 ```
 
-自訂網域：
+To rebuild the first-pass formula data from the generation script:
+
+```powershell
+node scripts\build-formulas-data.js
+```
+
+Formula maintenance details are in:
 
 ```text
-joshhuang.ccwu.cc
+docs/FORMULA_LAB_MAINTENANCE.md
 ```
 
-## YouTube Browser Architecture
+## YouTube Browser
 
-`youtube.html` is a public browser-style media page. It provides manual search, embedded playback, a result list, and a side ticker of video titles.
+`youtube.html` is a public search and playback interface.
 
-Core flow:
+Flow:
 
 ```text
 youtube.html
 |-- js/youtube.js
-|   |-- reads query from search form
-|   |-- checks localStorage cache for 1 hour
-|   |-- calls /api/youtube/search only after user submission
-|   `-- controls YouTube IFrame Player API
+|   |-- reads search form input
+|   |-- uses localStorage cache for repeated queries
+|   |-- calls /api/youtube/search only after user search
+|   `-- controls the YouTube IFrame Player API
 `-- functions/api/youtube/search.js
     |-- validates q, lang, and region
     |-- reads env.YOUTUBE_API_KEY
+    |-- applies YouTube quota accounting
     |-- calls YouTube Data API search.list
-    `-- returns sanitized JSON without secrets
+    `-- returns sanitized video items
 ```
 
 Quota posture:
 
 - No auto polling.
 - No automatic recommendation chain.
-- `search.list` is called only when the user submits a query.
-- Repeated queries are cached in the browser and at the Function response layer for 1 hour.
+- Search only runs after user submission.
+- Browser and Function responses cache repeated queries.
 
-## Formula Derivation Architecture
+## Finance Module
 
-`formulas.html` is the public entry for formula derivation modules. It shows searchable formula cards, category filters, status labels, and public-safe module links.
+`src/pages/finance.astro` is a source-first regional macro reference terminal. It covers:
 
-Core flow:
+- United States
+- Hong Kong
+- Mainland China
+- Taiwan
+- Singapore
 
-```text
-formulas.html
-|-- js/formulas.js
-|   |-- reads data/formulas.json
-|   |-- renders category filters and searchable formula cards
-|   `-- links ready modules to formula.html?id={formulaId}
-formula.html
-|-- js/formula-detail.js
-|   |-- reads the same formula registry
-|   |-- renders symbolic sections and step-by-step derivation
-|   |-- renders KaTeX math from JSON TeX strings
-|   `-- runs browser-side interactive calculations and Plotly charts
-data/formulas.json
-|-- categories[]
-`-- items[]
-```
-
-First interactive module:
-
-- `second-order-damping`
-- Uses frontend JavaScript only.
-- Uses KaTeX CDN for math layout.
-- Uses Plotly CDN for the response graph.
-- Adjusts damping ratio and natural frequency, then updates overshoot and time-domain response.
-
-Content rule:
-
-- Formula text, metadata, categories, derivation steps, and interaction settings belong in `data/formulas.json`.
-- Do not hard-code formula content into the HTML pages unless it is structural fallback text.
-- New interactive formulas should add a named calculation handler in `js/formula-detail.js`.
-
-Admin fit:
-
-- Local-only `WebPageAdmin` now includes a Formulas section.
-- Formula cards open a dedicated local editing surface in `WebPageAdmin`.
-- Basic metadata, derivation sections, steps, interactive parameters, and metrics are edited through structured form fields.
-- Publish/check logic includes formulas, HTML, CSS, JS, Functions, docs, and sitemap changes.
-
-## Wallpaper Interface Architecture
-
-`wallpapers.html` is treated as a dedicated desktop-surface application, not a normal content page.
-
-Core structure:
+The route preserves `/finance.html` and provides eight hash-addressable views:
 
 ```text
-wallpaper-viewport
-|-- wallpaper-track
-|   |-- wallpaper-screen-terminal  # clean terminal-style screen
-|   `-- wallpaper-screen-links     # same background + search + 18 shortcut tiles
-|-- wallpaper-panel-switch         # explicit left/right selector
-`-- wallpaper-bg-dock              # bottom drawer for background presets
+#overview
+#us
+#hk
+#cn
+#tw
+#sg
+#fx
+#sources
 ```
 
-Interaction model:
+Core data and behavior:
 
-- Desktop: mouse wheel switches between the two screens.
-- Mobile / iPad: horizontal swipe switches between the two screens.
-- The track only snaps to screen `0` or screen `1`; there is no resting state in the middle.
-- The bottom background drawer expands on hover, focus, or click/touch.
-- Selecting a background writes CSS variables on `#wallpaper-viewport`, so both screens update together.
+- `data/finance.json` defines 38 regional indicators and 18 entries in the canonical source registry.
+- Each indicator declares a source, category, update cadence, unit, and access mode.
+- Data modes are explicit: `official-api`, `official-snapshot`, `institutional-feed`, and `external-widget`.
+- Reviewed live adapters cover U.S. Treasury and BLS, HKMA, TWSE, and Singapore SingStat; mixed-cadence responses retain per-item dates.
+- China entries stay source-linked official snapshots unless a documented stable public API is reviewed.
+- TradingView market widgets load only after explicit browser-local consent and remain attributed.
+- The FX Lab supports a fixed 12-currency allowlist, preserves each quote's actual Frankfurter or Fawaz provider and date, uses browser-local last-success caching, and accepts only user-entered fee/spread scenarios.
+- No module value is presented as a real-time quote, executable price, trading signal, forecast, or investment recommendation.
 
-Data model:
+Local Finance preferences use versioned browser keys:
+
+```text
+jats:finance:external-v1
+jats:finance:fx-cache-v1
+jats:finance:fx-prefs-v1
+```
+
+The detailed source policy, API contract, cache behavior, and maintenance checklist are documented in `docs/FINANCE.md`.
+
+## Wallpaper Surface
+
+`wallpapers.html` is a dedicated desktop-surface interface.
+
+Data comes from:
 
 ```text
 data/wallpapers.json
-|-- backgrounds[]  # future image/video/css background presets
-`-- links[]        # public shortcut set rendered as the 6 x 3 grid
 ```
 
-Public boundary:
+Current inventory:
 
-- Shortcut tiles must remain public-safe.
-- Do not add private dashboards, tunnel URLs, admin panels, tokens, or local network addresses.
-- Future image/video assets should be referenced by public static paths only, for example `/assets/wallpapers/name.webp`.
+```text
+backgrounds: 4
+links: 18
+```
 
-## Maintenance Rule
+Rules:
 
-目前依使用者要求：本地完成並確認後，等待明確指令才 push 到 GitHub。
+- Wallpaper assets must use public static paths or guarded public asset URLs.
+- Shortcut tiles must stay public-safe.
+- Do not add admin dashboards, local service URLs, tokens, or private links.
 
-維護順序：
+## Flower Language Test
 
-1. 改資料優先改 `data/*.json`。
-2. 改文字優先改 `data/i18n.json`。
-3. 改版面才動 `index.html` / page html。
-4. 改視覺集中在 `styles.css`。
-5. 改資料來源集中在 `js/data-loader.js`。
-6. 每次重要調整更新 `docs/DEVELOPMENT_LOG.md`。
+`flower-language-test.html` is a standalone class-project page with its own CSS and JS.
+
+Data comes from:
+
+```text
+data/flower-language-test.json
+```
+
+Current inventory:
+
+```text
+questions: 6
+results: 64
+```
+
+This page does not use the shared portal shell.
+
+## Four Seasons Flowers
+
+`four-seasons-flowers.html` is a standalone, storybook-style instant flower-growing tool. It has its own CSS, JavaScript, data file, and generated WebP assets.
+
+Data comes from:
+
+```text
+data/four-seasons-flowers.json
+```
+
+The flow is pot selection, flower selection, and a persistent garden view. Watering and fertilizing advance growth through seedling, growing, and bloom stages; photos and all progress are stored locally under the versioned `fourSeasonsFlowers:v1` key. The settings dialog provides the only reset path.
+
+This page does not use the shared portal shell and does not send progress to a server.
+
+## Cloudflare Pages Settings
+
+Recommended Pages settings:
+
+```text
+Framework preset: Astro
+Build command: npm run build
+Build output directory: dist
+Production branch: main
+```
+
+Routing:
+
+```text
+_routes.json includes /api/* for Pages Functions.
+```
+
+Headers:
+
+```text
+_headers sets nosniff globally and no-cache revalidation for CSS, JS, and data files.
+```
+
+## Maintenance Rules
+
+When editing content:
+
+1. Prefer editing `data/*.json` for public content.
+2. Keep `en`, `zh-TW`, and `zh-CN` semantically aligned where localized fields exist.
+3. Validate JSON before previewing.
+4. Preview through the Astro development server.
+5. Update the generated sitemap route when adding or removing public pages.
+6. Keep public/private boundaries intact.
+7. Do not commit secrets, local logs, generated temp files, or oversized assets.
+
+When editing behavior:
+
+1. Keep shared portal behavior in `src/layouts/` and shared components.
+2. Keep page-specific behavior in the matching Astro page.
+3. Keep legacy interactive formula plot logic in `js/formula-detail.js`.
+4. Keep Cloudflare-only behavior inside `functions/`.
+5. Run syntax checks before publishing.
+
+## Current Verified State
+
+As of 2026-07-26, the following checks pass locally:
+
+- JSON, multilingual parity, ID, and local asset validation.
+- Astro strict type checks and production build.
+- Required route, metadata, and internal-link validation.
+- Vitest coverage for Compute Lab plus Finance input allowlists, regional and FX Function contracts, provider/date normalization, conversion, cost comparison, freshness, cache handling, and quota-safe failure envelopes.
+- Playwright coverage for preferences, Compute Lab, legacy detail redirects, Finance tabs and deep links, FX provenance plus success/failure refresh behavior, dynamic language, 360 px layout, and external-widget consent.
+- Finance Lighthouse production-preview scores meet the ≥90 acceptance target in all four categories on desktop and mobile.
+
+Current working tree note:
+
+- `server.log` and `server.err.log` are untracked local runtime files.

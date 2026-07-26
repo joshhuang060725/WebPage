@@ -1,0 +1,121 @@
+---
+import Localized from "./Localized.astro";
+
+const { element, formulaId } = Astro.props;
+const type = element.type;
+const hasLocalized = (value: any) => value && typeof value === "object" && "en" in value;
+---
+
+{type === "text" && <Localized value={element.content} tag="p" />}
+{
+  type === "note" && (
+    <aside class="formula-note">
+      {element.label && <Localized value={element.label} tag="strong" />}
+      <Localized value={element.content} tag="p" />
+    </aside>
+  )
+}
+{
+  type === "derivation-step" && (
+    <article class="derivation-step">
+      <Localized value={element.title} tag="h3" />
+      <div class="math-block">{`\\[${element.equation}\\]`}</div>
+      <Localized value={element.content} tag="p" />
+      {element.logicNote && <div class="logic-note"><Localized value={element.logicNote} /></div>}
+    </article>
+  )
+}
+{
+  type === "variable-table" && (
+    <div class="table-wrap">
+      {element.caption && <Localized value={element.caption} tag="h3" />}
+      <table>
+        <thead><tr><th>Symbol</th><th>Quantity</th><th>Unit</th><th>Meaning</th></tr></thead>
+        <tbody>
+          {element.rows.map((row: any) => (
+            <tr>
+              <td>{row.symbol}</td>
+              <td>{hasLocalized(row.quantity) ? <Localized value={row.quantity} /> : row.quantity}</td>
+              <td>{row.unit}</td>
+              <td>{hasLocalized(row.meaning) ? <Localized value={row.meaning} /> : row.meaning}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+{
+  type === "table" && (
+    <div class="table-wrap">
+      {element.caption && <Localized value={element.caption} tag="h3" />}
+      <table>
+        <thead><tr>{element.headers.map((header: any) => <th>{hasLocalized(header) ? <Localized value={header} /> : header}</th>)}</tr></thead>
+        <tbody>
+          {element.rows.map((row: any[]) => (
+            <tr>{row.map((cell: any) => <td>{hasLocalized(cell) ? <Localized value={cell} /> : cell}</td>)}</tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+{
+  type === "boundary-case" && (
+    <article class="boundary-case">
+      <code>{element.condition}</code>
+      <Localized value={element.result} tag="strong" />
+      <Localized value={element.meaning} tag="p" />
+    </article>
+  )
+}
+{
+  type === "design-rules" && (
+    <article class="design-rules">
+      <Localized value={element.title} tag="h3" />
+      <ol>{element.rules.map((rule: any) => <li><Localized value={rule} /></li>)}</ol>
+    </article>
+  )
+}
+{
+  type === "code" && (
+    <article class="code-block">
+      <Localized value={element.title} tag="h3" />
+      <div class="code-heading"><span>{element.language || "text"}</span><button type="button" data-copy-code>Copy</button></div>
+      <pre><code>{element.content}</code></pre>
+    </article>
+  )
+}
+{
+  type === "plot" && (
+    <article class="plot-entry">
+      <div>
+        <p class="eyebrow">INTERACTIVE MODULE</p>
+        <Localized value={element.caption} tag="h3" />
+        <div class="tag-list">
+          {element.parameters?.map((parameter: any) => <span class="tag">{parameter.symbol || parameter.id}: {parameter.min}–{parameter.max} {parameter.unit || ""}</span>)}
+        </div>
+      </div>
+      <a class="button primary" href={`/formula-interactive.html?id=${formulaId}`}>
+        <Localized value={{ en: "Open interactive view", "zh-TW": "開啟互動視圖", "zh-CN": "打开交互视图" }} />
+      </a>
+    </article>
+  )
+}
+
+<style>
+  .formula-note, .logic-note { padding: .85rem 1rem; border-left: 3px solid var(--cyan); background: var(--surface-soft); }
+  .formula-note p { margin: .35rem 0 0; }
+  .derivation-step { padding: 1rem 0; border-bottom: 1px solid var(--line); }
+  .math-block { margin: 1rem 0; padding: 1rem; overflow-x: auto; background: var(--bg); color: var(--yellow); text-align: center; }
+  .logic-note { color: var(--muted); font-size: .86rem; }
+  .boundary-case { display: grid; grid-template-columns: minmax(120px,.4fr) minmax(150px,.6fr) 1.4fr; gap: 1rem; padding: 1rem; border: 1px solid var(--line); }
+  .boundary-case code, .boundary-case strong { color: var(--yellow); }
+  .boundary-case p { margin: 0; color: var(--muted); }
+  .design-rules li { margin-bottom: .6rem; }
+  .code-heading { display: flex; justify-content: space-between; align-items: center; padding: .45rem .7rem; background: #111820; color: #aebbc7; font: 700 .7rem ui-monospace, monospace; }
+  .code-heading button { min-height: 30px; color: inherit; }
+  pre { margin: 0; padding: 1rem; overflow-x: auto; color: #d8e3e9; background: #080c10; }
+  .plot-entry { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 1rem; border: 1px solid var(--line-strong); background: linear-gradient(120deg, rgba(42,170,206,.1), var(--surface-soft)); }
+  @media (max-width: 640px) { .boundary-case { grid-template-columns: 1fr; } .plot-entry { align-items: flex-start; flex-direction: column; } }
+</style>

@@ -1,0 +1,24 @@
+---
+import Localized from "./Localized.astro";
+
+const { eyebrow, title, description, actions = [] } = Astro.props;
+---
+
+<header class="page-header">
+  <div>
+    <Localized value={eyebrow} tag="p" class="eyebrow" />
+    <Localized value={title} tag="h1" />
+    <Localized value={description} tag="p" class="page-lead" />
+  </div>
+  {
+    actions.length > 0 && (
+      <div class="header-actions">
+        {actions.map((action: any) => (
+          <a class:list={["button", action.primary && "primary"]} href={action.href}>
+            <Localized value={action.label} />
+          </a>
+        ))}
+      </div>
+    )
+  }
+</header>

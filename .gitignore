@@ -2,6 +2,10 @@
 Thumbs.db
 node_modules/
 dist/
+.astro/
+coverage/
+playwright-report/
+test-results/
 .env
 .env.*
 YoutubeKey.txt

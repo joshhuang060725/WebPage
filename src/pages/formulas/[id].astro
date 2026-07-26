@@ -1,0 +1,83 @@
+---
+import PortalLayout from "@layouts/PortalLayout.astro";
+import Localized from "@components/Localized.astro";
+import StatusBadge from "@components/StatusBadge.astro";
+import FormulaElement from "@components/FormulaElement.astro";
+import { readData } from "@lib/content";
+
+export function getStaticPaths() {
+  const data = readData<any>("formulas.json");
+  return data.items.map((formula: any) => ({ params: { id: formula.id }, props: { formula } }));
+}
+
+const { formula } = Astro.props as { formula: any };
+---
+
+<PortalLayout title={formula.title} description={formula.description} active="formulas" canonical={`/formulas/${formula.id}.html`}>
+  <Fragment slot="head">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css" />
+    <script is:inline defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"></script>
+    <script is:inline defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js"></script>
+  </Fragment>
+  <a class="back-link" href="/formulas.html">← <Localized value={{ en: "Formula index", "zh-TW": "公式索引", "zh-CN": "公式索引" }} /></a>
+  <header class="formula-hero">
+    <div>
+      <p class="eyebrow">FORMULA / {formula.number}</p>
+      <h1><Localized value={formula.title} /></h1>
+      <Localized value={formula.description} tag="p" class="lead" />
+      <div class="tag-list">{formula.tags.map((tag: string) => <span class="tag">{tag}</span>)}</div>
+    </div>
+    <StatusBadge status={formula.status} />
+  </header>
+  <div class="headline-equation">{`\\[${formula.formula}\\]`}</div>
+  <div class="notice"><Localized value={formula.summary} /></div>
+  <div class="formula-sections">
+    {formula.sections.map((section: any, index: number) => (
+      <section class="section formula-section" id={section.id}>
+        <header>
+          <span>{String(index + 1).padStart(2, "0")}</span>
+          <div><p class="eyebrow">{section.eyebrow}</p><Localized value={section.title} tag="h2" /></div>
+        </header>
+        <div class="panel element-stack">
+          {section.elements.map((element: any) => <FormulaElement element={element} formulaId={formula.id} />)}
+        </div>
+      </section>
+    ))}
+  </div>
+  <script is:inline slot="scripts">
+    // @ts-nocheck
+    const renderMath = () => {
+      if (window.renderMathInElement) {
+        window.renderMathInElement(document.querySelector("#main"), {
+          delimiters: [
+            { left: "\\[", right: "\\]", display: true },
+            { left: "$$", right: "$$", display: true },
+            { left: "$", right: "$", display: false }
+          ],
+          throwOnError: false
+        });
+      }
+    };
+    if (document.readyState === "complete") renderMath();
+    else window.addEventListener("load", renderMath, { once: true });
+    document.querySelectorAll("[data-copy-code]").forEach((button) => {
+      button.addEventListener("click", async () => {
+        const code = button.closest(".code-block")?.querySelector("code")?.textContent || "";
+        await navigator.clipboard.writeText(code);
+        button.textContent = "Copied";
+      });
+    });
+  </script>
+</PortalLayout>
+
+<style>
+  .back-link { display: inline-flex; margin-bottom: 2rem; color: var(--muted); text-decoration: none; }
+  .formula-hero { display: flex; align-items: end; justify-content: space-between; gap: 2rem; padding-bottom: 2rem; border-bottom: 1px solid var(--line-strong); }
+  .formula-hero .tag-list { margin-top: 1rem; }
+  .headline-equation { margin: 1rem 0; padding: 1.5rem; overflow-x: auto; border: 1px solid var(--line); background: var(--surface); color: var(--yellow); text-align: center; font-size: 1.25rem; }
+  .formula-section > header { display: grid; grid-template-columns: 52px 1fr; gap: 1rem; align-items: start; margin-bottom: 1rem; }
+  .formula-section > header > span { color: var(--yellow); font: 900 1.6rem ui-monospace, monospace; }
+  .formula-section h2 { margin: 0; }
+  .element-stack { display: grid; gap: 1rem; }
+  @media (max-width: 640px) { .formula-hero { align-items: flex-start; flex-direction: column; } }
+</style>

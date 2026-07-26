@@ -1,0 +1,16 @@
+---
+import PortalLayout from "@layouts/PortalLayout.astro";
+import Localized from "@components/Localized.astro";
+const title = { en: "Formula redirect", "zh-TW": "公式重新導向", "zh-CN": "公式重定向" };
+const description = { en: "Compatibility route for formula links.", "zh-TW": "舊公式連結相容頁。", "zh-CN": "旧公式链接兼容页。" };
+---
+<PortalLayout title={title} description={description} active="formulas">
+  <div class="panel empty-state">
+    <h1><Localized value={{ en: "Opening formula…", "zh-TW": "正在開啟公式…", "zh-CN": "正在打开公式…" }} /></h1>
+    <p><a href="/formulas.html"><Localized value={{ en: "Return to Formula Lab", "zh-TW": "返回公式推導", "zh-CN": "返回公式推导" }} /></a></p>
+  </div>
+  <script is:inline slot="scripts">
+    const id = new URLSearchParams(location.search).get("id");
+    if (id && /^[a-z0-9-]+$/i.test(id)) location.replace(`/formulas/${id}.html`);
+  </script>
+</PortalLayout>

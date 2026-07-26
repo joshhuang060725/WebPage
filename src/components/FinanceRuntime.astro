@@ -1,0 +1,28 @@
+<script>
+  import {
+    calculateFxCost,
+    createFinanceCache,
+    crossRate,
+    freshnessStatus,
+    readFinanceCache
+  } from "../lib/finance";
+
+  const financeWindow = window as typeof window & {
+    JATSFinance?: {
+      calculateFxCost: typeof calculateFxCost;
+      createFinanceCache: typeof createFinanceCache;
+      crossRate: typeof crossRate;
+      freshnessStatus: typeof freshnessStatus;
+      readFinanceCache: typeof readFinanceCache;
+    };
+  };
+
+  financeWindow.JATSFinance = Object.freeze({
+    calculateFxCost,
+    createFinanceCache,
+    crossRate,
+    freshnessStatus,
+    readFinanceCache
+  });
+  window.dispatchEvent(new Event("jats:finance-runtime-ready"));
+</script>

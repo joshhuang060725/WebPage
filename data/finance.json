@@ -1,0 +1,1472 @@
+{
+  "schemaVersion": 1,
+  "status": "beta",
+  "lastReviewedAt": "2026-07-26",
+  "overview": {
+    "title": {
+      "en": "Global Macro Monitor",
+      "zh-TW": "全球總體經濟觀察台",
+      "zh-CN": "全球宏观经济观察台"
+    },
+    "description": {
+      "en": "A source-first reference view for the United States, Hong Kong, Mainland China, Taiwan, and Singapore. It separates official data, official snapshots, and external market widgets.",
+      "zh-TW": "以來源透明為優先的參考視圖，聚焦美國、香港、中國大陸、臺灣與新加坡，並明確區分官方資料、官方快照與外部行情元件。",
+      "zh-CN": "以来源透明为优先的参考视图，聚焦美国、香港、中国大陆、台湾与新加坡，并明确区分官方数据、官方快照与外部行情组件。"
+    },
+    "regionOrder": [
+      "us",
+      "hk",
+      "cn",
+      "tw",
+      "sg"
+    ],
+    "headlineIndicatorIds": [
+      "us-treasury-10y",
+      "us-effective-federal-funds-rate",
+      "hk-usd-hkd-reference",
+      "cn-usd-cny-central-parity",
+      "tw-taiex",
+      "sg-sora"
+    ],
+    "statusLabels": {
+      "direct": {
+        "en": "Direct official data",
+        "zh-TW": "官方資料直接接入",
+        "zh-CN": "官方数据直接接入"
+      },
+      "official-snapshot": {
+        "en": "Official snapshot",
+        "zh-TW": "官方快照",
+        "zh-CN": "官方快照"
+      },
+      "external-widget": {
+        "en": "External market widget",
+        "zh-TW": "外部行情元件",
+        "zh-CN": "外部行情组件"
+      }
+    },
+    "sourcePolicy": {
+      "en": "Regional indicators prefer official public agencies and exchanges. TradingView is used only where an official, stable, zero-key market API is not available. Every displayed value must carry its source and as-of time.",
+      "zh-TW": "地區指標優先採用官方機構與交易所資料；只有在缺乏穩定且免金鑰的官方行情 API 時才使用 TradingView。所有顯示數值都必須附上來源與資料日期。",
+      "zh-CN": "地区指标优先采用官方机构与交易所数据；只有在缺乏稳定且免密钥的官方行情 API 时才使用 TradingView。所有显示数值都必须附上来源与数据日期。"
+    },
+    "riskDisclosure": {
+      "en": "Delayed reference data only. It is not a real-time quote, trading signal, forecast, or investment recommendation.",
+      "zh-TW": "僅供延遲參考，不是即時報價、交易訊號、預測或投資建議。",
+      "zh-CN": "仅供延迟参考，不是实时报价、交易信号、预测或投资建议。"
+    }
+  },
+  "us": {
+    "id": "us",
+    "name": {
+      "en": "United States",
+      "zh-TW": "美國",
+      "zh-CN": "美国"
+    },
+    "currency": "USD",
+    "timezone": "America/New_York",
+    "indicators": [
+      {
+        "id": "us-sp-500",
+        "category": "market",
+        "name": {
+          "en": "S&P 500",
+          "zh-TW": "標普 500 指數",
+          "zh-CN": "标普 500 指数"
+        },
+        "description": {
+          "en": "Broad large-cap U.S. equity market reference shown through an attributed external widget.",
+          "zh-TW": "透過保留來源標示的外部元件呈現美國大型股市場參考。",
+          "zh-CN": "通过保留来源标识的外部组件呈现美国大型股市场参考。"
+        },
+        "unit": "index-points",
+        "frequency": "market-delayed",
+        "availability": "external-widget",
+        "sourceId": "tradingview",
+        "externalSymbol": "SP:SPX"
+      },
+      {
+        "id": "us-nasdaq-composite",
+        "category": "market",
+        "name": {
+          "en": "Nasdaq Composite",
+          "zh-TW": "那斯達克綜合指數",
+          "zh-CN": "纳斯达克综合指数"
+        },
+        "description": {
+          "en": "Technology-heavy U.S. equity market reference shown through an attributed external widget.",
+          "zh-TW": "透過保留來源標示的外部元件呈現偏重科技股的美國市場參考。",
+          "zh-CN": "通过保留来源标识的外部组件呈现偏重科技股的美国市场参考。"
+        },
+        "unit": "index-points",
+        "frequency": "market-delayed",
+        "availability": "external-widget",
+        "sourceId": "tradingview",
+        "externalSymbol": "NASDAQ:IXIC"
+      },
+      {
+        "id": "us-dollar-exchange-rates",
+        "category": "fx",
+        "name": {
+          "en": "U.S. Dollar Exchange Rates",
+          "zh-TW": "美元外匯匯率",
+          "zh-CN": "美元外汇汇率"
+        },
+        "description": {
+          "en": "Federal Reserve H.10 foreign exchange reference rates for selected currencies.",
+          "zh-TW": "美國聯邦準備理事會 H.10 所列的精選外幣參考匯率。",
+          "zh-CN": "美国联邦储备委员会 H.10 所列的精选外币参考汇率。"
+        },
+        "unit": "varies-by-pair",
+        "frequency": "business-daily",
+        "availability": "direct",
+        "sourceId": "us-fed",
+        "seriesCode": "H10"
+      },
+      {
+        "id": "us-effective-federal-funds-rate",
+        "category": "rates",
+        "name": {
+          "en": "Effective Federal Funds Rate",
+          "zh-TW": "有效聯邦基金利率",
+          "zh-CN": "有效联邦基金利率"
+        },
+        "description": {
+          "en": "Daily effective overnight federal funds rate published in the Federal Reserve H.15 release.",
+          "zh-TW": "美國聯邦準備理事會 H.15 發布的每日有效隔夜聯邦基金利率。",
+          "zh-CN": "美国联邦储备委员会 H.15 发布的每日有效隔夜联邦基金利率。"
+        },
+        "unit": "percent",
+        "frequency": "business-daily",
+        "availability": "direct",
+        "sourceId": "us-fed",
+        "seriesCode": "H15"
+      },
+      {
+        "id": "us-treasury-2y",
+        "category": "rates",
+        "name": {
+          "en": "U.S. Treasury 2-Year Yield",
+          "zh-TW": "美國 2 年期公債殖利率",
+          "zh-CN": "美国 2 年期国债收益率"
+        },
+        "description": {
+          "en": "Two-year Treasury par yield curve rate.",
+          "zh-TW": "美國財政部 2 年期公債票面殖利率曲線利率。",
+          "zh-CN": "美国财政部 2 年期国债票面收益率曲线利率。"
+        },
+        "unit": "percent",
+        "frequency": "business-daily",
+        "availability": "direct",
+        "sourceId": "us-treasury",
+        "seriesCode": "BC_2YEAR"
+      },
+      {
+        "id": "us-treasury-10y",
+        "category": "rates",
+        "name": {
+          "en": "U.S. Treasury 10-Year Yield",
+          "zh-TW": "美國 10 年期公債殖利率",
+          "zh-CN": "美国 10 年期国债收益率"
+        },
+        "description": {
+          "en": "Ten-year Treasury par yield curve rate.",
+          "zh-TW": "美國財政部 10 年期公債票面殖利率曲線利率。",
+          "zh-CN": "美国财政部 10 年期国债票面收益率曲线利率。"
+        },
+        "unit": "percent",
+        "frequency": "business-daily",
+        "availability": "direct",
+        "sourceId": "us-treasury",
+        "seriesCode": "BC_10YEAR"
+      },
+      {
+        "id": "us-cpi-u",
+        "category": "macro",
+        "name": {
+          "en": "Consumer Price Index for All Urban Consumers",
+          "zh-TW": "全體城市消費者物價指數",
+          "zh-CN": "全体城市消费者价格指数"
+        },
+        "description": {
+          "en": "Headline CPI-U, U.S. city average, all items (1982–1984 = 100).",
+          "zh-TW": "美國城市平均、全項目的整體 CPI-U（1982–1984 年＝100）。",
+          "zh-CN": "美国城市平均、全项目的整体 CPI-U（1982–1984 年=100）。"
+        },
+        "unit": "index-1982-1984-100",
+        "frequency": "monthly",
+        "availability": "direct",
+        "sourceId": "us-bls",
+        "seriesCode": "CUUR0000SA0"
+      },
+      {
+        "id": "us-unemployment-rate",
+        "category": "macro",
+        "name": {
+          "en": "Unemployment Rate",
+          "zh-TW": "失業率",
+          "zh-CN": "失业率"
+        },
+        "description": {
+          "en": "Seasonally adjusted civilian unemployment rate.",
+          "zh-TW": "經季節調整的民間失業率。",
+          "zh-CN": "经季节调整的民间失业率。"
+        },
+        "unit": "percent",
+        "frequency": "monthly",
+        "availability": "direct",
+        "sourceId": "us-bls",
+        "seriesCode": "LNS14000000"
+      }
+    ]
+  },
+  "hk": {
+    "id": "hk",
+    "name": {
+      "en": "Hong Kong",
+      "zh-TW": "香港",
+      "zh-CN": "香港"
+    },
+    "currency": "HKD",
+    "timezone": "Asia/Hong_Kong",
+    "indicators": [
+      {
+        "id": "hk-hang-seng-index",
+        "category": "market",
+        "name": {
+          "en": "Hang Seng Index",
+          "zh-TW": "恆生指數",
+          "zh-CN": "恒生指数"
+        },
+        "description": {
+          "en": "Hong Kong large-cap equity market reference shown through an attributed external widget.",
+          "zh-TW": "透過保留來源標示的外部元件呈現香港大型股市場參考。",
+          "zh-CN": "通过保留来源标识的外部组件呈现香港大型股市场参考。"
+        },
+        "unit": "index-points",
+        "frequency": "market-delayed",
+        "availability": "external-widget",
+        "sourceId": "tradingview",
+        "externalSymbol": "TVC:HSI"
+      },
+      {
+        "id": "hk-hscei",
+        "category": "market",
+        "name": {
+          "en": "Hang Seng China Enterprises Index",
+          "zh-TW": "恆生中國企業指數",
+          "zh-CN": "恒生中国企业指数"
+        },
+        "description": {
+          "en": "Reference for Mainland Chinese enterprises listed in Hong Kong.",
+          "zh-TW": "香港上市中國大陸企業的市場參考。",
+          "zh-CN": "香港上市中国大陆企业的市场参考。"
+        },
+        "unit": "index-points",
+        "frequency": "market-delayed",
+        "availability": "external-widget",
+        "sourceId": "tradingview",
+        "externalSymbol": "TVC:HSCEI"
+      },
+      {
+        "id": "hk-usd-hkd-reference",
+        "category": "fx",
+        "name": {
+          "en": "USD/HKD Reference Rate",
+          "zh-TW": "美元兌港元參考匯率",
+          "zh-CN": "美元兑港元参考汇率"
+        },
+        "description": {
+          "en": "Daily Hong Kong dollar exchange-rate reference published by the HKMA.",
+          "zh-TW": "香港金融管理局發布的每日港元匯率參考。",
+          "zh-CN": "香港金融管理局发布的每日港元汇率参考。"
+        },
+        "unit": "HKD-per-USD",
+        "frequency": "business-daily",
+        "availability": "direct",
+        "sourceId": "hk-hkma"
+      },
+      {
+        "id": "hk-base-rate",
+        "category": "rates",
+        "name": {
+          "en": "HKMA Base Rate",
+          "zh-TW": "香港金融管理局基本利率",
+          "zh-CN": "香港金融管理局基本利率"
+        },
+        "description": {
+          "en": "Base Rate under the Hong Kong Linked Exchange Rate System.",
+          "zh-TW": "香港聯繫匯率制度下的基本利率。",
+          "zh-CN": "香港联系汇率制度下的基本利率。"
+        },
+        "unit": "percent",
+        "frequency": "event-driven",
+        "availability": "direct",
+        "sourceId": "hk-hkma"
+      },
+      {
+        "id": "hk-hibor-1m",
+        "category": "rates",
+        "name": {
+          "en": "One-Month HIBOR",
+          "zh-TW": "一個月香港銀行同業拆息",
+          "zh-CN": "一个月香港银行同业拆息"
+        },
+        "description": {
+          "en": "One-month Hong Kong interbank offered rate reference.",
+          "zh-TW": "一個月期香港銀行同業拆息參考。",
+          "zh-CN": "一个月期香港银行同业拆息参考。"
+        },
+        "unit": "percent",
+        "frequency": "business-daily",
+        "availability": "direct",
+        "sourceId": "hk-hkma"
+      },
+      {
+        "id": "hk-composite-cpi",
+        "category": "macro",
+        "name": {
+          "en": "Composite Consumer Price Index",
+          "zh-TW": "綜合消費物價指數",
+          "zh-CN": "综合消费物价指数"
+        },
+        "description": {
+          "en": "Headline consumer-price measure published by the Hong Kong Census and Statistics Department.",
+          "zh-TW": "香港政府統計處發布的整體消費物價指標。",
+          "zh-CN": "香港政府统计处发布的整体消费物价指标。"
+        },
+        "unit": "index",
+        "frequency": "monthly",
+        "availability": "official-snapshot",
+        "sourceId": "hk-census"
+      },
+      {
+        "id": "hk-unemployment-rate",
+        "category": "macro",
+        "name": {
+          "en": "Unemployment Rate",
+          "zh-TW": "失業率",
+          "zh-CN": "失业率"
+        },
+        "description": {
+          "en": "Seasonally adjusted unemployment rate published as a rolling three-month estimate.",
+          "zh-TW": "以三個月移動期間發布的經季節調整失業率。",
+          "zh-CN": "以三个月移动期间发布的经季节调整失业率。"
+        },
+        "unit": "percent",
+        "frequency": "monthly",
+        "availability": "official-snapshot",
+        "sourceId": "hk-census"
+      },
+      {
+        "id": "hk-real-gdp-growth",
+        "category": "macro",
+        "name": {
+          "en": "Real GDP Growth",
+          "zh-TW": "實質本地生產總值成長率",
+          "zh-CN": "实质本地生产总值增长率"
+        },
+        "description": {
+          "en": "Year-on-year change in real gross domestic product.",
+          "zh-TW": "實質本地生產總值的年增率。",
+          "zh-CN": "实质本地生产总值的同比增长率。"
+        },
+        "unit": "percent-year-on-year",
+        "frequency": "quarterly",
+        "availability": "official-snapshot",
+        "sourceId": "hk-census"
+      }
+    ]
+  },
+  "cn": {
+    "id": "cn",
+    "name": {
+      "en": "Mainland China",
+      "zh-TW": "中國大陸",
+      "zh-CN": "中国大陆"
+    },
+    "currency": "CNY",
+    "timezone": "Asia/Shanghai",
+    "dataPolicy": {
+      "en": "No current value is stored when an official, documented, stable public API is unavailable. These entries are source-linked official snapshots only.",
+      "zh-TW": "當官方未提供具文件且穩定的公開 API 時，不儲存任何當前數值；這些項目只作附來源連結的官方快照。",
+      "zh-CN": "当官方未提供有文档且稳定的公开 API 时，不存储任何当前数值；这些项目只作附来源链接的官方快照。"
+    },
+    "indicators": [
+      {
+        "id": "cn-sse-composite",
+        "category": "market",
+        "name": {
+          "en": "SSE Composite Index",
+          "zh-TW": "上證綜合指數",
+          "zh-CN": "上证综合指数"
+        },
+        "description": {
+          "en": "Shanghai Stock Exchange broad-market index definition and official snapshot link.",
+          "zh-TW": "上海證券交易所大盤指數定義與官方快照連結。",
+          "zh-CN": "上海证券交易所大盘指数定义与官方快照链接。"
+        },
+        "unit": "index-points",
+        "frequency": "business-daily",
+        "availability": "official-snapshot",
+        "sourceId": "cn-sse"
+      },
+      {
+        "id": "cn-szse-component",
+        "category": "market",
+        "name": {
+          "en": "SZSE Component Index",
+          "zh-TW": "深證成分指數",
+          "zh-CN": "深证成分指数"
+        },
+        "description": {
+          "en": "Shenzhen Stock Exchange component-index definition and official snapshot link.",
+          "zh-TW": "深圳證券交易所成分指數定義與官方快照連結。",
+          "zh-CN": "深圳证券交易所成分指数定义与官方快照链接。"
+        },
+        "unit": "index-points",
+        "frequency": "business-daily",
+        "availability": "official-snapshot",
+        "sourceId": "cn-szse"
+      },
+      {
+        "id": "cn-usd-cny-central-parity",
+        "category": "fx",
+        "name": {
+          "en": "USD/CNY Central Parity",
+          "zh-TW": "美元兌人民幣中間價",
+          "zh-CN": "美元兑人民币中间价"
+        },
+        "description": {
+          "en": "Daily central parity announced under authorization from the People's Bank of China.",
+          "zh-TW": "由中國人民銀行授權公布的每日人民幣匯率中間價。",
+          "zh-CN": "由中国人民银行授权公布的每日人民币汇率中间价。"
+        },
+        "unit": "CNY-per-USD",
+        "frequency": "business-daily",
+        "availability": "official-snapshot",
+        "sourceId": "cn-pbc"
+      },
+      {
+        "id": "cn-lpr-1y",
+        "category": "rates",
+        "name": {
+          "en": "One-Year Loan Prime Rate",
+          "zh-TW": "一年期貸款市場報價利率",
+          "zh-CN": "一年期贷款市场报价利率"
+        },
+        "description": {
+          "en": "One-year Loan Prime Rate authorized for publication by the People's Bank of China.",
+          "zh-TW": "由中國人民銀行授權公布的一年期貸款市場報價利率。",
+          "zh-CN": "由中国人民银行授权公布的一年期贷款市场报价利率。"
+        },
+        "unit": "percent",
+        "frequency": "monthly",
+        "availability": "official-snapshot",
+        "sourceId": "cn-pbc"
+      },
+      {
+        "id": "cn-lpr-5y",
+        "category": "rates",
+        "name": {
+          "en": "Five-Year-or-Longer Loan Prime Rate",
+          "zh-TW": "五年期以上貸款市場報價利率",
+          "zh-CN": "五年期以上贷款市场报价利率"
+        },
+        "description": {
+          "en": "Five-year-or-longer Loan Prime Rate authorized for publication by the People's Bank of China.",
+          "zh-TW": "由中國人民銀行授權公布的五年期以上貸款市場報價利率。",
+          "zh-CN": "由中国人民银行授权公布的五年期以上贷款市场报价利率。"
+        },
+        "unit": "percent",
+        "frequency": "monthly",
+        "availability": "official-snapshot",
+        "sourceId": "cn-pbc"
+      },
+      {
+        "id": "cn-consumer-price-index",
+        "category": "macro",
+        "name": {
+          "en": "Consumer Price Index",
+          "zh-TW": "居民消費價格指數",
+          "zh-CN": "居民消费价格指数"
+        },
+        "description": {
+          "en": "National consumer-price index published by the National Bureau of Statistics of China.",
+          "zh-TW": "中國國家統計局發布的全國居民消費價格指數。",
+          "zh-CN": "中国国家统计局发布的全国居民消费价格指数。"
+        },
+        "unit": "index-or-percent-year-on-year",
+        "frequency": "monthly",
+        "availability": "official-snapshot",
+        "sourceId": "cn-nbs"
+      },
+      {
+        "id": "cn-real-gdp-growth",
+        "category": "macro",
+        "name": {
+          "en": "Real GDP Growth",
+          "zh-TW": "國內生產總值實際成長率",
+          "zh-CN": "国内生产总值实际增长率"
+        },
+        "description": {
+          "en": "Official constant-price gross domestic product growth.",
+          "zh-TW": "按不變價格計算的官方國內生產總值成長率。",
+          "zh-CN": "按不变价格计算的官方国内生产总值增长率。"
+        },
+        "unit": "percent-year-on-year",
+        "frequency": "quarterly",
+        "availability": "official-snapshot",
+        "sourceId": "cn-nbs"
+      },
+      {
+        "id": "cn-industrial-production-growth",
+        "category": "macro",
+        "name": {
+          "en": "Industrial Production Growth",
+          "zh-TW": "規模以上工業增加值成長率",
+          "zh-CN": "规模以上工业增加值增长率"
+        },
+        "description": {
+          "en": "Year-on-year growth in value added of industrial enterprises above designated size.",
+          "zh-TW": "規模以上工業企業增加值的年增率。",
+          "zh-CN": "规模以上工业企业增加值的同比增长率。"
+        },
+        "unit": "percent-year-on-year",
+        "frequency": "monthly",
+        "availability": "official-snapshot",
+        "sourceId": "cn-nbs"
+      }
+    ]
+  },
+  "tw": {
+    "id": "tw",
+    "name": {
+      "en": "Taiwan",
+      "zh-TW": "臺灣",
+      "zh-CN": "台湾"
+    },
+    "currency": "TWD",
+    "timezone": "Asia/Taipei",
+    "indicators": [
+      {
+        "id": "tw-taiex",
+        "category": "market",
+        "name": {
+          "en": "TAIEX",
+          "zh-TW": "臺灣加權股價指數",
+          "zh-CN": "台湾加权股价指数"
+        },
+        "description": {
+          "en": "Taiwan Stock Exchange capitalization-weighted index history.",
+          "zh-TW": "臺灣證券交易所發行量加權股價指數歷史資料。",
+          "zh-CN": "台湾证券交易所发行量加权股价指数历史数据。"
+        },
+        "unit": "index-points",
+        "frequency": "business-daily",
+        "availability": "direct",
+        "sourceId": "tw-twse",
+        "seriesCode": "exchangeReport/MI_INDEX:發行量加權股價指數"
+      },
+      {
+        "id": "tw-taiwan-50",
+        "category": "market",
+        "name": {
+          "en": "Taiwan 50 Index",
+          "zh-TW": "臺灣 50 指數",
+          "zh-CN": "台湾 50 指数"
+        },
+        "description": {
+          "en": "Official Taiwan 50 index history exposed by the TWSE OpenAPI.",
+          "zh-TW": "臺灣證券交易所 OpenAPI 提供的臺灣 50 指數官方歷史資料。",
+          "zh-CN": "台湾证券交易所 OpenAPI 提供的台湾 50 指数官方历史数据。"
+        },
+        "unit": "index-points",
+        "frequency": "business-daily",
+        "availability": "direct",
+        "sourceId": "tw-twse",
+        "seriesCode": "exchangeReport/MI_INDEX:臺灣50指數"
+      },
+      {
+        "id": "tw-usd-twd-closing-rate",
+        "category": "fx",
+        "name": {
+          "en": "USD/TWD Closing Rate",
+          "zh-TW": "美元兌新臺幣收盤匯率",
+          "zh-CN": "美元兑新台币收盘汇率"
+        },
+        "description": {
+          "en": "Daily New Taiwan dollar exchange-rate dataset published by the Central Bank of the Republic of China (Taiwan).",
+          "zh-TW": "中華民國中央銀行發布的新臺幣每日匯率資料。",
+          "zh-CN": "中华民国中央银行发布的新台币每日汇率数据。"
+        },
+        "unit": "TWD-per-USD",
+        "frequency": "business-daily",
+        "availability": "direct",
+        "sourceId": "tw-cbc",
+        "seriesCode": "BP01D01"
+      },
+      {
+        "id": "tw-rediscount-rate",
+        "category": "rates",
+        "name": {
+          "en": "Central Bank Rediscount Rate",
+          "zh-TW": "中央銀行重貼現率",
+          "zh-CN": "中央银行重贴现率"
+        },
+        "description": {
+          "en": "Policy rediscount rate announced by Taiwan's central bank.",
+          "zh-TW": "臺灣中央銀行公布的政策性重貼現率。",
+          "zh-CN": "台湾中央银行公布的政策性重贴现率。"
+        },
+        "unit": "percent",
+        "frequency": "event-driven",
+        "availability": "direct",
+        "sourceId": "tw-cbc"
+      },
+      {
+        "id": "tw-m2-growth",
+        "category": "rates",
+        "name": {
+          "en": "M2 Annual Growth",
+          "zh-TW": "貨幣總計數 M2 年增率",
+          "zh-CN": "货币总计数 M2 同比增长率"
+        },
+        "description": {
+          "en": "Annual growth rate of the M2 monetary aggregate.",
+          "zh-TW": "貨幣總計數 M2 的年增率。",
+          "zh-CN": "货币总计数 M2 的同比增长率。"
+        },
+        "unit": "percent-year-on-year",
+        "frequency": "monthly",
+        "availability": "direct",
+        "sourceId": "tw-cbc"
+      },
+      {
+        "id": "tw-consumer-price-index",
+        "category": "macro",
+        "name": {
+          "en": "Consumer Price Index",
+          "zh-TW": "消費者物價指數",
+          "zh-CN": "消费者物价指数"
+        },
+        "description": {
+          "en": "Taiwan headline consumer-price measure published by the Directorate-General of Budget, Accounting and Statistics.",
+          "zh-TW": "行政院主計總處發布的臺灣整體消費者物價指標。",
+          "zh-CN": "行政院主计总处发布的台湾整体消费者物价指标。"
+        },
+        "unit": "index-or-percent-year-on-year",
+        "frequency": "monthly",
+        "availability": "official-snapshot",
+        "sourceId": "tw-dgbas"
+      },
+      {
+        "id": "tw-real-gdp-growth",
+        "category": "macro",
+        "name": {
+          "en": "Real GDP Growth",
+          "zh-TW": "實質經濟成長率",
+          "zh-CN": "实际经济增长率"
+        },
+        "description": {
+          "en": "Year-on-year real gross domestic product growth published by DGBAS.",
+          "zh-TW": "行政院主計總處發布的實質國內生產總值年增率。",
+          "zh-CN": "行政院主计总处发布的实际国内生产总值同比增长率。"
+        },
+        "unit": "percent-year-on-year",
+        "frequency": "quarterly",
+        "availability": "official-snapshot",
+        "sourceId": "tw-dgbas"
+      }
+    ]
+  },
+  "sg": {
+    "id": "sg",
+    "name": {
+      "en": "Singapore",
+      "zh-TW": "新加坡",
+      "zh-CN": "新加坡"
+    },
+    "currency": "SGD",
+    "timezone": "Asia/Singapore",
+    "indicators": [
+      {
+        "id": "sg-straits-times-index",
+        "category": "market",
+        "name": {
+          "en": "Straits Times Index",
+          "zh-TW": "海峽時報指數",
+          "zh-CN": "海峡时报指数"
+        },
+        "description": {
+          "en": "SGX large-cap equity benchmark and official delayed market snapshot.",
+          "zh-TW": "新加坡交易所大型股基準及官方延遲行情快照。",
+          "zh-CN": "新加坡交易所大型股基准及官方延迟行情快照。"
+        },
+        "unit": "index-points",
+        "frequency": "market-delayed",
+        "availability": "official-snapshot",
+        "sourceId": "sg-sgx"
+      },
+      {
+        "id": "sg-usd-sgd-reference",
+        "category": "fx",
+        "name": {
+          "en": "USD/SGD Reference Rate",
+          "zh-TW": "美元兌新加坡元參考匯率",
+          "zh-CN": "美元兑新加坡元参考汇率"
+        },
+        "description": {
+          "en": "Public interbank reference-rate table made available through the MAS statistics service.",
+          "zh-TW": "新加坡金融管理局統計服務公開的銀行間參考匯率表。",
+          "zh-CN": "新加坡金融管理局统计服务公开的银行间参考汇率表。"
+        },
+        "unit": "SGD-per-USD",
+        "frequency": "business-daily",
+        "availability": "official-snapshot",
+        "sourceId": "sg-mas"
+      },
+      {
+        "id": "sg-sora",
+        "category": "rates",
+        "name": {
+          "en": "Singapore Overnight Rate Average",
+          "zh-TW": "新加坡隔夜利率平均值",
+          "zh-CN": "新加坡隔夜利率平均值"
+        },
+        "description": {
+          "en": "Volume-weighted average rate of eligible overnight unsecured SGD interbank transactions.",
+          "zh-TW": "符合資格的隔夜無擔保新加坡元銀行間交易之成交量加權平均利率。",
+          "zh-CN": "符合资格的隔夜无担保新加坡元银行间交易之成交量加权平均利率。"
+        },
+        "unit": "percent",
+        "frequency": "business-daily",
+        "availability": "official-snapshot",
+        "sourceId": "sg-mas"
+      },
+      {
+        "id": "sg-sgs-10y-yield",
+        "category": "rates",
+        "name": {
+          "en": "Singapore Government Securities 10-Year Yield",
+          "zh-TW": "新加坡政府證券 10 年期殖利率",
+          "zh-CN": "新加坡政府证券 10 年期收益率"
+        },
+        "description": {
+          "en": "Closing yield for the 10-year benchmark Singapore Government Securities issue.",
+          "zh-TW": "10 年期新加坡政府證券基準券的收盤殖利率。",
+          "zh-CN": "10 年期新加坡政府证券基准券的收盘收益率。"
+        },
+        "unit": "percent",
+        "frequency": "business-daily",
+        "availability": "official-snapshot",
+        "sourceId": "sg-mas"
+      },
+      {
+        "id": "sg-consumer-price-index",
+        "category": "macro",
+        "name": {
+          "en": "Consumer Price Index",
+          "zh-TW": "消費者物價指數",
+          "zh-CN": "消费者物价指数"
+        },
+        "description": {
+          "en": "Singapore all-items consumer-price index from SingStat (2024 = 100).",
+          "zh-TW": "新加坡統計局的全項目消費者物價指數（2024 年＝100）。",
+          "zh-CN": "新加坡统计局的全项目消费者价格指数（2024 年=100）。"
+        },
+        "unit": "index-2024-100",
+        "frequency": "monthly",
+        "availability": "direct",
+        "sourceId": "sg-singstat"
+      },
+      {
+        "id": "sg-real-gdp-growth",
+        "category": "macro",
+        "name": {
+          "en": "Real GDP Growth",
+          "zh-TW": "實質國內生產總值成長率",
+          "zh-CN": "实际国内生产总值增长率"
+        },
+        "description": {
+          "en": "Year-on-year growth in Singapore's real gross domestic product.",
+          "zh-TW": "新加坡實質國內生產總值的年增率。",
+          "zh-CN": "新加坡实际国内生产总值的同比增长率。"
+        },
+        "unit": "percent-year-on-year",
+        "frequency": "quarterly",
+        "availability": "direct",
+        "sourceId": "sg-singstat"
+      },
+      {
+        "id": "sg-unemployment-rate",
+        "category": "macro",
+        "name": {
+          "en": "Resident Unemployment Rate",
+          "zh-TW": "居民失業率",
+          "zh-CN": "居民失业率"
+        },
+        "description": {
+          "en": "Seasonally adjusted resident unemployment rate.",
+          "zh-TW": "經季節調整的居民失業率。",
+          "zh-CN": "经季节调整的居民失业率。"
+        },
+        "unit": "percent",
+        "frequency": "quarterly",
+        "availability": "direct",
+        "sourceId": "sg-singstat"
+      }
+    ]
+  },
+  "fx": {
+    "title": {
+      "en": "FX Reference & Cost Lab",
+      "zh-TW": "外匯參考與換匯成本實驗室",
+      "zh-CN": "外汇参考与换汇成本实验室"
+    },
+    "description": {
+      "en": "Consistent daily reference conversion across selected currencies, with provider disclosure and no claim of executable bank pricing.",
+      "zh-TW": "以一致的每日參考資料換算精選貨幣，揭露資料提供者，且不宣稱為銀行可成交牌價。",
+      "zh-CN": "以一致的每日参考数据换算精选货币，披露数据提供者，且不声称为银行可成交牌价。"
+    },
+    "baseCurrency": "USD",
+    "supportedCurrencies": [
+      {
+        "code": "USD",
+        "name": {
+          "en": "U.S. Dollar",
+          "zh-TW": "美元",
+          "zh-CN": "美元"
+        }
+      },
+      {
+        "code": "TWD",
+        "name": {
+          "en": "New Taiwan Dollar",
+          "zh-TW": "新臺幣",
+          "zh-CN": "新台币"
+        }
+      },
+      {
+        "code": "HKD",
+        "name": {
+          "en": "Hong Kong Dollar",
+          "zh-TW": "港元",
+          "zh-CN": "港元"
+        }
+      },
+      {
+        "code": "CNY",
+        "name": {
+          "en": "Chinese Yuan",
+          "zh-TW": "人民幣",
+          "zh-CN": "人民币"
+        }
+      },
+      {
+        "code": "SGD",
+        "name": {
+          "en": "Singapore Dollar",
+          "zh-TW": "新加坡元",
+          "zh-CN": "新加坡元"
+        }
+      },
+      {
+        "code": "EUR",
+        "name": {
+          "en": "Euro",
+          "zh-TW": "歐元",
+          "zh-CN": "欧元"
+        }
+      },
+      {
+        "code": "JPY",
+        "name": {
+          "en": "Japanese Yen",
+          "zh-TW": "日圓",
+          "zh-CN": "日元"
+        }
+      },
+      {
+        "code": "GBP",
+        "name": {
+          "en": "Pound Sterling",
+          "zh-TW": "英鎊",
+          "zh-CN": "英镑"
+        }
+      },
+      {
+        "code": "KRW",
+        "name": {
+          "en": "South Korean Won",
+          "zh-TW": "韓元",
+          "zh-CN": "韩元"
+        }
+      },
+      {
+        "code": "AUD",
+        "name": {
+          "en": "Australian Dollar",
+          "zh-TW": "澳幣",
+          "zh-CN": "澳元"
+        }
+      },
+      {
+        "code": "CAD",
+        "name": {
+          "en": "Canadian Dollar",
+          "zh-TW": "加拿大元",
+          "zh-CN": "加拿大元"
+        }
+      },
+      {
+        "code": "CHF",
+        "name": {
+          "en": "Swiss Franc",
+          "zh-TW": "瑞士法郎",
+          "zh-CN": "瑞士法郎"
+        }
+      }
+    ],
+    "pairs": [
+      {
+        "id": "fx-usd-twd",
+        "base": "USD",
+        "quote": "TWD",
+        "sourceId": "fawaz-currency-api"
+      },
+      {
+        "id": "fx-usd-hkd",
+        "base": "USD",
+        "quote": "HKD",
+        "sourceId": "frankfurter"
+      },
+      {
+        "id": "fx-usd-cny",
+        "base": "USD",
+        "quote": "CNY",
+        "sourceId": "frankfurter"
+      },
+      {
+        "id": "fx-usd-sgd",
+        "base": "USD",
+        "quote": "SGD",
+        "sourceId": "frankfurter"
+      },
+      {
+        "id": "fx-eur-usd",
+        "base": "EUR",
+        "quote": "USD",
+        "sourceId": "frankfurter"
+      },
+      {
+        "id": "fx-usd-jpy",
+        "base": "USD",
+        "quote": "JPY",
+        "sourceId": "frankfurter"
+      }
+    ],
+    "historyPolicy": {
+      "en": "This beta view loads the latest daily reference only. Historical ranges are not plotted; use the linked provider pages when historical context is required.",
+      "zh-TW": "此 beta 版本僅載入最新每日參考值，不繪製歷史區間；需要歷史脈絡時，請使用已連結的提供者頁面。",
+      "zh-CN": "此 beta 版本仅加载最新每日参考值，不绘制历史区间；需要历史背景时，请使用已链接的提供者页面。"
+    },
+    "sourcePolicy": {
+      "en": "The converter uses Frankfurter as its primary cross-currency dataset and the Fawaz official mirror for unsupported references such as TWD. It must display the actual contributing provider; regional cards retain their local official source definitions.",
+      "zh-TW": "換算器以 Frankfurter 作為主要跨幣別資料集，並以 Fawaz 官方鏡像補足 TWD 等不支援的參考匯率；介面必須顯示實際貢獻來源，地區卡片仍保留各地官方來源定義。",
+      "zh-CN": "换算器以 Frankfurter 作为主要跨币种数据集，并以 Fawaz 官方镜像补足 TWD 等不支持的参考汇率；界面必须显示实际贡献来源，地区卡片仍保留各地官方来源定义。"
+    },
+    "disclaimer": {
+      "en": "Reference mid-market data is not a bank's cash, card, remittance, bid, ask, or executable rate. Fees and spreads must be supplied by the user.",
+      "zh-TW": "參考中間價不是銀行現鈔、刷卡、匯款、買入、賣出或可成交匯率；手續費與點差必須由使用者自行輸入。",
+      "zh-CN": "参考中间价不是银行现钞、刷卡、汇款、买入、卖出或可成交汇率；手续费与点差必须由用户自行输入。"
+    }
+  },
+  "sources": [
+    {
+      "id": "us-treasury",
+      "region": "us",
+      "name": {
+        "en": "U.S. Department of the Treasury",
+        "zh-TW": "美國財政部",
+        "zh-CN": "美国财政部"
+      },
+      "url": "https://home.treasury.gov/treasury-daily-interest-rate-xml-feed",
+      "publisherType": "official-public-agency",
+      "accessMode": "api",
+      "formats": [
+        "xml",
+        "atom"
+      ],
+      "updateFrequency": "business-daily",
+      "apiKeyRequired": false,
+      "recommendedUse": "direct",
+      "notes": {
+        "en": "Official daily Treasury yield-curve feed. Cache by source date and preserve missing market days.",
+        "zh-TW": "官方每日公債殖利率曲線資料流；應依來源日期快取，並保留市場休市缺值。",
+        "zh-CN": "官方每日国债收益率曲线数据流；应按来源日期缓存，并保留市场休市缺值。"
+      }
+    },
+    {
+      "id": "us-bls",
+      "region": "us",
+      "name": {
+        "en": "U.S. Bureau of Labor Statistics",
+        "zh-TW": "美國勞工統計局",
+        "zh-CN": "美国劳工统计局"
+      },
+      "url": "https://www.bls.gov/developers/",
+      "publisherType": "official-public-agency",
+      "accessMode": "api",
+      "formats": [
+        "json"
+      ],
+      "updateFrequency": "release-calendar",
+      "apiKeyRequired": false,
+      "recommendedUse": "direct-with-cache",
+      "notes": {
+        "en": "The unregistered public API has lower request limits. Use fixed series IDs, cache results, and retain BLS release dates.",
+        "zh-TW": "未註冊的公開 API 請求額度較低；應使用固定序列代碼、快取結果並保留 BLS 發布日期。",
+        "zh-CN": "未注册的公开 API 请求额度较低；应使用固定序列代码、缓存结果并保留 BLS 发布日期。"
+      }
+    },
+    {
+      "id": "us-fed",
+      "region": "us",
+      "name": {
+        "en": "Board of Governors of the Federal Reserve System",
+        "zh-TW": "美國聯邦準備理事會",
+        "zh-CN": "美国联邦储备委员会"
+      },
+      "url": "https://www.federalreserve.gov/datadownload/",
+      "links": [
+        {
+          "label": {
+            "en": "H.10 Foreign Exchange Rates",
+            "zh-TW": "H.10 外匯匯率",
+            "zh-CN": "H.10 外汇汇率"
+          },
+          "url": "https://www.federalreserve.gov/datadownload/Choose.aspx?rel=H10"
+        },
+        {
+          "label": {
+            "en": "H.15 Selected Interest Rates",
+            "zh-TW": "H.15 精選利率",
+            "zh-CN": "H.15 精选利率"
+          },
+          "url": "https://www.federalreserve.gov/datadownload/Choose.aspx?rel=H15"
+        }
+      ],
+      "publisherType": "official-central-bank",
+      "accessMode": "official-download",
+      "formats": [
+        "csv",
+        "xml"
+      ],
+      "updateFrequency": "business-daily",
+      "apiKeyRequired": false,
+      "recommendedUse": "direct-fixed-query",
+      "notes": {
+        "en": "Use pre-defined Data Download Program queries. Do not infer a quote date from the fetch date.",
+        "zh-TW": "使用預先定義的資料下載查詢；不可用抓取日期推定報價日期。",
+        "zh-CN": "使用预先定义的数据下载查询；不可用抓取日期推定报价日期。"
+      }
+    },
+    {
+      "id": "hk-hkma",
+      "region": "hk",
+      "name": {
+        "en": "Hong Kong Monetary Authority Open API",
+        "zh-TW": "香港金融管理局開放 API",
+        "zh-CN": "香港金融管理局开放 API"
+      },
+      "url": "https://apidocs.hkma.gov.hk/",
+      "publisherType": "official-central-bank",
+      "accessMode": "api",
+      "formats": [
+        "json"
+      ],
+      "updateFrequency": "dataset-specific",
+      "apiKeyRequired": false,
+      "recommendedUse": "direct",
+      "notes": {
+        "en": "Documented public API for monetary, banking, exchange-rate, and market statistics. Preserve each dataset's end-of-period date.",
+        "zh-TW": "具文件的公開 API，提供貨幣、銀行、匯率與市場統計；應保留各資料集的期末日期。",
+        "zh-CN": "有文档的公开 API，提供货币、银行、汇率与市场统计；应保留各数据集的期末日期。"
+      }
+    },
+    {
+      "id": "hk-census",
+      "region": "hk",
+      "name": {
+        "en": "Hong Kong Census and Statistics Department",
+        "zh-TW": "香港政府統計處",
+        "zh-CN": "香港政府统计处"
+      },
+      "url": "https://www.censtatd.gov.hk/en/",
+      "publisherType": "official-public-agency",
+      "accessMode": "official-download",
+      "formats": [
+        "csv",
+        "web-table"
+      ],
+      "updateFrequency": "release-calendar",
+      "apiKeyRequired": false,
+      "recommendedUse": "official-snapshot",
+      "notes": {
+        "en": "Use the machine-readable table attached to each statistical product. Pin table identifiers before automating any retrieval.",
+        "zh-TW": "使用各統計產品附帶的機器可讀表格；自動擷取前應固定表格識別碼。",
+        "zh-CN": "使用各统计产品附带的机器可读表格；自动抓取前应固定表格标识符。"
+      }
+    },
+    {
+      "id": "cn-nbs",
+      "region": "cn",
+      "name": {
+        "en": "National Bureau of Statistics of China — National Data",
+        "zh-TW": "中國國家統計局「國家資料」",
+        "zh-CN": "中国国家统计局“国家数据”"
+      },
+      "url": "https://data.stats.gov.cn/easyquery.htm",
+      "publisherType": "official-public-agency",
+      "accessMode": "official-snapshot",
+      "formats": [
+        "web-table"
+      ],
+      "updateFrequency": "monthly-quarterly-annual",
+      "apiKeyRequired": false,
+      "recommendedUse": "source-link-and-reviewed-snapshot",
+      "notes": {
+        "en": "The public portal is authoritative, but no documented stable zero-key API is assumed. Do not present a stored value as current without a verified as-of date.",
+        "zh-TW": "公開入口具權威性，但不假設存在具文件且穩定的免金鑰 API；未核驗資料日期前，不得把儲存值標成當前數值。",
+        "zh-CN": "公开入口具权威性，但不假设存在有文档且稳定的免密钥 API；未核验数据日期前，不得把存储值标成当前数值。"
+      }
+    },
+    {
+      "id": "cn-pbc",
+      "region": "cn",
+      "name": {
+        "en": "People's Bank of China",
+        "zh-TW": "中國人民銀行",
+        "zh-CN": "中国人民银行"
+      },
+      "url": "https://www.pbc.gov.cn/zhengcehuobisi/125207/125217/125925/17105-2.html",
+      "links": [
+        {
+          "label": {
+            "en": "RMB Central Parity Announcements",
+            "zh-TW": "人民幣匯率中間價公告",
+            "zh-CN": "人民币汇率中间价公告"
+          },
+          "url": "https://www.pbc.gov.cn/zhengcehuobisi/125207/125217/125925/17105-2.html"
+        },
+        {
+          "label": {
+            "en": "Loan Prime Rate Announcements",
+            "zh-TW": "貸款市場報價利率公告",
+            "zh-CN": "贷款市场报价利率公告"
+          },
+          "url": "https://www.pbc.gov.cn/zhengcehuobisi/125207/125213/125440/3876551/index.html"
+        }
+      ],
+      "publisherType": "official-central-bank",
+      "accessMode": "official-snapshot",
+      "formats": [
+        "html"
+      ],
+      "updateFrequency": "business-daily-and-monthly",
+      "apiKeyRequired": false,
+      "recommendedUse": "source-link-and-reviewed-snapshot",
+      "notes": {
+        "en": "Official announcement pages are suitable for citation and reviewed snapshots, not an assumed stable JSON API.",
+        "zh-TW": "官方公告頁適合引用與人工核驗快照，不應假設為穩定 JSON API。",
+        "zh-CN": "官方公告页适合引用与人工核验快照，不应假设为稳定 JSON API。"
+      }
+    },
+    {
+      "id": "cn-sse",
+      "region": "cn",
+      "name": {
+        "en": "Shanghai Stock Exchange",
+        "zh-TW": "上海證券交易所",
+        "zh-CN": "上海证券交易所"
+      },
+      "url": "https://www.sse.com.cn/market/sseindex/indexlist/",
+      "publisherType": "official-exchange",
+      "accessMode": "official-snapshot",
+      "formats": [
+        "html"
+      ],
+      "updateFrequency": "business-daily",
+      "apiKeyRequired": false,
+      "recommendedUse": "source-link",
+      "notes": {
+        "en": "Use for official index definitions and source links. Do not depend on undocumented website endpoints.",
+        "zh-TW": "用於官方指數定義與來源連結；不得依賴未公開文件的網站端點。",
+        "zh-CN": "用于官方指数定义与来源链接；不得依赖未公开文档的网站端点。"
+      }
+    },
+    {
+      "id": "cn-szse",
+      "region": "cn",
+      "name": {
+        "en": "Shenzhen Stock Exchange",
+        "zh-TW": "深圳證券交易所",
+        "zh-CN": "深圳证券交易所"
+      },
+      "url": "https://www.szse.cn/market/trend/index.html",
+      "publisherType": "official-exchange",
+      "accessMode": "official-snapshot",
+      "formats": [
+        "html"
+      ],
+      "updateFrequency": "business-daily",
+      "apiKeyRequired": false,
+      "recommendedUse": "source-link",
+      "notes": {
+        "en": "Use for official index definitions and source links. Do not depend on undocumented website endpoints.",
+        "zh-TW": "用於官方指數定義與來源連結；不得依賴未公開文件的網站端點。",
+        "zh-CN": "用于官方指数定义与来源链接；不得依赖未公开文档的网站端点。"
+      }
+    },
+    {
+      "id": "tw-twse",
+      "region": "tw",
+      "name": {
+        "en": "Taiwan Stock Exchange OpenAPI",
+        "zh-TW": "臺灣證券交易所 OpenAPI",
+        "zh-CN": "台湾证券交易所 OpenAPI"
+      },
+      "url": "https://openapi.twse.com.tw/",
+      "publisherType": "official-exchange",
+      "accessMode": "api",
+      "formats": [
+        "json",
+        "openapi"
+      ],
+      "updateFrequency": "dataset-specific",
+      "apiKeyRequired": false,
+      "recommendedUse": "direct",
+      "notes": {
+        "en": "Documented no-key OpenAPI with market, index, and trading datasets. Prefer the historical index endpoints for stable daily views.",
+        "zh-TW": "具文件且免金鑰的 OpenAPI，提供市場、指數與交易資料；穩定的每日視圖應優先使用歷史指數端點。",
+        "zh-CN": "有文档且免密钥的 OpenAPI，提供市场、指数与交易数据；稳定的每日视图应优先使用历史指数端点。"
+      }
+    },
+    {
+      "id": "tw-cbc",
+      "region": "tw",
+      "name": {
+        "en": "Central Bank of the Republic of China (Taiwan) Statistics API",
+        "zh-TW": "中華民國中央銀行統計資料庫 API",
+        "zh-CN": "中华民国中央银行统计数据库 API"
+      },
+      "url": "https://cpx.cbc.gov.tw/Data/ExportToAPIInfo",
+      "publisherType": "official-central-bank",
+      "accessMode": "api",
+      "formats": [
+        "json"
+      ],
+      "updateFrequency": "dataset-specific",
+      "apiKeyRequired": false,
+      "recommendedUse": "direct",
+      "notes": {
+        "en": "Documented item-code API. The BP01D01 example returns daily exchange-rate data; other series must use verified item codes from the official catalog.",
+        "zh-TW": "具文件的項目代碼 API；BP01D01 範例提供每日匯率資料，其他序列必須使用官方目錄核驗過的項目代碼。",
+        "zh-CN": "有文档的项目代码 API；BP01D01 示例提供每日汇率数据，其他序列必须使用官方目录核验过的项目代码。"
+      }
+    },
+    {
+      "id": "tw-dgbas",
+      "region": "tw",
+      "name": {
+        "en": "Directorate-General of Budget, Accounting and Statistics",
+        "zh-TW": "行政院主計總處",
+        "zh-CN": "行政院主计总处"
+      },
+      "url": "https://www.dgbas.gov.tw/",
+      "publisherType": "official-public-agency",
+      "accessMode": "official-snapshot",
+      "formats": [
+        "web-table",
+        "download"
+      ],
+      "updateFrequency": "release-calendar",
+      "apiKeyRequired": false,
+      "recommendedUse": "source-link-and-reviewed-snapshot",
+      "notes": {
+        "en": "Use official CPI and national-accounts releases with their release and reference periods. Do not infer a current value from a publication page date.",
+        "zh-TW": "使用官方 CPI 與國民所得發布資料，並保留發布日及資料期間；不可從網頁日期推定當前數值。",
+        "zh-CN": "使用官方 CPI 与国民所得发布数据，并保留发布日期及数据期间；不可从网页日期推定当前数值。"
+      }
+    },
+    {
+      "id": "sg-singstat",
+      "region": "sg",
+      "name": {
+        "en": "Singapore Department of Statistics — SingStat",
+        "zh-TW": "新加坡統計局 SingStat",
+        "zh-CN": "新加坡统计局 SingStat"
+      },
+      "url": "https://tablebuilder.singstat.gov.sg/view-api/for-developers",
+      "publisherType": "official-public-agency",
+      "accessMode": "api",
+      "formats": [
+        "json",
+        "csv",
+        "openapi"
+      ],
+      "updateFrequency": "release-calendar",
+      "apiKeyRequired": false,
+      "recommendedUse": "direct",
+      "notes": {
+        "en": "Documented table API with stable resource IDs. Store the table resource ID and series or row identifier with each implemented metric.",
+        "zh-TW": "具文件且採穩定資源代碼的表格 API；實作每項指標時應保存表格資源代碼與序列或列識別碼。",
+        "zh-CN": "有文档且采用稳定资源代码的表格 API；实现每项指标时应保存表格资源代码与序列或行标识符。"
+      }
+    },
+    {
+      "id": "sg-mas",
+      "region": "sg",
+      "name": {
+        "en": "Monetary Authority of Singapore Statistics",
+        "zh-TW": "新加坡金融管理局統計",
+        "zh-CN": "新加坡金融管理局统计"
+      },
+      "url": "https://eservices.mas.gov.sg/Statistics/msb/ExchangeRates.aspx",
+      "links": [
+        {
+          "label": {
+            "en": "Exchange Rates",
+            "zh-TW": "匯率",
+            "zh-CN": "汇率"
+          },
+          "url": "https://eservices.mas.gov.sg/Statistics/msb/ExchangeRates.aspx"
+        },
+        {
+          "label": {
+            "en": "Domestic Interest Rates and SORA",
+            "zh-TW": "國內利率與 SORA",
+            "zh-CN": "国内利率与 SORA"
+          },
+          "url": "https://eservices.mas.gov.sg/statistics/dir/DomesticInterestRates.aspx"
+        },
+        {
+          "label": {
+            "en": "Daily Singapore Government Securities Prices",
+            "zh-TW": "每日新加坡政府證券價格",
+            "zh-CN": "每日新加坡政府证券价格"
+          },
+          "url": "https://eservices.mas.gov.sg/statistics/fdanet/SgsBenchmarkIssuePrices.aspx"
+        }
+      ],
+      "publisherType": "official-central-bank",
+      "accessMode": "official-snapshot",
+      "formats": [
+        "html",
+        "download"
+      ],
+      "updateFrequency": "dataset-specific",
+      "apiKeyRequired": false,
+      "recommendedUse": "source-link-and-reviewed-snapshot",
+      "notes": {
+        "en": "Public statistics pages are source links, not an assumed open API. The exchange-rate page states that rates are supplied by Refinitiv and are not attributable to MAS.",
+        "zh-TW": "公開統計頁只作來源連結，不假設為開放 API；匯率頁說明資料由 Refinitiv 提供，且不歸屬於 MAS。",
+        "zh-CN": "公开统计页只作来源链接，不假设为开放 API；汇率页说明数据由 Refinitiv 提供，且不归属于 MAS。"
+      }
+    },
+    {
+      "id": "sg-sgx",
+      "region": "sg",
+      "name": {
+        "en": "Singapore Exchange — Straits Times Index",
+        "zh-TW": "新加坡交易所海峽時報指數",
+        "zh-CN": "新加坡交易所海峡时报指数"
+      },
+      "url": "https://www.sgx.com/indices/products/sti",
+      "publisherType": "official-exchange",
+      "accessMode": "official-snapshot",
+      "formats": [
+        "html",
+        "download"
+      ],
+      "updateFrequency": "market-delayed",
+      "apiKeyRequired": false,
+      "recommendedUse": "source-link",
+      "notes": {
+        "en": "Official delayed index page and index definition. Do not treat website requests as a documented market-data API.",
+        "zh-TW": "官方延遲指數頁與指數定義；不可把網站請求當作具文件的行情 API。",
+        "zh-CN": "官方延迟指数页与指数定义；不可把网站请求当作有文档的行情 API。"
+      }
+    },
+    {
+      "id": "frankfurter",
+      "region": "global",
+      "name": {
+        "en": "Frankfurter Currency API",
+        "zh-TW": "Frankfurter 匯率 API",
+        "zh-CN": "Frankfurter 汇率 API"
+      },
+      "url": "https://frankfurter.dev/",
+      "publisherType": "open-source-aggregator",
+      "accessMode": "api",
+      "formats": [
+        "json"
+      ],
+      "updateFrequency": "business-daily",
+      "apiKeyRequired": false,
+      "recommendedUse": "direct-with-provider-disclosure",
+      "notes": {
+        "en": "No-key daily reference API. Preserve the provider returned for each rate and do not label aggregated data as a local central-bank quote.",
+        "zh-TW": "免金鑰的每日參考 API；應保留每筆匯率回傳的提供機構，不可把聚合資料標成當地央行報價。",
+        "zh-CN": "免密钥的每日参考 API；应保留每笔汇率返回的提供机构，不可把聚合数据标成当地央行报价。"
+      }
+    },
+    {
+      "id": "fawaz-currency-api",
+      "region": "global",
+      "name": {
+        "en": "Fawaz Currency API Official Mirror",
+        "zh-TW": "Fawaz 匯率 API 官方鏡像",
+        "zh-CN": "Fawaz 汇率 API 官方镜像"
+      },
+      "url": "https://github.com/fawazahmed0/exchange-api",
+      "publisherType": "open-source-aggregator",
+      "accessMode": "api",
+      "formats": [
+        "json"
+      ],
+      "updateFrequency": "daily",
+      "apiKeyRequired": false,
+      "recommendedUse": "fallback-with-provider-disclosure",
+      "notes": {
+        "en": "No-key daily reference dataset used only when the primary provider does not cover a currency such as TWD. The interface must preserve Fawaz attribution and the upstream date.",
+        "zh-TW": "免金鑰的每日參考資料集，僅在主要來源未涵蓋 TWD 等幣別時使用；介面必須保留 Fawaz 來源標示與上游日期。",
+        "zh-CN": "免密钥的每日参考数据集，仅在主要来源未覆盖 TWD 等币种时使用；界面必须保留 Fawaz 来源标识与上游日期。"
+      }
+    },
+    {
+      "id": "tradingview",
+      "region": "global",
+      "name": {
+        "en": "TradingView Market Overview Widget",
+        "zh-TW": "TradingView 市場總覽元件",
+        "zh-CN": "TradingView 市场总览组件"
+      },
+      "url": "https://www.tradingview.com/widget-docs/widgets/watchlists/market-overview/",
+      "publisherType": "external-widget",
+      "accessMode": "external-widget",
+      "formats": [
+        "embedded-widget"
+      ],
+      "updateFrequency": "market-dependent",
+      "apiKeyRequired": false,
+      "recommendedUse": "consent-gated-embed",
+      "notes": {
+        "en": "Use only as an attributed, consent-gated market display. Do not scrape or re-publish widget values as JATSWeb data.",
+        "zh-TW": "僅作保留來源標示且經使用者同意後載入的行情顯示；不可擷取或以 JATSWeb 資料名義重新發布元件數值。",
+        "zh-CN": "仅作保留来源标识且经用户同意后加载的行情显示；不可抓取或以 JATSWeb 数据名义重新发布组件数值。"
+      }
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+---
+import PortalLayout from "@layouts/PortalLayout.astro";
+import Localized from "@components/Localized.astro";
+import StatusBadge from "@components/StatusBadge.astro";
+import { readData } from "@lib/content";
+
+export function getStaticPaths() {
+  const projects = readData<any[]>("projects.json");
+  return projects.map((project) => ({ params: { id: project.id }, props: { project } }));
+}
+
+const { project } = Astro.props as { project: any };
+const paragraphs = Object.fromEntries(
+  ["en", "zh-TW", "zh-CN"].map((lang) => [
+    lang,
+    String(project.content?.[lang] || project.description?.[lang] || "").replace(/^#[^\n]+\n+/, "")
+  ])
+) as { en: string; "zh-TW": string; "zh-CN": string };
+---
+
+<PortalLayout title={project.title} description={project.description} active="projects" canonical={`/projects/${project.id}.html`}>
+  <a class="back-link" href="/projects.html">← <Localized value={{ en: "All projects", "zh-TW": "所有專案", "zh-CN": "所有项目" }} /></a>
+  <header class="project-hero">
+    <div>
+      <p class="eyebrow">PROJECT / {project.id}</p>
+      <h1><Localized value={project.title} /></h1>
+      <Localized value={project.description} tag="p" class="lead" />
+    </div>
+    <StatusBadge status={project.status} />
+  </header>
+
+  <div class="project-layout">
+    <article class="panel">
+      <p class="eyebrow">PROJECT RECORD</p>
+      <Localized value={paragraphs} tag="div" class="project-content" />
+    </article>
+    <aside class="grid">
+      <section class="panel">
+        <p class="eyebrow">TECHNOLOGY</p>
+        <div class="tag-list">
+          {(project.tech_stack?.length ? project.tech_stack : ["Concept record"]).map((item: string) => <span class="tag">{item}</span>)}
+        </div>
+      </section>
+      <section class="panel">
+        <p class="eyebrow">LINKS</p>
+        <div class="project-links">
+          {(project.links || []).map((link: any) => (
+            <a href={link.url} target={link.url.startsWith("http") ? "_blank" : undefined} rel="noreferrer">
+              {link.label}<span>↗</span>
+            </a>
+          ))}
+          {project.links?.length === 0 && <p class="muted">No public link.</p>}
+        </div>
+      </section>
+      <section class="notice warning">
+        <Localized
+          value={{
+            en: "This page records the current state. Planned and concept work may change before implementation.",
+            "zh-TW": "此頁記錄目前狀態；規劃與概念內容可能在實作前調整。",
+            "zh-CN": "此页记录当前状态；规划与概念内容可能在实现前调整。"
+          }}
+        />
+      </section>
+    </aside>
+  </div>
+</PortalLayout>
+
+<style>
+  .back-link { display: inline-flex; margin-bottom: 2rem; color: var(--muted); text-decoration: none; }
+  .project-hero { display: flex; align-items: end; justify-content: space-between; gap: 2rem; padding-bottom: 2rem; margin-bottom: 2rem; border-bottom: 1px solid var(--line-strong); }
+  .project-layout { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(260px, .7fr); gap: 1rem; }
+  .project-content { white-space: pre-line; line-height: 1.9; }
+  .project-links { display: grid; }
+  .project-links a { display: flex; justify-content: space-between; padding: .7rem 0; border-bottom: 1px solid var(--line); text-decoration: none; }
+  .project-links span { color: var(--yellow); }
+  @media (max-width: 760px) { .project-hero { align-items: flex-start; flex-direction: column; } .project-layout { grid-template-columns: 1fr; } }
+</style>

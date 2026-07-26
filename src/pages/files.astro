@@ -1,0 +1,73 @@
+---
+import PortalLayout from "@layouts/PortalLayout.astro";
+import PageHeader from "@components/PageHeader.astro";
+import Localized from "@components/Localized.astro";
+import { readData } from "@lib/content";
+
+const files = readData<any[]>("files.json");
+const title = { en: "Public Files", "zh-TW": "公開檔案", "zh-CN": "公开文件" };
+const description = {
+  en: "Public, non-sensitive downloads with file type, size, storage source, and update metadata.",
+  "zh-TW": "附帶類型、大小、儲存來源與更新資訊的公開非敏感檔案。",
+  "zh-CN": "附带类型、大小、存储来源与更新信息的公开非敏感文件。"
+};
+const formatSize = (size = 0) => size >= 1048576 ? `${(size / 1048576).toFixed(1)} MB` : `${Math.max(1, Math.round(size / 1024))} KB`;
+---
+
+<PortalLayout title={title} description={description} active="files">
+  <PageHeader eyebrow={{ en: "ASSETS / READ ONLY", "zh-TW": "資源／唯讀", "zh-CN": "资源／只读" }} title={title} description={description} />
+  <div class="notice warning">
+    <Localized value={{ en: "Downloads are public and read-only. Verify the file name and type before opening. Upload and deletion remain outside this website.", "zh-TW": "下載內容為公開唯讀。開啟前請確認檔名與類型；上傳及刪除功能不在本站提供。", "zh-CN": "下载内容为公开只读。打开前请确认文件名与类型；上传及删除功能不在本站提供。" }} />
+  </div>
+  <section class="section">
+    <div class="section-heading">
+      <h2><Localized value={{ en: "Available downloads", "zh-TW": "可下載檔案", "zh-CN": "可下载文件" }} /></h2>
+      <div class="search-field"><label class="visually-hidden" for="file-search">Search files</label><input id="file-search" type="search" placeholder="Search files…" /></div>
+    </div>
+    <div class="grid" id="file-list">
+      {
+        files.map((file) => (
+          <article class="card file-card" data-search={`${file.name} ${file.description} ${file.extension}`}>
+            <div class="file-icon">{String(file.extension || "file").toUpperCase()}</div>
+            <div>
+              <h3>{file.name}</h3>
+              <p>{file.description}</p>
+              <div class="meta-row">
+                <span class="tag">{formatSize(file.size)}</span>
+                <span class="tag">{file.storage_provider === "r2" ? "Cloudflare R2" : "Git asset"}</span>
+                <span class="tag">{new Date(file.uploadedAt).toLocaleDateString("en-CA")}</span>
+              </div>
+            </div>
+            <a class="button" href={file.public_url || file.path} download={file.storage_provider === "git" ? file.fileName : undefined}>
+              <Localized value={{ en: "Download", "zh-TW": "下載", "zh-CN": "下载" }} />
+            </a>
+          </article>
+        ))
+      }
+      {files.length === 0 && <div class="panel empty-state"><Localized value={{ en: "No public files are available.", "zh-TW": "目前沒有公開檔案。", "zh-CN": "目前没有公开文件。" }} /></div>}
+    </div>
+    <p id="file-empty" class="empty-state" hidden><Localized value={{ en: "No matching file.", "zh-TW": "找不到符合的檔案。", "zh-CN": "找不到匹配的文件。" }} /></p>
+  </section>
+  <script is:inline slot="scripts">
+    const input = document.querySelector("#file-search");
+    const cards = [...document.querySelectorAll(".file-card")];
+    const empty = document.querySelector("#file-empty");
+    input?.addEventListener("input", () => {
+      const q = input.value.trim().toLowerCase();
+      let count = 0;
+      cards.forEach((card) => {
+        const show = !q || card.dataset.search.toLowerCase().includes(q);
+        card.hidden = !show;
+        count += Number(show);
+      });
+      empty.hidden = count > 0;
+    });
+  </script>
+</PortalLayout>
+
+<style>
+  .section-heading .search-field { width: min(340px, 100%); }
+  .file-card { display: grid; grid-template-columns: 72px 1fr auto; align-items: center; gap: 1rem; }
+  .file-icon { width: 64px; height: 64px; display: grid; place-items: center; border: 1px solid var(--line-strong); color: var(--yellow); background: var(--surface-soft); font: 900 .8rem ui-monospace, monospace; }
+  @media (max-width: 640px) { .file-card { grid-template-columns: 52px 1fr; } .file-icon { width: 48px; height: 48px; } .file-card .button { grid-column: 1 / -1; } }
+</style>

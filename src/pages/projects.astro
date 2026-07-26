@@ -1,0 +1,56 @@
+---
+import PortalLayout from "@layouts/PortalLayout.astro";
+import PageHeader from "@components/PageHeader.astro";
+import Localized from "@components/Localized.astro";
+import StatusBadge from "@components/StatusBadge.astro";
+import { readData } from "@lib/content";
+
+const projects = readData<any[]>("projects.json");
+const title = { en: "Projects", "zh-TW": "專案紀錄", "zh-CN": "项目记录" };
+const description = {
+  en: "Project records that explain intent, implementation, current maturity, and known limits.",
+  "zh-TW": "說明目標、實作方式、成熟度與已知限制的專案紀錄。",
+  "zh-CN": "说明目标、实现方式、成熟度与已知限制的项目记录。"
+};
+---
+
+<PortalLayout title={title} description={description} active="projects">
+  <PageHeader eyebrow={{ en: "WORK / BUILD LOG", "zh-TW": "作品／建置紀錄", "zh-CN": "作品／构建记录" }} title={title} description={description} />
+  <div class="notice">
+    <Localized
+      value={{
+        en: "Statuses describe the current implementation honestly: active work is usable, concepts document direction, and planned records are not presented as finished products.",
+        "zh-TW": "狀態如實反映目前實作：active 可使用、concept 記錄方向、planned 不會包裝成完成品。",
+        "zh-CN": "状态如实反映当前实现：active 可使用、concept 记录方向、planned 不会包装成完成品。"
+      }}
+    />
+  </div>
+  <section class="section grid two">
+    {
+      projects.map((project, index) => (
+        <article class="card project-card">
+          <div class="meta-row">
+            <span class="project-number">{String(index + 1).padStart(2, "0")}</span>
+            <StatusBadge status={project.status} />
+          </div>
+          <h2><Localized value={project.title} /></h2>
+          <Localized value={project.description} tag="p" />
+          <div class="tag-list">
+            {(project.tech_stack || []).map((item: string) => <span class="tag">{item}</span>)}
+          </div>
+          <a class="project-open" href={`/projects/${project.id}.html`}>
+            <Localized value={{ en: "Read project record", "zh-TW": "閱讀專案紀錄", "zh-CN": "阅读项目记录" }} />
+            <span>→</span>
+          </a>
+        </article>
+      ))
+    }
+  </section>
+</PortalLayout>
+
+<style>
+  .project-card { min-height: 290px; display: flex; flex-direction: column; }
+  .project-card .meta-row { justify-content: space-between; }
+  .project-number { color: var(--cyan); font: 800 .75rem ui-monospace, monospace; }
+  .project-open { margin-top: auto; padding-top: 1.25rem; display: flex; justify-content: space-between; color: var(--yellow); text-decoration: none; font-weight: 800; }
+</style>

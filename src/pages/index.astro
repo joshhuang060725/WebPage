@@ -1,0 +1,252 @@
+---
+import PortalLayout from "@layouts/PortalLayout.astro";
+import Localized from "@components/Localized.astro";
+import StatusBadge from "@components/StatusBadge.astro";
+
+const title = { en: "Personal Auxiliary Terminal", "zh-TW": "個人輔助終端", "zh-CN": "个人辅助终端" };
+const description = {
+  en: "Josh Huang's public portal for identity, projects, engineering notes, and browser-based tools.",
+  "zh-TW": "黃昭詠的公開個人門戶，整合個人資料、專案、工程筆記與瀏覽器工具。",
+  "zh-CN": "黄昭詠的公开个人门户，整合个人资料、项目、工程笔记与浏览器工具。"
+};
+const modules = [
+  {
+    href: "/profile.html",
+    code: "IDENTITY",
+    title: { en: "Profile", "zh-TW": "個人資料", "zh-CN": "个人资料" },
+    description: {
+      en: "Public identity, technical interests, and contact channels.",
+      "zh-TW": "公開身份、技術興趣與聯絡方式。",
+      "zh-CN": "公开身份、技术兴趣与联系方式。"
+    },
+    status: "ready"
+  },
+  {
+    href: "/projects.html",
+    code: "WORK",
+    title: { en: "Projects", "zh-TW": "專案紀錄", "zh-CN": "项目记录" },
+    description: {
+      en: "Implementation records, design decisions, and current limitations.",
+      "zh-TW": "實作紀錄、設計判斷與目前限制。",
+      "zh-CN": "实现记录、设计判断与当前限制。"
+    },
+    status: "ready"
+  },
+  {
+    href: "/formulas.html",
+    code: "KNOWLEDGE",
+    title: { en: "Formula Lab", "zh-TW": "公式推導", "zh-CN": "公式推导" },
+    description: {
+      en: "Twenty structured engineering derivations with interactive modules.",
+      "zh-TW": "20 個結構化工程推導與互動模組。",
+      "zh-CN": "20 个结构化工程推导与交互模块。"
+    },
+    status: "ready"
+  },
+  {
+    href: "/finance.html",
+    code: "UTILITY",
+    title: { en: "Finance / Exchange", "zh-TW": "匯率工具", "zh-CN": "汇率工具" },
+    description: {
+      en: "Public-source currency conversion with timestamps and source transparency.",
+      "zh-TW": "具更新時間與來源說明的公開匯率換算。",
+      "zh-CN": "具更新时间与来源说明的公开汇率换算。"
+    },
+    status: "beta"
+  },
+  {
+    href: "/compute-lab.html",
+    code: "COMPUTE",
+    title: { en: "Compute Lab", "zh-TW": "計算實驗室", "zh-CN": "计算实验室" },
+    description: {
+      en: "Expression, matrix, and chart tools that run entirely in the browser.",
+      "zh-TW": "完全在瀏覽器執行的表達式、矩陣與圖表工具。",
+      "zh-CN": "完全在浏览器运行的表达式、矩阵与图表工具。"
+    },
+    status: "beta"
+  },
+  {
+    href: "/wallpapers.html",
+    code: "SURFACE",
+    title: { en: "Wallpaper Surface", "zh-TW": "桌布介面", "zh-CN": "桌布界面" },
+    description: {
+      en: "A persistent start surface with backgrounds and public shortcuts.",
+      "zh-TW": "具背景選擇與公開捷徑的持久化起始介面。",
+      "zh-CN": "具背景选择与公开捷径的持久化起始界面。"
+    },
+    status: "ready"
+  }
+];
+---
+
+<PortalLayout title={title} description={description}>
+  <section class="hero">
+    <div>
+      <p class="eyebrow">JATS / SYSTEM DIRECTORY</p>
+      <h1>
+        <Localized
+          value={{
+            en: "A personal system, made public.",
+            "zh-TW": "一套公開運作的個人系統。",
+            "zh-CN": "一套公开运行的个人系统。"
+          }}
+        />
+      </h1>
+      <Localized value={description} tag="p" class="lead" />
+      <div class="button-row">
+        <a class="button primary" href="/tools.html">
+          <Localized value={{ en: "Open tool directory", "zh-TW": "開啟工具目錄", "zh-CN": "打开工具目录" }} />
+        </a>
+        <a class="button" href="/projects.html">
+          <Localized value={{ en: "Read project records", "zh-TW": "閱讀專案紀錄", "zh-CN": "阅读项目记录" }} />
+        </a>
+      </div>
+    </div>
+    <div class="system-summary panel" aria-label="System summary">
+      <div><strong>13+</strong><span>PUBLIC SURFACES</span></div>
+      <div><strong>03</strong><span>LANGUAGES</span></div>
+      <div><strong>20</strong><span>FORMULA MODULES</span></div>
+      <div><strong>LOCAL</strong><span>USER STATE</span></div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="directory-title">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">MODULE INDEX</p>
+        <h2 id="directory-title">
+          <Localized value={{ en: "System directory", "zh-TW": "系統目錄", "zh-CN": "系统目录" }} />
+        </h2>
+      </div>
+      <div class="search-field directory-search">
+        <label class="visually-hidden" for="module-search">Search modules</label>
+        <input id="module-search" type="search" placeholder="Search modules…" autocomplete="off" />
+      </div>
+    </div>
+    <div class="grid three" id="module-grid">
+      {
+        modules.map((module) => (
+          <article
+            class="card module-card"
+            data-search={`${module.code} ${module.title.en} ${module.title["zh-TW"]} ${module.title["zh-CN"]}`}
+          >
+            <div class="meta-row">
+              <span class="eyebrow">{module.code}</span>
+              <StatusBadge status={module.status} />
+            </div>
+            <h3><Localized value={module.title} /></h3>
+            <Localized value={module.description} tag="p" />
+            <a class="card-link" href={module.href} aria-label={`Open ${module.title.en}`}>
+              <span>OPEN / →</span>
+            </a>
+          </article>
+        ))
+      }
+    </div>
+    <p class="empty-state" id="module-empty" hidden>
+      <Localized value={{ en: "No matching module.", "zh-TW": "找不到符合的模組。", "zh-CN": "找不到匹配的模块。" }} />
+    </p>
+  </section>
+
+  <section class="section grid two">
+    <article class="panel">
+      <p class="eyebrow">OPERATING PRINCIPLES</p>
+      <h2><Localized value={{ en: "Public by design", "zh-TW": "公開但有邊界", "zh-CN": "公开但有边界" }} /></h2>
+      <Localized
+        value={{
+          en: "The portal exposes public content and controlled read-only APIs. Preferences stay on the device; credentials and write operations stay outside the public site.",
+          "zh-TW": "網站只公開內容與受控唯讀 API。偏好保存在裝置上，憑證與寫入操作不進入公開站。",
+          "zh-CN": "网站只公开内容与受控只读 API。偏好保存在设备上，凭证与写入操作不进入公开站。"
+        }}
+        tag="p"
+      />
+    </article>
+    <article class="panel">
+      <p class="eyebrow">LATEST BASELINE</p>
+      <h2><Localized value={{ en: "Professionalization v2", "zh-TW": "專業化 v2", "zh-CN": "专业化 v2" }} /></h2>
+      <Localized
+        value={{
+          en: "Shared navigation, multilingual content, explicit maturity labels, accessible states, and a maintainable static build.",
+          "zh-TW": "統一導航、三語內容、明確成熟度、無障礙狀態與可維護的靜態建置。",
+          "zh-CN": "统一导航、三语内容、明确成熟度、无障碍状态与可维护的静态构建。"
+        }}
+        tag="p"
+      />
+    </article>
+  </section>
+
+  <script is:inline slot="scripts">
+    const moduleSearch = document.querySelector("#module-search");
+    const moduleCards = [...document.querySelectorAll(".module-card")];
+    const moduleEmpty = document.querySelector("#module-empty");
+    moduleSearch?.addEventListener("input", () => {
+      const query = moduleSearch.value.trim().toLowerCase();
+      let visible = 0;
+      moduleCards.forEach((card) => {
+        const match = !query || card.dataset.search.toLowerCase().includes(query);
+        card.hidden = !match;
+        if (match) visible += 1;
+      });
+      moduleEmpty.hidden = visible > 0;
+    });
+  </script>
+</PortalLayout>
+
+<style>
+  .hero {
+    min-height: min(670px, calc(100vh - 150px));
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(260px, 0.65fr);
+    gap: 2rem;
+    align-items: center;
+  }
+  .hero h1 {
+    max-width: 900px;
+  }
+  .hero .button-row {
+    margin-top: 1.6rem;
+  }
+  .system-summary {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    padding: 0;
+    background: var(--line);
+  }
+  .system-summary div {
+    min-height: 120px;
+    padding: 1.15rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: var(--surface-strong);
+  }
+  .system-summary strong {
+    color: var(--yellow);
+    font: 900 1.6rem ui-monospace, monospace;
+  }
+  .system-summary span {
+    color: var(--muted);
+    font: 700 0.65rem ui-monospace, monospace;
+  }
+  .directory-search {
+    width: min(360px, 100%);
+  }
+  .module-card .meta-row {
+    justify-content: space-between;
+  }
+  .module-card .eyebrow {
+    margin: 0;
+  }
+  .module-card .card-link {
+    color: var(--yellow);
+    font: 800 0.75rem ui-monospace, monospace;
+  }
+  @media (max-width: 760px) {
+    .hero {
+      min-height: auto;
+      grid-template-columns: 1fr;
+      padding: 2rem 0;
+    }
+  }
+</style>

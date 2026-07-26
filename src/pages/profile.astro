@@ -1,0 +1,86 @@
+---
+import PortalLayout from "@layouts/PortalLayout.astro";
+import PageHeader from "@components/PageHeader.astro";
+import Localized from "@components/Localized.astro";
+import { readData } from "@lib/content";
+
+const profile = readData<any>("profile.json");
+const title = { en: "Profile", "zh-TW": "個人資料", "zh-CN": "个人资料" };
+const description = {
+  en: "Public profile, technical interests, and contact channels for Josh Huang.",
+  "zh-TW": "黃昭詠的公開個人資料、技術興趣與聯絡方式。",
+  "zh-CN": "黄昭詠的公开个人资料、技术兴趣与联系方式。"
+};
+---
+
+<PortalLayout title={title} description={description} active="profile">
+  <PageHeader
+    eyebrow={{ en: "IDENTITY / PUBLIC PROFILE", "zh-TW": "身份／公開資料", "zh-CN": "身份／公开资料" }}
+    title={{ en: profile.name, "zh-TW": "黃昭詠 / Josh Huang", "zh-CN": "黄昭詠 / Josh Huang" }}
+    description={description}
+  />
+
+  <div class="profile-layout">
+    <article class="panel profile-copy">
+      <p class="eyebrow">ABOUT</p>
+      <Localized value={profile.summary} tag="p" class="profile-summary" />
+    </article>
+    <aside class="grid">
+      <section class="panel">
+        <p class="eyebrow">INTERESTS</p>
+        <div class="tag-list">{profile.tags.map((tag: string) => <span class="tag">{tag}</span>)}</div>
+      </section>
+      <section class="panel">
+        <p class="eyebrow">CONTACT</p>
+        <div class="contact-list">
+          {profile.contacts.filter((item: any) => item.public).map((item: any) => (
+            <a href={item.url} rel="noreferrer" target="_blank">{item.label}<span>↗</span></a>
+          ))}
+          <a href="mailto:josh20060725@gmail.com">Email<span>↗</span></a>
+        </div>
+        <Localized
+          value={{
+            en: "Public contact channels only. No private dashboard or account access is exposed.",
+            "zh-TW": "僅提供公開聯絡方式，不公開私人後台或帳號存取。",
+            "zh-CN": "仅提供公开联系方式，不公开私人后台或账号访问。"
+          }}
+          tag="p"
+          class="muted small"
+        />
+      </section>
+    </aside>
+  </div>
+
+  <section class="section">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">SYSTEM FOCUS</p>
+        <h2><Localized value={{ en: "What JATSWeb explores", "zh-TW": "JATSWeb 的探索方向", "zh-CN": "JATSWeb 的探索方向" }} /></h2>
+      </div>
+    </div>
+    <div class="grid three">
+      <article class="card">
+        <h3>Web Systems</h3>
+        <Localized value={{ en: "Static-first architecture, edge APIs, and public/private boundaries.", "zh-TW": "靜態優先架構、邊緣 API 與公開／私人邊界。", "zh-CN": "静态优先架构、边缘 API 与公开／私人边界。" }} tag="p" />
+      </article>
+      <article class="card">
+        <h3>UI / UX</h3>
+        <Localized value={{ en: "A restrained terminal language adapted for responsive, accessible interfaces.", "zh-TW": "將克制的終端語言轉化為響應式且可存取的介面。", "zh-CN": "将克制的终端语言转化为响应式且可访问的界面。" }} tag="p" />
+      </article>
+      <article class="card">
+        <h3>Engineering Notes</h3>
+        <Localized value={{ en: "Structured derivations and interactive browser tools for technical learning.", "zh-TW": "用結構化推導與瀏覽器互動工具記錄技術學習。", "zh-CN": "用结构化推导与浏览器交互工具记录技术学习。" }} tag="p" />
+      </article>
+    </div>
+  </section>
+</PortalLayout>
+
+<style>
+  .profile-layout { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(260px, 0.7fr); gap: 1rem; }
+  .profile-summary { white-space: pre-line; font-size: 1.05rem; line-height: 1.9; }
+  .contact-list { display: grid; margin-bottom: 1rem; }
+  .contact-list a { display: flex; justify-content: space-between; padding: .7rem 0; border-bottom: 1px solid var(--line); text-decoration: none; }
+  .contact-list a span { color: var(--yellow); }
+  .small { font-size: .78rem; }
+  @media (max-width: 760px) { .profile-layout { grid-template-columns: 1fr; } }
+</style>

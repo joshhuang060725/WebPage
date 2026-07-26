@@ -1,0 +1,16 @@
+---
+import PortalLayout from "@layouts/PortalLayout.astro";
+import Localized from "@components/Localized.astro";
+const title = { en: "Project redirect", "zh-TW": "專案重新導向", "zh-CN": "项目重定向" };
+const description = { en: "Compatibility route for project links.", "zh-TW": "舊專案連結相容頁。", "zh-CN": "旧项目链接兼容页。" };
+---
+<PortalLayout title={title} description={description} active="projects">
+  <div class="panel empty-state">
+    <h1><Localized value={{ en: "Opening project…", "zh-TW": "正在開啟專案…", "zh-CN": "正在打开项目…" }} /></h1>
+    <p><a href="/projects.html"><Localized value={{ en: "Return to projects", "zh-TW": "返回專案列表", "zh-CN": "返回项目列表" }} /></a></p>
+  </div>
+  <script is:inline slot="scripts">
+    const id = new URLSearchParams(location.search).get("id");
+    if (id && /^[a-z0-9-]+$/i.test(id)) location.replace(`/projects/${id}.html`);
+  </script>
+</PortalLayout>

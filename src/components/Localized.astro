@@ -1,0 +1,41 @@
+---
+import type { Localized as LocalizedValue } from "@lib/content";
+
+interface Props {
+  value: LocalizedValue | string;
+  tag?: keyof HTMLElementTagNameMap;
+  class?: string;
+  html?: boolean;
+}
+
+const { value, tag = "span", class: className, html = false } = Astro.props;
+const normalized =
+  typeof value === "string"
+    ? { en: value, "zh-TW": value, "zh-CN": value }
+    : value;
+const Tag = tag;
+---
+
+{
+  html ? (
+    <Tag
+      class={className}
+      data-localized
+      data-en={normalized.en}
+      data-zh-tw={normalized["zh-TW"]}
+      data-zh-cn={normalized["zh-CN"]}
+      data-localized-html="true"
+      set:html={normalized.en}
+    />
+  ) : (
+    <Tag
+      class={className}
+      data-localized
+      data-en={normalized.en}
+      data-zh-tw={normalized["zh-TW"]}
+      data-zh-cn={normalized["zh-CN"]}
+    >
+      {normalized.en}
+    </Tag>
+  )
+}

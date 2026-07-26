@@ -1,0 +1,175 @@
+---
+import Localized from "@components/Localized.astro";
+import "../styles/global.css";
+import type { Localized as LocalizedValue } from "@lib/content";
+
+interface Props {
+  title: LocalizedValue;
+  description: LocalizedValue;
+  canonical?: string;
+  active?: string;
+}
+
+const { title, description, canonical = Astro.url.pathname, active = "" } = Astro.props;
+const base = "https://joshhuang.ccwu.cc";
+const nav = [
+  ["profile", "/profile.html", { en: "Bio", "zh-TW": "個人資料", "zh-CN": "个人资料" }],
+  ["wallpapers", "/wallpapers.html", { en: "Wallpapers", "zh-TW": "桌布", "zh-CN": "壁纸" }],
+  ["projects", "/projects.html", { en: "Projects", "zh-TW": "專案", "zh-CN": "项目" }],
+  ["formulas", "/formulas.html", { en: "Formula Lab", "zh-TW": "公式實驗室", "zh-CN": "公式实验室" }],
+  ["links", "/links.html", { en: "Quick Links", "zh-TW": "快速連結", "zh-CN": "快速链接" }],
+  ["youtube", "/youtube.html", { en: "YouTube", "zh-TW": "影片搜尋", "zh-CN": "视频搜索" }],
+  ["finance", "/finance.html", { en: "Finance", "zh-TW": "金融終端", "zh-CN": "金融终端" }],
+  ["tools", "/tools.html", { en: "Tools", "zh-TW": "工具", "zh-CN": "工具" }],
+  ["files", "/files.html", { en: "Files", "zh-TW": "檔案", "zh-CN": "文件" }]
+] as const;
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "JATSWeb",
+  url: base,
+  author: { "@type": "Person", name: "Josh Huang" },
+  inLanguage: ["en", "zh-TW", "zh-CN"]
+};
+---
+
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title.en} | JATSWeb</title>
+    <meta name="description" content={description.en} />
+    <meta name="theme-color" content="#0a0d10" />
+    <link rel="canonical" href={new URL(canonical, base)} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="JATSWeb" />
+    <meta property="og:title" content={`${title.en} | JATSWeb`} />
+    <meta property="og:description" content={description.en} />
+    <meta property="og:url" content={new URL(canonical, base)} />
+    <meta property="og:image" content={`${base}/og-image.svg`} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <script is:inline>
+      (() => {
+        const root = document.documentElement;
+        const stored = localStorage.getItem("jats:language");
+        const detected = navigator.language.toLowerCase();
+        const initial =
+          stored ||
+          (detected.startsWith("zh-tw") || detected.startsWith("zh-hk")
+            ? "zh-TW"
+            : detected.startsWith("zh")
+              ? "zh-CN"
+              : "en");
+        root.lang = initial;
+        root.dataset.initialLanguage = initial;
+        if (initial !== "en") root.dataset.languagePending = "true";
+      })();
+    </script>
+    <style is:inline>
+      html[data-language-pending="true"] body { visibility: hidden; }
+    </style>
+    <noscript><style>body { visibility: visible !important; }</style></noscript>
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div class="site-shell">
+      <header class="topbar">
+        <a class="brand" href="/" aria-label="JATSWeb home">
+          <span class="brand-mark">JATS</span>
+          <span class="brand-name">Josh Auxiliary Terminal System</span>
+        </a>
+        <div class="topbar-controls">
+          <div class="language-switch" aria-label="Language">
+            <button type="button" data-lang="en">EN</button>
+            <button type="button" data-lang="zh-TW" aria-label="繁體中文">繁</button>
+            <button type="button" data-lang="zh-CN" aria-label="简体中文">简</button>
+          </div>
+          <button class="theme-toggle" type="button" aria-label="Toggle color theme">
+            <span aria-hidden="true">◐</span>
+          </button>
+          <button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false">☰</button>
+        </div>
+      </header>
+
+      <main id="main" class="main-content">
+        <slot />
+      </main>
+
+      <aside class="nav-rail" aria-label="Primary navigation">
+        <a class:list={["rail-home", !active && "is-active"]} href="/" aria-label="Home">J</a>
+        <nav>
+          {
+            nav.map(([id, href, label], index) => (
+              <a class:list={["rail-link", active === id && "is-active"]} href={href}>
+                <span class="rail-index">{String(index + 1).padStart(2, "0")}</span>
+                <Localized value={label} />
+              </a>
+            ))
+          }
+        </nav>
+        <div class="rail-status"><span></span> SYSTEM ONLINE</div>
+      </aside>
+      <button class="nav-scrim" type="button" aria-label="Close navigation"></button>
+    </div>
+
+    <footer class="site-footer">
+      <span>JATSWeb / Josh Huang</span>
+      <span>Static-first · Public read-only · v2.0</span>
+    </footer>
+
+    <script>
+      // @ts-nocheck
+      const root = document.documentElement;
+      let language = root.dataset.initialLanguage || "en";
+
+      function applyLanguage(nextLanguage) {
+        language = nextLanguage;
+        localStorage.setItem("jats:language", language);
+        root.lang = language;
+        document.querySelectorAll("[data-localized]").forEach((node) => {
+          const key = language === "zh-TW" ? "zhTw" : language === "zh-CN" ? "zhCn" : "en";
+          const value = node.dataset[key] || node.dataset.en || "";
+          if (node.dataset.localizedHtml === "true") node.innerHTML = value;
+          else node.textContent = value;
+        });
+        document.querySelectorAll("[data-lang]").forEach((button) => {
+          button.classList.toggle("is-active", button.dataset.lang === language);
+          button.setAttribute("aria-pressed", String(button.dataset.lang === language));
+        });
+        document.dispatchEvent(new CustomEvent("jats:language", { detail: { language } }));
+      }
+
+      document.querySelectorAll("[data-lang]").forEach((button) => {
+        button.addEventListener("click", () => applyLanguage(button.dataset.lang));
+      });
+
+      const storedTheme = localStorage.getItem("jats:theme");
+      root.dataset.theme =
+        storedTheme || (matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+      document.querySelector(".theme-toggle")?.addEventListener("click", () => {
+        root.dataset.theme = root.dataset.theme === "light" ? "dark" : "light";
+        localStorage.setItem("jats:theme", root.dataset.theme);
+      });
+
+      const navToggle = document.querySelector(".nav-toggle");
+      const navScrim = document.querySelector(".nav-scrim");
+      const closeNav = () => {
+        document.body.classList.remove("nav-open");
+        navToggle?.setAttribute("aria-expanded", "false");
+      };
+      navToggle?.addEventListener("click", () => {
+        const open = document.body.classList.toggle("nav-open");
+        navToggle.setAttribute("aria-expanded", String(open));
+      });
+      navScrim?.addEventListener("click", closeNav);
+      addEventListener("keydown", (event) => event.key === "Escape" && closeNav());
+      applyLanguage(language);
+      delete root.dataset.languagePending;
+    </script>
+    <slot name="scripts" />
+  </body>
+</html>
